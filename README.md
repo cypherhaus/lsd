@@ -34,6 +34,6 @@ The LNPay API is interacted with through Supabase Edge Functions. To setup and d
 
 Login to supabase with `supabase login` and enter your access key located in your Supabase account preferences -> Access Tokens -> Generate New Token
 
-Link your project with `supabase link --project-ref your-project-ref` (replace `your-project-ref` wit h the reference code found on your Supabase project dashboard)
+Link your project with `supabase link --project-ref your-project-ref` (replace `your-project-ref` with the reference code found on your Supabase project dashboard)
 
 Deploy the edge functions to your Supabase project with `supabase functions deploy create-wallet`. (Repeat this step for all of the Edge Functions).
