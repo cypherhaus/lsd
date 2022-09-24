@@ -7,8 +7,14 @@ An easy Bitcoin Lightning Network web app template using [Supabase](http://supab
 - Database (Supabase)
 - State management (Mobx)
 
-### Instructions
+## Running Supa LN
 
-Clone the repository and run
+### Clone the repository
 
-### `npm start` / `yarn`
+run `npm start` / `yarn` to initiate the project.
+
+### Create an `.env` file
+
+add the following variables
+
+### Clone the repository
