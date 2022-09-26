@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useStore } from "../store";
-import { Page } from "../components/Page";
+import { Screen } from "../components/Screen";
+import { observer } from "mobx-react-lite";
 
-export const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
+export const Auth = observer(() => {
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("danramac");
   const [email, setEmail] = useState<string>("dr.mcgrane@gmail.com");
   const [password, setPassword] = useState<string>("passwordtest");
 
-  const { authStore } = useStore();
+  const { authView } = useStore();
 
-  const handleSignup = async () => authStore.signUp(email, username, password);
-  const handleLogin = async () => authStore.login(email, password);
+  const handleSignup = async () => {
+    authView.createUser(email, username, password);
+  };
+
+  const handleLogin = async () => authView.login(email, password);
 
   return (
-    <Page>
-      <div className="flex flex-col items-center justify-center w-full h-full">
+    <Screen>
+      <div className="flex flex-col items-center justify-center">
         <p>{isSignUp ? "Sign Up" : "Login"}</p>
         {isSignUp && (
           <input
@@ -42,10 +46,10 @@ export const Auth = () => {
         <button onClick={() => (isSignUp ? handleSignup() : handleLogin())}>
           SUBMIT
         </button>
-        <div onClick={() => setIsSignUp(!isSignUp)}>
+        <div className="cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
           {isSignUp ? "Have an account?" : "Don't have an account?"}
         </div>
       </div>
-    </Page>
+    </Screen>
   );
-};
+});

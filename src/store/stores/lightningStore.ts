@@ -11,6 +11,7 @@ export default class LightningStore {
     this._store = store;
   }
 
-  async getBalance() {}
-  async getWallet() {}
+  async createWallet() {
+    this._store.api.lightningAPI.createWallet();
+  }
 }

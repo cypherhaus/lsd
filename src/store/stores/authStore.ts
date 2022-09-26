@@ -17,33 +17,40 @@ export default class AuthStore {
    * Signup User
    */
   async signUp(email: string, username: string, password: string) {
-    // try {
-    //   const { user } = await this._store.api.authAPI.signUp(
-    //     email,
-    //     username,
-    //     password
-    //   );
-    //   this.currentUser = user;
-    // } catch (err) {
-    //   console.log("Error signing up user", username);
-    // }
+    try {
+      // Todo fix type
+      // @ts-ignore
+      const { user } = await this._store.api.authAPI.signUp(
+        email,
+        username,
+        password
+      );
+      console.log({ user });
+      this.currentUser = user;
+      return user.id;
+    } catch (err) {
+      console.log("Error signing up user", username);
+    }
   }
 
   /**
    * Login User
    */
   async login(email: string, password: string) {
-    // try {
-    //   const { user } = await this._store.api.authAPI.login(email, password);
-    //   this.currentUser = user;
-    // } catch (err) {
-    //   console.log("Error logging in user", email);
-    // }
+    try {
+      // Todo fix type
+      // @ts-ignore
+      const { user } = await this._store.api.authAPI.login(email, password);
+      this.currentUser = user;
+    } catch (err) {
+      console.log("Error logging in user", email);
+    }
   }
 
   async logout() {
     try {
-      const data = await this._store.api.authAPI.signOut();
+      await this._store.api.authAPI.signOut();
+      this.currentUser = null;
     } catch (err) {
       console.log({ err });
     }
