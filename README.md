@@ -1,17 +1,17 @@
-# Supa LN
+# Supabase x ZEBEDEE
 
-An easy Bitcoin Lightning Network web app template using [Supabase](http://supabase.com) and [LNPay](http://lnpay.co)
+An easy Bitcoin Lightning Network web app template using [Supabase](http://supabase.com) and [ZEBEDEE](http://zebedee.io)
 
 - Authentication (Supabase)
-- Lightning Network API (Supabase Edge Functions and LNPay)
+- Lightning Network API (Supabase Edge Functions and ZEBEDEE)
 - Database (Supabase)
 - State management (Mobx)
 
-## Running Supa LN
+## Running Supa ZBD
 
 ### Create accounts
 
-Create accounts at [Supabase](http://supabase.com) and [LNPay](http://lnpay.co).
+Create accounts at [Supabase](https://supabase.com) and [ZEBEDEE](https://zebedee.io).
 
 Create a new project on Supabase.
 
