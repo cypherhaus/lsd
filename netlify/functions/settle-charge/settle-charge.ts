@@ -1,5 +1,5 @@
 import { Handler } from "@netlify/functions";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@1.35.7";
+import { createClient } from "@supabase/supabase-js";
 
 const handler: Handler = async (event, context) => {
   const supabaseClient = createClient(
