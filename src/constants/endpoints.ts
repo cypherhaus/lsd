@@ -1,1 +1,1 @@
-export const CREATE_WALLET = "/create-wallet";
+export const CREATE_CHARGE = "create-charge";

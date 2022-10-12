@@ -1,11 +1,10 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Store } from "../store";
-import { User } from "../../types";
 
 export default class AuthStore {
   private _store: Store;
 
-  currentUser: User | null = null;
+  currentUser: any | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });

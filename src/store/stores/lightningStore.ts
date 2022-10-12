@@ -11,7 +11,20 @@ export default class LightningStore {
     this._store = store;
   }
 
-  async createWallet() {
-    this._store.api.lightningAPI.createWallet();
+  async createCharge(id: string, amount: string) {
+    const data = await this._store.api.lightningAPI.createCharge(id, amount);
+    console.log({ data });
   }
+
+  // Pay a user by username
+  async payUsername() {}
+
+  // Withdrawal using LNURL
+  async withdraw() {}
+
+  // Create bolt12 invoice
+  async generateInvoice() {}
+
+  // Get Transactions
+  async getTxs() {}
 }

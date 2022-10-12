@@ -1,5 +1,5 @@
 {
-  "name": "supa-ln",
+  "name": "supa-zbd",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,6 +12,7 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "autoprefixer": "^10.4.12",
+    "axios": "^0.27.2",
     "mobx": "^6.6.2",
     "mobx-react-lite": "^3.4.0",
     "postcss": "^8.4.16",

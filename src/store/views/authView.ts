@@ -1,8 +1,11 @@
 import { makeAutoObservable } from "mobx";
+import { User } from "../../types";
 import { Store } from "../store";
 
 export default class AuthView {
   private _store: Store;
+
+  user: any | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -18,15 +21,16 @@ export default class AuthView {
   //  Signs up a user to Supabase and creates a Lightning Wallet
   async createUser(email: string, username: string, password: string) {
     // Create a new user on Supabase Authentication
-    // const userId = await this._store.authStore.signUp(
-    //   email,
-    //   username,
-    //   password
-    // );
+    const userId = await this._store.authStore.signUp(
+      email,
+      username,
+      password
+    );
 
-    // Using new user id, create a wallet associated with it
-    // console.log("create user with id", userId);
-
-    this._store.lightningStore.createWallet();
+    this.user = {
+      email,
+      userId,
+      username,
+    };
   }
 }
