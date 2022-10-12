@@ -52,4 +52,8 @@ Login to supabase with `supabase login` and enter your access key located in you
 
 Link your project with `supabase link --project-ref your-project-ref` (replace `your-project-ref` with the reference code found on your Supabase project dashboard)
 
-Deploy the edge functions to your Supabase project with `supabase functions deploy wallet-details`. (Repeat this step for all of the Edge Functions).
+Deploy the edge functions to your Supabase project with `supabase functions deploy create-charge`. (Repeat this step for all of the Edge Functions).
+
+Readme Todos
+
+- Guide on database functions/triggers
