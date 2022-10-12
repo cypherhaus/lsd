@@ -7,3 +7,17 @@ export interface User {
   walletId: string;
   walletAdminKey: string;
 }
+
+export interface Charge {
+  amount: string;
+  callbackUrl: string;
+  confirmedAt: string;
+  createdAt: string;
+  description: string;
+  expiresAt: string;
+  id: string;
+  internalId: string;
+  invoice: { request: string };
+  status: string;
+  unit: string;
+}

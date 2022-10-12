@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 
 export default class AuthStore {

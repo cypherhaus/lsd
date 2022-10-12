@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { User } from "../../types";
 import { Store } from "../store";
 
 export default class AuthView {

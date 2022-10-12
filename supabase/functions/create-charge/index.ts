@@ -17,16 +17,14 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, description, id } = await req.json();
-
-    console.log({ amount });
+    const { amount, description, id, callback } = await req.json();
 
     const body = JSON.stringify({
       expiresIn: 300,
       amount: amount,
-      description: "-",
-      internalId: "-",
-      callbackUrl: "https://your-website.com/callback",
+      description: description ? description : "-",
+      internalId: id,
+      callbackUrl: callback,
     });
 
     const resp = await fetch("https://api.zebedee.io/v0/charges", {

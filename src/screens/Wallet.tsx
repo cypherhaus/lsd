@@ -1,7 +1,9 @@
+import { observer } from "mobx-react-lite";
+import QRCode from "react-qr-code";
 import { Screen } from "../components/Screen";
 import { useStore } from "../store";
 
-export const Wallet = () => {
+export const Wallet = observer(() => {
   const { lightningStore } = useStore();
 
   return (
@@ -15,6 +17,13 @@ export const Wallet = () => {
       >
         Fund
       </button>
+      {lightningStore.charge && (
+        <QRCode
+          style={{ height: "auto", maxWidth: "300px", width: "300px" }}
+          value={lightningStore.charge.invoice.request}
+          viewBox={`0 0 256 256`}
+        />
+      )}
     </Screen>
   );
-};
+});
