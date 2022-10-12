@@ -6,15 +6,22 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_URL ?? "",
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
-  console.log({ context, event, supabaseClient });
 
-  // await supabaseClient.from("charge").update({ settled: true }).eq("id", "1");
+  if (event?.queryStringParameters?.id) {
+    const response = await supabaseClient
+      .from("charge")
+      .update({ settled: true })
+      .eq("id", event?.queryStringParameters?.id);
 
-  const data = { message: "Hello World" };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Succesfully updated charge" }),
+    };
+  }
 
   return {
-    statusCode: 200,
-    body: JSON.stringify(data),
+    statusCode: 400,
+    body: JSON.stringify({ message: "Error settling charge" }),
   };
 };
 
