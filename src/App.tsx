@@ -22,7 +22,7 @@ const App = observer(() => {
     return () => {
       supabase.removeSubscription(subscription);
     };
-  }, []);
+  }, [authStore]);
 
   if (!authStore.currentUser)
     return (
