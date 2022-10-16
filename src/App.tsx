@@ -8,11 +8,15 @@ import { Auth } from "./screens/Auth";
 import { useStore } from "./store";
 
 const App = observer(() => {
-  const { authStore } = useStore();
+  const { authStore, lightningStore } = useStore();
 
   useEffect(() => {
     const session = supabase.auth.session();
     if (session) authStore.setUser(session.user);
+
+    if (authStore.currentUser) {
+      lightningStore.fetchWallet(authStore.currentUser.id);
+    }
 
     const subscription = supabase
       .from("payments")
@@ -23,6 +27,8 @@ const App = observer(() => {
       supabase.removeSubscription(subscription);
     };
   }, [authStore]);
+
+  console.log(lightningStore.wallet);
 
   if (!authStore.currentUser)
     return (
