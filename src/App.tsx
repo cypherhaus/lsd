@@ -26,9 +26,7 @@ const App = observer(() => {
     return () => {
       supabase.removeSubscription(subscription);
     };
-  }, [authStore]);
-
-  console.log(lightningStore.wallet);
+  }, [authStore, lightningStore]);
 
   if (!authStore.currentUser)
     return (

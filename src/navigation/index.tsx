@@ -3,7 +3,7 @@ import { useStore } from "../store";
 import { unauthenticatedNav, authenticatedNav } from "./NavItems";
 
 export const Navigation = observer(() => {
-  const { authStore, lightningStore } = useStore();
+  const { authStore } = useStore();
   const nav = authStore.currentUser ? authenticatedNav : unauthenticatedNav;
   return (
     <div className="flex justify-end pt-5 px-5">
