@@ -6,7 +6,6 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_URL ?? "",
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
-  console.log("called");
   if (event?.queryStringParameters?.id) {
     // TODO: Double check with ZBD that this is actually settled and not some punter
 
