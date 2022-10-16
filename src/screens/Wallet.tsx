@@ -34,7 +34,7 @@ export const Wallet = observer(() => {
         supabase.removeSubscription(balanceSub);
       };
     }
-  }, [lightningStore.charge]);
+  }, [lightningStore, authStore]);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
