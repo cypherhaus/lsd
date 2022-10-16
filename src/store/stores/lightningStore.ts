@@ -12,16 +12,12 @@ export default class LightningStore {
     this._store = store;
   }
 
-  async createCharge(id: string, amount: string) {
-    const data = await this._store.api.lightningAPI.createCharge(amount);
-    if (data?.data?.data) this.charge = data?.data?.data;
-
-    console.log(this.charge);
-
-    // Callback
-    // create edge function for callback which updates the entry to settled
-
-    // Realtime update balance
+  async createCharge(amount: string, userId: string) {
+    const data = await this._store.api.lightningAPI.createCharge(
+      amount,
+      userId
+    );
+    if (data?.data) this.charge = data?.data;
   }
 
   // Pay a user by username
