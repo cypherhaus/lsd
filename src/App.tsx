@@ -14,10 +14,6 @@ const App = observer(() => {
     const session = supabase.auth.session();
     if (session) authStore.setUser(session.user);
 
-    if (authStore.currentUser) {
-      lightningStore.fetchWallet(authStore.currentUser.id);
-    }
-
     const subscription = supabase
       .from("payments")
       .on("*", (e) => console.log("called", e))
@@ -28,6 +24,12 @@ const App = observer(() => {
     };
   }, [authStore, lightningStore]);
 
+  useEffect(() => {
+    if (authStore.currentUser) {
+      lightningStore.fetchWallet(authStore.currentUser.id);
+    }
+  }, [authStore.currentUser]);
+
   if (!authStore.currentUser)
     return (
       <div className="h-screen">
@@ -37,7 +39,6 @@ const App = observer(() => {
 
   return (
     <div className="h-screen">
-      <Navigation />
       <RouterProvider router={router} />
     </div>
   );

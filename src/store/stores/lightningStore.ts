@@ -13,6 +13,7 @@ export default class LightningStore {
   }
 
   async fetchWallet(userId: string) {
+    console.log("called");
     const data = await this._store.api.lightningAPI.fetchWallet(userId);
     this.wallet = data;
   }
@@ -31,6 +32,10 @@ export default class LightningStore {
 
   chargeSettled() {
     this.charge = null;
+  }
+
+  clearWallet() {
+    this.wallet = null;
   }
 
   // Pay a user by username

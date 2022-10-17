@@ -14,7 +14,6 @@ export const authenticatedNav = [
 export const unauthenticatedNav = [
   {
     href: "/",
-
     title: "HOME",
   },
   {

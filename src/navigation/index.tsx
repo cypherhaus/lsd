@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
+import { NavLink } from "react-router-dom";
 import { unauthenticatedNav, authenticatedNav } from "./NavItems";
 
 export const Navigation = observer(() => {
@@ -8,9 +9,9 @@ export const Navigation = observer(() => {
   return (
     <div className="flex justify-end pt-5 px-5">
       {nav.map((nav) => (
-        <a key={nav.href} className="ml-8 font-bold" href={nav.href}>
+        <NavLink key={nav.href} className="ml-8 font-bold" to={nav.href}>
           {nav.title}
-        </a>
+        </NavLink>
       ))}
       {authStore.currentUser && (
         <div>

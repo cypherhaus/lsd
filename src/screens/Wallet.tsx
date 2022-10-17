@@ -8,11 +8,11 @@ import { formatMsatsToSats } from "../utils/formats";
 
 export const Wallet = observer(() => {
   const { lightningStore, authStore } = useStore();
-  const [amount, setAmount] = useState<string | null>(null);
+  const [amount, setAmount] = useState<string>("");
 
   useEffect(() => {
     const balanceSub = supabase
-      .from(`wallet:id=eq.${authStore.currentUser.id}`)
+      .from(`profile:id=eq.${authStore.currentUser.id}`)
       .on("UPDATE", (message) => {
         lightningStore.setWallet(message.new);
       })
@@ -24,7 +24,7 @@ export const Wallet = observer(() => {
         .on("UPDATE", (message) => {
           if (message.new.settled) {
             lightningStore.chargeSettled();
-            setAmount(null);
+            setAmount("");
           }
         })
         .subscribe();
@@ -34,7 +34,7 @@ export const Wallet = observer(() => {
         supabase.removeSubscription(balanceSub);
       };
     }
-  }, [lightningStore, authStore]);
+  }, [lightningStore, lightningStore.charge, authStore]);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
@@ -46,10 +46,11 @@ export const Wallet = observer(() => {
     }
   };
 
-  if (!lightningStore.wallet) return <></>;
+  if (!lightningStore.wallet) return <div>no profile</div>;
 
   return (
     <Screen>
+      <span className="text-2xl">Hello {lightningStore.wallet.username}</span>
       <span className="text-2xl">
         Balance: {formatMsatsToSats(lightningStore.wallet.balance)} SATS
       </span>
@@ -60,7 +61,7 @@ export const Wallet = observer(() => {
         className="border mr-5"
         placeholder="Amount"
         type="number"
-        value={parseInt(amount ? amount : "0")}
+        value={amount}
       ></input>
       <button
         onClick={handleFundClick}

@@ -49,7 +49,11 @@ export default class AuthStore {
   async logout() {
     try {
       await this._store.api.authAPI.signOut();
-      this.currentUser = null;
+      runInAction(() => {
+        this.currentUser = null;
+      });
+      await this._store.lightningStore.clearWallet();
+      window.open("/");
     } catch (err) {
       console.log({ err });
     }

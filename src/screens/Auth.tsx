@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useStore } from "../store";
-import { Screen } from "../components/Screen";
 import { observer } from "mobx-react-lite";
 
 export const Auth = observer(() => {
@@ -18,7 +17,7 @@ export const Auth = observer(() => {
   const handleLogin = async () => authView.login(email, password);
 
   return (
-    <Screen>
+    <div>
       <div className="flex flex-col items-center justify-center">
         <p>{isSignUp ? "Sign Up" : "Login"}</p>
         {isSignUp && (
@@ -50,6 +49,6 @@ export const Auth = observer(() => {
           {isSignUp ? "Have an account?" : "Don't have an account?"}
         </div>
       </div>
-    </Screen>
+    </div>
   );
 });

@@ -5,7 +5,7 @@ import { supabase } from "../config/supabase";
 import { SETTLE_CHARGE } from "../constants/endpoints";
 export default class LightningApi {
   fetchWallet = async (userId: string) => {
-    const data = await supabase.from("wallet").select().eq("id", userId);
+    const data = await supabase.from("profile").select().eq("id", userId);
 
     return data?.data?.[0];
   };
