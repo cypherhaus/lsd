@@ -10,9 +10,17 @@ export default class LightningApi {
     return data?.data?.[0];
   };
 
+  payUser = async () => {
+    // get profile of username
+    // add debit for current user id with recipient userid of username
+    // add credit for recipient of username with a sender value of current user
+    // update balances
+  };
+
   createCharge = async (sats: string, userId: string) => {
     const amountInMsats = (parseInt(sats) * 1000).toString();
     const chargeId = uuidv4();
+
     try {
       const data = await axios.post(
         "https://api.zebedee.io/v0/charges",
