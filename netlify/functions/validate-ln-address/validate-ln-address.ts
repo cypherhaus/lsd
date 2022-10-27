@@ -9,7 +9,7 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
-  if (event.httpMethod !== "OPTION") {
+  if (event.httpMethod === "OPTION") {
     return {
       statusCode: 200,
       headers: CORS_HEADERS,
