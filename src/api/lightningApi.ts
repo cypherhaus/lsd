@@ -69,7 +69,11 @@ export default class LightningApi {
 
       await supabase
         .from("charges")
-        .insert({ id: chargeId, amount: amountInMsats, user_id: userId });
+        .insert({
+          id: chargeId,
+          amount: parseInt(amountInMsats) / 1000,
+          user_id: userId,
+        });
 
       if (data) {
         return data.data;
