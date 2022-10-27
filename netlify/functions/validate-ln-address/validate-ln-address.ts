@@ -1,5 +1,4 @@
 import { Handler } from "@netlify/functions";
-import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
 const handler: Handler = async (event, context) => {
