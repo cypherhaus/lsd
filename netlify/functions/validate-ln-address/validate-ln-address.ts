@@ -9,6 +9,14 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
+  if (event.httpMethod !== "OPTION") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: "This was a preflight call!",
+    };
+  }
+
   if (event?.queryStringParameters?.lnAddress) {
     const { lnAddress } = event?.queryStringParameters;
 
@@ -24,15 +32,15 @@ const handler: Handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(data.data),
       headers: CORS_HEADERS,
+      body: JSON.stringify(data.data),
     };
   }
 
   return {
     statusCode: 400,
-    body: JSON.stringify({ message: "Error settling charge" }),
     headers: CORS_HEADERS,
+    body: JSON.stringify({ message: "Error settling charge" }),
   };
 };
 
