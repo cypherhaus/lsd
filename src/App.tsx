@@ -14,14 +14,14 @@ const App = observer(() => {
     const session = supabase.auth.session();
     if (session) authStore.setUser(session.user);
 
-    const subscription = supabase
-      .from("payments")
-      .on("*", (e) => console.log("called", e))
-      .subscribe();
+    // const subscription = supabase
+    //   .from("payments")
+    //   .on("*", (e) => console.log("called", e))
+    //   .subscribe();
 
-    return () => {
-      supabase.removeSubscription(subscription);
-    };
+    // return () => {
+    //   supabase.removeSubscription(subscription);
+    // };
   }, [authStore, lightningStore]);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ export const Wallet = observer(() => {
 
   useEffect(() => {
     const balanceSub = supabase
-      .from(`profile:id=eq.${authStore.currentUser.id}`)
+      .from(`profiles:id=eq.${authStore.currentUser.id}`)
       .on("UPDATE", (message) => {
         lightningStore.setWallet(message.new);
       })
@@ -20,7 +20,7 @@ export const Wallet = observer(() => {
 
     if (lightningStore.charge) {
       const chargeSub = supabase
-        .from(`charge:id=eq.${lightningStore.charge.internalId}`)
+        .from(`charges:id=eq.${lightningStore.charge.internalId}`)
         .on("UPDATE", (message) => {
           if (message.new.settled) {
             lightningStore.chargeSettled();

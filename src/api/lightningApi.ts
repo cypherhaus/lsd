@@ -5,17 +5,22 @@ import { supabase } from "../config/supabase";
 import { SETTLE_CHARGE } from "../constants/endpoints";
 export default class LightningApi {
   fetchWallet = async (userId: string) => {
-    const data = await supabase.from("profile").select().eq("id", userId);
+    const data = await supabase.from("profiles").select().eq("id", userId);
 
     return data?.data?.[0];
   };
 
   payUser = async () => {
+    // CLIENT SIDE
     // get profile of username
     // add debit for current user id with recipient userid of username
-    // add credit for recipient of username with a sender value of current user
+    // SUPABASE DB FUNCTIONS
     // update balances
+    // after new payment added, calculate balances again
   };
+
+  // to calculate balance
+  //  (total of debits - credits in settlements) + (total of debits - credits in payments)
 
   createCharge = async (sats: string, userId: string) => {
     const amountInMsats = (parseInt(sats) * 1000).toString();
@@ -40,7 +45,7 @@ export default class LightningApi {
       );
 
       await supabase
-        .from("charge")
+        .from("charges")
         .insert({ id: chargeId, amount: amountInMsats, user_id: userId });
 
       if (data) {
