@@ -10,6 +10,15 @@ export default class LightningApi {
     return data?.data?.[0];
   };
 
+  updateLnAddress = async (lnAddress: string) => {
+    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/validate-ln-address?lnAddress=${lnAddress}`
+    );
+
+    console.log({ response });
+  };
+
   payUser = async (
     currentUserId: string,
     sendToUsername: string,
@@ -45,9 +54,6 @@ export default class LightningApi {
     }
     return { success: false, message: "Internal Error" };
   };
-
-  // to calculate balance
-  //  (total of debits - credits in settlements) + (total of debits - credits in payments)
 
   createCharge = async (sats: string, userId: string) => {
     const amountInMsats = (parseInt(sats) * 1000).toString();

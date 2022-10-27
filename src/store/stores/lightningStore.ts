@@ -12,6 +12,18 @@ export default class LightningStore {
     this._store = store;
   }
 
+  setWallet(wallet: any) {
+    this.wallet = wallet;
+  }
+
+  chargeSettled() {
+    this.charge = null;
+  }
+
+  clearWallet() {
+    this.wallet = null;
+  }
+
   async fetchWallet(userId: string) {
     const data = await this._store.api.lightningAPI.fetchWallet(userId);
     this.wallet = data;
@@ -23,18 +35,6 @@ export default class LightningStore {
       userId
     );
     if (data?.data) this.charge = data?.data;
-  }
-
-  setWallet(wallet: any) {
-    this.wallet = wallet;
-  }
-
-  chargeSettled() {
-    this.charge = null;
-  }
-
-  clearWallet() {
-    this.wallet = null;
   }
 
   // Pay a user by username
@@ -50,6 +50,12 @@ export default class LightningStore {
     );
 
     return data;
+  }
+
+  async updateLnAddress(address: string) {
+    const response = await this._store.api.lightningAPI.updateLnAddress(
+      address
+    );
   }
 
   // Withdrawal using LNURL

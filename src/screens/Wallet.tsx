@@ -6,8 +6,9 @@ import { supabase } from "../config/supabase";
 import { useStore } from "../store";
 
 export const Wallet = observer(() => {
-  const { lightningStore, authStore } = useStore();
+  const { lightningStore, lightningView, authStore } = useStore();
   const [amount, setAmount] = useState<string>("");
+  const [lnAddress, setLnAddress] = useState("");
 
   useEffect(() => {
     if (lightningStore.charge) {
@@ -31,6 +32,10 @@ export const Wallet = observer(() => {
     setAmount(e.target.value);
   };
 
+  const handleLnAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLnAddress(e.target.value);
+  };
+
   const handleFundClick = () => {
     if (amount) {
       lightningStore.createCharge(amount, authStore.currentUser.id);
@@ -38,6 +43,10 @@ export const Wallet = observer(() => {
   };
 
   const handleWithdrawClick = () => {};
+
+  const handleSaveLnAddress = () => {
+    lightningView.updateLnAddress(lnAddress);
+  };
 
   if (!lightningStore.wallet) return <div>no profile</div>;
 
@@ -67,13 +76,13 @@ export const Wallet = observer(() => {
         Fund
       </button>
       <input
-        onChange={(e) => handleTextChange(e)}
+        onChange={(e) => handleLnAddressChange(e)}
         className="border mt-10 mr-5"
         placeholder="Lightning Address"
-        value={amount}
+        value={lnAddress}
       ></input>
       <button
-        onClick={handleFundClick}
+        onClick={handleSaveLnAddress}
         className="rounded p-3 mt-5 text-white bg-black"
       >
         Save

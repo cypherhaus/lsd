@@ -25,6 +25,12 @@ export default class LightningView {
     return response;
   }
 
+  async updateLnAddress(address: string) {
+    await this._store.lightningStore.updateLnAddress(address);
+
+    // return response;
+  }
+
   // Handle click fund account
   handleFundClick() {}
 
