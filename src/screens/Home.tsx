@@ -1,19 +1,24 @@
 import { ChangeEvent, useState } from "react";
 import { Screen } from "../components/Screen";
-import { Navigation } from "../navigation";
+import { useStore } from "../store";
 
 export const Home = () => {
   const [username, setUsername] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<null | number>(null);
 
-  const handleSendClick = () => {};
+  const { lightningView, authStore } = useStore();
+
+  const handleSendClick = () => {
+    if (!amount || !username) return;
+    lightningView.handlePayUsername(authStore.currentUser.id, username, amount);
+  };
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    setAmount(parseInt(e.target.value));
   };
   return (
     <Screen>
@@ -29,7 +34,7 @@ export const Home = () => {
         className="border mb-5"
         placeholder="Amount"
         type="number"
-        value={amount}
+        value={amount ? amount : ""}
       ></input>
       <button
         onClick={handleSendClick}

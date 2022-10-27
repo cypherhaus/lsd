@@ -4,7 +4,6 @@ import QRCode from "react-qr-code";
 import { Screen } from "../components/Screen";
 import { supabase } from "../config/supabase";
 import { useStore } from "../store";
-import { formatMsatsToSats } from "../utils/formats";
 
 export const Wallet = observer(() => {
   const { lightningStore, authStore } = useStore();
@@ -52,7 +51,7 @@ export const Wallet = observer(() => {
     <Screen>
       <span className="text-2xl">Hello {lightningStore.wallet.username}</span>
       <span className="text-2xl">
-        Balance: {formatMsatsToSats(lightningStore.wallet.balance)} SATS
+        Balance: {lightningStore.wallet.balance ?? 0} SATS
       </span>
       <div>Withdrawal</div>
       <div>Transactions</div>

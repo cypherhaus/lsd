@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { supabase } from "./config/supabase";
-import { Navigation } from "./navigation";
 import { router } from "./routes";
 import { Auth } from "./screens/Auth";
 import { useStore } from "./store";
@@ -22,7 +21,7 @@ const App = observer(() => {
     // return () => {
     //   supabase.removeSubscription(subscription);
     // };
-  }, [authStore, lightningStore]);
+  }, [authStore]);
 
   useEffect(() => {
     if (authStore.currentUser) {

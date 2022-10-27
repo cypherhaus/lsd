@@ -10,9 +10,32 @@ export default class LightningApi {
     return data?.data?.[0];
   };
 
-  payUser = async () => {
+  payUser = async (
+    currentUserId: string,
+    sendToUsername: string,
+    amount: number
+  ) => {
     // CLIENT SIDE
-    // get profile of username
+    try {
+      const response = await supabase
+        .from("profiles")
+        .select()
+        .eq("username", sendToUsername);
+
+      if (response.data?.length) {
+        await supabase.from("payments").insert({
+          debit: amount,
+          user_id: currentUserId,
+          participant_id: response.data[0].id,
+        });
+      } else {
+        console.log("no matching user");
+        return;
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+
     // add debit for current user id with recipient userid of username
     // SUPABASE DB FUNCTIONS
     // update balances

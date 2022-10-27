@@ -11,7 +11,17 @@ export default class LightningView {
   }
 
   // Handle clicking pay user
-  handlePayUsername() {}
+  handlePayUsername(
+    currentUserId: string,
+    sendToUsername: string,
+    amount: number
+  ) {
+    this._store.lightningStore.payUsername(
+      currentUserId,
+      sendToUsername,
+      amount
+    );
+  }
 
   // Handle click fund account
   handleFundClick() {}
