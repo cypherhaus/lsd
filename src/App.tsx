@@ -27,7 +27,7 @@ const App = observer(() => {
     if (authStore.currentUser) {
       lightningStore.fetchWallet(authStore.currentUser.id);
     }
-  }, [authStore.currentUser]);
+  }, [authStore.currentUser, lightningStore]);
 
   if (!authStore.currentUser)
     return (
