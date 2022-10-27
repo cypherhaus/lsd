@@ -1,6 +1,12 @@
 import { Handler } from "@netlify/functions";
 import axios from "axios";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "Origin, X-Requested-With, Content-Type, Accept",
+};
+
 const handler: Handler = async (event, context) => {
   if (event?.queryStringParameters?.lnAddress) {
     const { lnAddress } = event?.queryStringParameters;
@@ -18,12 +24,14 @@ const handler: Handler = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify(data.data),
+      headers: CORS_HEADERS,
     };
   }
 
   return {
     statusCode: 400,
     body: JSON.stringify({ message: "Error settling charge" }),
+    headers: CORS_HEADERS,
   };
 };
 

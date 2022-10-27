@@ -53,9 +53,7 @@ export default class LightningStore {
   }
 
   async updateLnAddress(address: string) {
-    const response = await this._store.api.lightningAPI.updateLnAddress(
-      address
-    );
+    await this._store.api.lightningAPI.updateLnAddress(address);
   }
 
   // Withdrawal using LNURL
