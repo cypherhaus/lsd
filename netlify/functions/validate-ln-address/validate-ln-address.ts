@@ -2,9 +2,10 @@ import { Handler } from "@netlify/functions";
 import axios from "axios";
 
 const CORS_HEADERS = {
+  "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "Origin, X-Requested-With, Content-Type, Accept",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "GET, POST, OPTION",
 };
 
 const handler: Handler = async (event, context) => {
