@@ -13,14 +13,16 @@ const App = observer(() => {
     const session = supabase.auth.session();
     if (session) authStore.setUser(session.user);
 
-    // const subscription = supabase
-    //   .from("payments")
-    //   .on("*", (e) => console.log("called", e))
-    //   .subscribe();
+    const balanceSub = supabase
+      .from(`profiles:id=eq.${authStore.currentUser.id}`)
+      .on("UPDATE", (message) => {
+        lightningStore.setWallet(message.new);
+      })
+      .subscribe();
 
-    // return () => {
-    //   supabase.removeSubscription(subscription);
-    // };
+    return () => {
+      supabase.removeSubscription(balanceSub);
+    };
   }, [authStore]);
 
   useEffect(() => {

@@ -8,9 +8,18 @@ export const Home = () => {
 
   const { lightningView, authStore } = useStore();
 
-  const handleSendClick = () => {
+  const handleSendClick = async () => {
     if (!amount || !username) return;
-    lightningView.handlePayUsername(authStore.currentUser.id, username, amount);
+    const result = await lightningView.handlePayUsername(
+      authStore.currentUser.id,
+      username,
+      amount
+    );
+
+    if (result.success) {
+      setUsername("");
+      setAmount(null);
+    }
   };
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {

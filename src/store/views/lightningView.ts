@@ -11,16 +11,18 @@ export default class LightningView {
   }
 
   // Handle clicking pay user
-  handlePayUsername(
+  async handlePayUsername(
     currentUserId: string,
     sendToUsername: string,
     amount: number
   ) {
-    this._store.lightningStore.payUsername(
+    const response = await this._store.lightningStore.payUsername(
       currentUserId,
       sendToUsername,
       amount
     );
+
+    return response;
   }
 
   // Handle click fund account

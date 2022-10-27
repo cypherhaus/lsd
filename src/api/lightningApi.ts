@@ -23,23 +23,27 @@ export default class LightningApi {
         .eq("username", sendToUsername);
 
       if (response.data?.length) {
-        await supabase.from("payments").insert({
+        const data = await supabase.from("payments").insert({
           debit: amount,
           user_id: currentUserId,
           participant_id: response.data[0].id,
         });
+
+        if (response.status === 200) {
+          return {
+            success: true,
+            data,
+            message: "Successfully sent a payment",
+          };
+        }
       } else {
         console.log("no matching user");
-        return;
+        return { success: false, message: "No Matching User" };
       }
     } catch (err) {
       console.log({ err });
     }
-
-    // add debit for current user id with recipient userid of username
-    // SUPABASE DB FUNCTIONS
-    // update balances
-    // after new payment added, calculate balances again
+    return { success: false, message: "Internal Error" };
   };
 
   // to calculate balance
@@ -48,6 +52,10 @@ export default class LightningApi {
   createCharge = async (sats: string, userId: string) => {
     const amountInMsats = (parseInt(sats) * 1000).toString();
     const chargeId = uuidv4();
+
+    console.log(
+      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/${SETTLE_CHARGE}?id=${chargeId}`
+    );
 
     try {
       const data = await axios.post(
@@ -67,13 +75,11 @@ export default class LightningApi {
         }
       );
 
-      await supabase
-        .from("charges")
-        .insert({
-          id: chargeId,
-          amount: parseInt(amountInMsats) / 1000,
-          user_id: userId,
-        });
+      await supabase.from("charges").insert({
+        id: chargeId,
+        amount: parseInt(amountInMsats) / 1000,
+        user_id: userId,
+      });
 
       if (data) {
         return data.data;

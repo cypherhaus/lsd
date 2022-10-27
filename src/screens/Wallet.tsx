@@ -10,13 +10,6 @@ export const Wallet = observer(() => {
   const [amount, setAmount] = useState<string>("");
 
   useEffect(() => {
-    const balanceSub = supabase
-      .from(`profiles:id=eq.${authStore.currentUser.id}`)
-      .on("UPDATE", (message) => {
-        lightningStore.setWallet(message.new);
-      })
-      .subscribe();
-
     if (lightningStore.charge) {
       const chargeSub = supabase
         .from(`charges:id=eq.${lightningStore.charge.internalId}`)
@@ -30,10 +23,9 @@ export const Wallet = observer(() => {
 
       return () => {
         supabase.removeSubscription(chargeSub);
-        supabase.removeSubscription(balanceSub);
       };
     }
-  }, [lightningStore, lightningStore.charge, authStore]);
+  }, [lightningStore.charge, authStore]);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
@@ -45,16 +37,22 @@ export const Wallet = observer(() => {
     }
   };
 
+  const handleWithdrawClick = () => {};
+
   if (!lightningStore.wallet) return <div>no profile</div>;
 
   return (
     <Screen>
-      <span className="text-2xl">Hello {lightningStore.wallet.username}</span>
       <span className="text-2xl">
-        Balance: {lightningStore.wallet.balance ?? 0} SATS
+        Hello {lightningStore.wallet.username} / danny@zbd.gg
       </span>
-      <div>Withdrawal</div>
-      <div>Transactions</div>
+
+      <button
+        onClick={handleWithdrawClick}
+        className="rounded mt-10 mb-20 p-3 text-white bg-black"
+      >
+        Withdraw
+      </button>
       <input
         onChange={(e) => handleTextChange(e)}
         className="border mr-5"
@@ -64,10 +62,23 @@ export const Wallet = observer(() => {
       ></input>
       <button
         onClick={handleFundClick}
-        className="rounded p-3 text-white bg-black"
+        className="rounded p-3 mt-5 text-white bg-black"
       >
         Fund
       </button>
+      <input
+        onChange={(e) => handleTextChange(e)}
+        className="border mt-10 mr-5"
+        placeholder="Lightning Address"
+        value={amount}
+      ></input>
+      <button
+        onClick={handleFundClick}
+        className="rounded p-3 mt-5 text-white bg-black"
+      >
+        Save
+      </button>
+
       {lightningStore.charge && (
         <QRCode
           style={{ height: "auto", maxWidth: "300px", width: "300px" }}

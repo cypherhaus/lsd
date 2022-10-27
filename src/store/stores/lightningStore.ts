@@ -43,7 +43,13 @@ export default class LightningStore {
     sendToUsername: string,
     amount: number
   ) {
-    this._store.api.lightningAPI.payUser(currentUserId, sendToUsername, amount);
+    const data = await this._store.api.lightningAPI.payUser(
+      currentUserId,
+      sendToUsername,
+      amount
+    );
+
+    return data;
   }
 
   // Withdrawal using LNURL
