@@ -15,11 +15,9 @@ const handler: Handler = async (event, context) => {
       }
     );
 
-    console.log({ data });
-
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Succesfully updated charge" }),
+      body: JSON.stringify({ data }),
     };
   }
 
