@@ -59,22 +59,18 @@ const handler: Handler = async (event, context) => {
       }
     );
 
-    console.log({ data });
-
-    const response = await supabaseClient.from("charges").insert({
+    await supabaseClient.from("charges").insert({
       id: chargeId,
       amount: parseInt(amountInMsats) / 1000,
       user_id: id,
     });
-
-    console.log({ response });
 
     return {
       statusCode: 201,
       headers: CORS_HEADERS,
       body: JSON.stringify({
         message: "Successfully created charge",
-        data,
+        data: { ...data.data },
       }),
     };
   } catch (err) {
