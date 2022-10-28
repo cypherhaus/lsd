@@ -49,7 +49,7 @@ const handler: Handler = async (event, context) => {
 
     console.log(data);
 
-    if (data.data.valid) {
+    if (data.data?.data.valid) {
       const supabaseRes = await supabaseClient
         .from("profiles")
         .update({ ln_address: lnAddress })
