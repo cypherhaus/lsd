@@ -28,8 +28,6 @@ const handler: Handler = async (event, context) => {
         .update({ settled: true })
         .eq("id", internalId);
 
-      console.log("body", event.body);
-
       return {
         statusCode: 200,
         body: JSON.stringify({ message: "Succesfully updated charge" }),
