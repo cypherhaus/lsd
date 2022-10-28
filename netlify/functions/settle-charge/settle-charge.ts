@@ -6,15 +6,28 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_URL ?? "",
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
-  if (event?.queryStringParameters?.id) {
+  if (event?.body) {
+    const { internalId, status } = JSON.parse(event.body);
     // TODO: Double check with ZBD that this is actually settled and not some punter
 
-    console.log({ event });
+    if (status === "expired") {
+      await supabaseClient
+        .from("charges")
+        .update({ expired: true })
+        .eq("id", internalId);
 
-    const response = await supabaseClient
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Succesfully expired charge" }),
+      };
+    }
+
+    await supabaseClient
       .from("charges")
       .update({ settled: true })
-      .eq("id", event?.queryStringParameters?.id);
+      .eq("id", internalId);
+
+    console.log("body", event.body);
 
     return {
       statusCode: 200,
