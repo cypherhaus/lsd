@@ -61,11 +61,13 @@ const handler: Handler = async (event, context) => {
 
     console.log({ data });
 
-    await supabaseClient.from("charges").insert({
+    const response = await supabaseClient.from("charges").insert({
       id: chargeId,
       amount: parseInt(amountInMsats) / 1000,
       user_id: id,
     });
+
+    console.log({ response });
 
     return {
       statusCode: 201,
