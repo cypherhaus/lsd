@@ -59,6 +59,8 @@ const handler: Handler = async (event, context) => {
       }
     );
 
+    console.log({ data });
+
     await supabaseClient.from("charges").insert({
       id: chargeId,
       amount: parseInt(amountInMsats) / 1000,
