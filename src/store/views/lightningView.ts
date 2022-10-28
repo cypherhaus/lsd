@@ -25,8 +25,8 @@ export default class LightningView {
     return response;
   }
 
-  async updateLnAddress(address: string) {
-    await this._store.lightningStore.updateLnAddress(address);
+  async updateLnAddress(address: string, id: string) {
+    await this._store.lightningStore.updateLnAddress(address, id);
 
     // return response;
   }

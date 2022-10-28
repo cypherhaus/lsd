@@ -47,13 +47,15 @@ const handler: Handler = async (event, context) => {
       }
     );
 
-    console.log(data.data);
+    console.log(data);
 
     if (data.data.valid) {
-      await supabaseClient
+      const supabaseRes = await supabaseClient
         .from("profiles")
         .update({ ln_address: lnAddress })
         .eq("id", id);
+
+      console.log({ supabaseRes });
 
       return {
         statusCode: 200,

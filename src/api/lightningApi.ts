@@ -10,10 +10,10 @@ export default class LightningApi {
     return data?.data?.[0];
   };
 
-  updateLnAddress = async (lnAddress: string) => {
+  updateLnAddress = async (lnAddress: string, id: string) => {
     if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/validate-ln-address?lnAddress=${lnAddress}`
+      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/update-ln-address?lnAddress=${lnAddress}&id=${id}`
     );
 
     console.log({ response });

@@ -45,7 +45,7 @@ export const Wallet = observer(() => {
   const handleWithdrawClick = () => {};
 
   const handleSaveLnAddress = () => {
-    lightningView.updateLnAddress(lnAddress);
+    lightningView.updateLnAddress(lnAddress, authStore.currentUser.id);
   };
 
   if (!lightningStore.wallet) return <div>no profile</div>;
