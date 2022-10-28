@@ -42,7 +42,7 @@ const handler: Handler = async (event, context) => {
     const amountInMsats = (parseInt(amount) * 1000).toString();
     const chargeId = uuidv4();
 
-    await axios.post(
+    const data = await axios.post(
       "https://api.zebedee.io/v0/charges",
       {
         expiresIn: 300,
@@ -59,7 +59,7 @@ const handler: Handler = async (event, context) => {
       }
     );
 
-    const response = await supabaseClient.from("charges").insert({
+    await supabaseClient.from("charges").insert({
       id: chargeId,
       amount: parseInt(amountInMsats) / 1000,
       user_id: id,
@@ -69,15 +69,15 @@ const handler: Handler = async (event, context) => {
       statusCode: 201,
       headers: CORS_HEADERS,
       body: JSON.stringify({
-        message: "Successfully added lightning address",
-        data: response,
+        message: "Successfully created charge",
+        data,
       }),
     };
   } catch (err) {
     return {
       statusCode: 500,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ message: "Error processing ln address" }),
+      body: JSON.stringify({ message: "Error creating charge" }),
     };
   }
 };

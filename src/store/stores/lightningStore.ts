@@ -30,11 +30,9 @@ export default class LightningStore {
   }
 
   async createCharge(amount: string, userId: string) {
-    const data = await this._store.api.lightningAPI.createCharge(
-      amount,
-      userId
-    );
-    if (data?.data) this.charge = data?.data;
+    await this._store.api.lightningAPI.createCharge(amount, userId);
+
+    // if (data?.data) this.charge = data?.data;
   }
 
   // Pay a user by username

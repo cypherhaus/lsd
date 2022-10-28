@@ -58,10 +58,23 @@ export default class LightningApi {
   };
 
   createCharge = async (sats: string, userId: string) => {
-    try {
-      // call new netlify
+    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
 
-      return { data: { data: {} } };
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVERLESS_BASE_URL}/create-charge?amount=${sats}&id=${userId}`
+      );
+
+      console.log({ response });
+
+      if (response.status === 201) {
+        return {
+          success: true,
+          message: "Successfully added lightning address",
+        };
+      }
+
+      return { success: false, message: "Failed to add lightning address" };
     } catch (err) {
       console.log({ err });
     }
