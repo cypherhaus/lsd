@@ -45,7 +45,7 @@ const handler: Handler = async (event, context) => {
     const data = await axios.post(
       "https://api.zebedee.io/v0/charges",
       {
-        expiresIn: 30,
+        expiresIn: 2000,
         amount: amountInMsats,
         description: "-",
         internalId: chargeId,
