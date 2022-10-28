@@ -65,16 +65,7 @@ export default class LightningApi {
         `${process.env.REACT_APP_SERVERLESS_BASE_URL}/create-charge?amount=${sats}&id=${userId}`
       );
 
-      console.log({ response });
-
-      if (response.status === 201) {
-        return {
-          success: true,
-          message: "Successfully added lightning address",
-        };
-      }
-
-      return { success: false, message: "Failed to add lightning address" };
+      return response.data;
     } catch (err) {
       console.log({ err });
     }

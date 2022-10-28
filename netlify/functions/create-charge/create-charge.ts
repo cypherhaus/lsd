@@ -70,7 +70,7 @@ const handler: Handler = async (event, context) => {
       headers: CORS_HEADERS,
       body: JSON.stringify({
         message: "Successfully created charge",
-        data: { ...data.data },
+        ...data.data,
       }),
     };
   } catch (err) {
