@@ -47,6 +47,8 @@ const handler: Handler = async (event, context) => {
       }
     );
 
+    console.log(data.data);
+
     if (data.data.valid) {
       await supabaseClient
         .from("profiles")
@@ -56,7 +58,9 @@ const handler: Handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
-        body: JSON.stringify(data.data),
+        body: JSON.stringify({
+          message: "Successfully added lightning address",
+        }),
       };
     } else {
       return {
