@@ -13,6 +13,8 @@ const App = observer(() => {
     const session = supabase.auth.session();
     if (session) authStore.setUser(session.user);
 
+    if (!authStore.currentUser) return;
+
     const balanceSub = supabase
       .from(`profiles:id=eq.${authStore.currentUser.id}`)
       .on("UPDATE", (message) => {

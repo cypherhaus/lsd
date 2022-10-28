@@ -9,14 +9,12 @@ const handler: Handler = async (event, context) => {
   if (event?.queryStringParameters?.id) {
     // TODO: Double check with ZBD that this is actually settled and not some punter
 
-    console.log({ context });
+    console.log({ event });
 
     const response = await supabaseClient
       .from("charges")
       .update({ settled: true })
       .eq("id", event?.queryStringParameters?.id);
-
-    console.log({ response });
 
     return {
       statusCode: 200,
