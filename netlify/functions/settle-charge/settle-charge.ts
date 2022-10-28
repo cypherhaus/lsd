@@ -22,17 +22,19 @@ const handler: Handler = async (event, context) => {
       };
     }
 
-    await supabaseClient
-      .from("charges")
-      .update({ settled: true })
-      .eq("id", internalId);
+    if (status === "completed") {
+      await supabaseClient
+        .from("charges")
+        .update({ settled: true })
+        .eq("id", internalId);
 
-    console.log("body", event.body);
+      console.log("body", event.body);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Succesfully updated charge" }),
-    };
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Succesfully updated charge" }),
+      };
+    }
   }
 
   return {
