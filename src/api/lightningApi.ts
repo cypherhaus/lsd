@@ -13,15 +13,7 @@ export default class LightningApi {
   updateLnAddress = async (lnAddress: string) => {
     if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
     const response = await axios.get(
-      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/validate-ln-address?lnAddress=${lnAddress}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Methods": "GET, POST, OPTION",
-        },
-      }
+      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/validate-ln-address?lnAddress=${lnAddress}`
     );
 
     console.log({ response });
