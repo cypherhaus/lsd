@@ -49,7 +49,7 @@ const handler: Handler = async (event, context) => {
         amount: amountInMsats,
         description: "-",
         internalId: chargeId,
-        callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/create-charge?id=${chargeId}`,
+        callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/settle-charge?id=${chargeId}`,
       },
       {
         headers: {

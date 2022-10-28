@@ -9,6 +9,8 @@ const handler: Handler = async (event, context) => {
   if (event?.queryStringParameters?.id) {
     // TODO: Double check with ZBD that this is actually settled and not some punter
 
+    console.log({ context });
+
     const response = await supabaseClient
       .from("charges")
       .update({ settled: true })
