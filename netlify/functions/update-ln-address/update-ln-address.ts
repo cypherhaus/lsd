@@ -47,18 +47,14 @@ const handler: Handler = async (event, context) => {
       }
     );
 
-    console.log(data);
-
     if (data.data?.data.valid) {
-      const supabaseRes = await supabaseClient
+      await supabaseClient
         .from("profiles")
         .update({ ln_address: lnAddress })
         .eq("id", id);
 
-      console.log({ supabaseRes });
-
       return {
-        statusCode: 200,
+        statusCode: 201,
         headers: CORS_HEADERS,
         body: JSON.stringify({
           message: "Successfully added lightning address",
