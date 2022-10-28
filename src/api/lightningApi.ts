@@ -1,8 +1,6 @@
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 
 import { supabase } from "../config/supabase";
-import { SETTLE_CHARGE } from "../constants/endpoints";
 export default class LightningApi {
   fetchWallet = async (userId: string) => {
     const data = await supabase.from("profiles").select().eq("id", userId);
@@ -16,15 +14,19 @@ export default class LightningApi {
       `${process.env.REACT_APP_SERVERLESS_BASE_URL}/update-ln-address?lnAddress=${lnAddress}&id=${id}`
     );
 
-    console.log({ response });
+    if (response.status === 201) {
+      return { success: true, message: "Successfully added lightning address" };
+    }
+
+    return { success: false, message: "Failed to add lightning address" };
   };
 
+  // Todo - Add RLS
   payUser = async (
     currentUserId: string,
     sendToUsername: string,
     amount: number
   ) => {
-    // CLIENT SIDE
     try {
       const response = await supabase
         .from("profiles")
@@ -56,40 +58,10 @@ export default class LightningApi {
   };
 
   createCharge = async (sats: string, userId: string) => {
-    const amountInMsats = (parseInt(sats) * 1000).toString();
-    const chargeId = uuidv4();
-
-    console.log(
-      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/${SETTLE_CHARGE}?id=${chargeId}`
-    );
-
     try {
-      const data = await axios.post(
-        "https://api.zebedee.io/v0/charges",
-        {
-          expiresIn: 300,
-          amount: amountInMsats,
-          description: "-",
-          internalId: chargeId,
-          callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/${SETTLE_CHARGE}?id=${chargeId}`,
-        },
-        {
-          headers: {
-            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // call new netlify
 
-      await supabase.from("charges").insert({
-        id: chargeId,
-        amount: parseInt(amountInMsats) / 1000,
-        user_id: userId,
-      });
-
-      if (data) {
-        return data.data;
-      }
+      return { data: { data: {} } };
     } catch (err) {
       console.log({ err });
     }

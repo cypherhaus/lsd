@@ -26,9 +26,12 @@ export default class LightningView {
   }
 
   async updateLnAddress(address: string, id: string) {
-    await this._store.lightningStore.updateLnAddress(address, id);
+    const response = await this._store.lightningStore.updateLnAddress(
+      address,
+      id
+    );
 
-    // return response;
+    return response;
   }
 
   // Handle click fund account
