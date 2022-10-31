@@ -1,4 +1,5 @@
 import { Handler } from "@netlify/functions";
+import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
 const CORS_HEADERS = {
@@ -9,6 +10,10 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
+  const supabaseClient = createClient(
+    process.env.REACT_APP_SUPABASE_URL ?? "",
+    process.env.REACT_APP_SUPABASE_KEY ?? ""
+  );
   if (event.httpMethod === "OPTION") {
     return {
       statusCode: 200,
@@ -18,7 +23,8 @@ const handler: Handler = async (event, context) => {
 
   if (
     !event?.queryStringParameters?.lnAddress ||
-    !event?.queryStringParameters?.amount
+    !event?.queryStringParameters?.amount ||
+    !event?.queryStringParameters?.userId
   ) {
     return {
       statusCode: 400,
@@ -30,24 +36,31 @@ const handler: Handler = async (event, context) => {
   }
 
   try {
-    const { lnAddress, amount } = event?.queryStringParameters;
+    const { lnAddress, amount, userId } = event?.queryStringParameters;
 
-    const data = await axios.post(
-      `https://api.zebedee.io/v0/ln-address/send-payment`,
-      {
-        lnAddress,
-        amount: parseInt(amount) * 1000,
-        comment: "Withdraw from Supa ZBD",
-      },
-      {
-        headers: {
-          apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const balanceCheck = await supabaseClient
+      .from("profiles")
+      .select()
+      .eq("id", userId);
 
-    console.log({ data });
+    console.log({ balanceCheck });
+
+    // const data = await axios.post(
+    //   `https://api.zebedee.io/v0/ln-address/send-payment`,
+    //   {
+    //     lnAddress,
+    //     amount: parseInt(amount) * 1000,
+    //     comment: "Withdraw from Supa ZBD",
+    //   },
+    //   {
+    //     headers: {
+    //       apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+
+    // console.log({ data });
 
     return {
       statusCode: 200,
