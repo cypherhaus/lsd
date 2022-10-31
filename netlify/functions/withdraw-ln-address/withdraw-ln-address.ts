@@ -43,8 +43,6 @@ const handler: Handler = async (event, context) => {
       .select()
       .eq("id", userId);
 
-    console.log({ balanceCheck });
-
     // const data = await axios.post(
     //   `https://api.zebedee.io/v0/ln-address/send-payment`,
     //   {
@@ -67,6 +65,7 @@ const handler: Handler = async (event, context) => {
       headers: CORS_HEADERS,
       body: JSON.stringify({
         message: "Successfully withdrawn to lightning address",
+        ...balanceCheck.data,
       }),
     };
   } catch (err) {
