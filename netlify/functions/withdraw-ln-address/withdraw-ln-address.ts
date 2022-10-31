@@ -73,46 +73,54 @@ const handler: Handler = async (event, context) => {
         debit: amount,
       });
 
-      //   const data = await axios.post(
-      //     `https://api.zebedee.io/v0/ln-address/send-payment`,
-      //     {
-      //       lnAddress,
-      //       amount: parseInt(amount) * 1000,
-      //       comment: "Withdraw from Supa ZBD",
-      //     },
-      //     {
-      //       headers: {
-      //         apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   );
-
-      if (settlement.data) {
-        const update = await supabaseClient
-          .from("settlements")
-          .update({
-            is_complete: true,
-          })
-          .eq("id", settlement.data[0].id);
-
+      if (!settlement.data) {
         return {
-          statusCode: 200,
+          statusCode: 500,
           headers: CORS_HEADERS,
           body: JSON.stringify({
-            message: "Update",
-            ...update,
+            message: "Internal Server Error",
           }),
         };
       }
+
+      const data = await axios.post(
+        `https://api.zebedee.io/v0/ln-address/send-payment`,
+        {
+          lnAddress,
+          amount: parseInt(amount) * 1000,
+          comment: "Withdraw from Supa ZBD",
+        },
+        {
+          headers: {
+            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!data.data) {
+        return {
+          statusCode: 500,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({
+            message: "Internal Server Error",
+          }),
+        };
+      }
+
+      await supabaseClient
+        .from("settlements")
+        .update({
+          is_complete: true,
+        })
+        .eq("id", settlement.data[0].id);
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Here",
-          //   message: "Successfully withdrawn sats",
-          ...settlement,
+          message: "Successfully withdrawn sats",
+          settlementId: settlement.data[0].id,
         }),
       };
     }
