@@ -65,32 +65,53 @@ const handler: Handler = async (event, context) => {
     }
 
     if (balance > parseInt(amount)) {
-      const lnAddress = balanceCheck.data[0].ln_address;
+      const lnAddress = balance.ln_address;
 
-      const data = await axios.post(
-        `https://api.zebedee.io/v0/ln-address/send-payment`,
-        {
-          lnAddress,
-          amount: parseInt(amount) * 1000,
-          comment: "Withdraw from Supa ZBD",
-        },
-        {
-          headers: {
-            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const settlement = await supabaseClient.from("settlements").insert({
+        type: "WITHDRAW",
+        user_id: userId,
+        debit: amount,
+      });
+
+      //   const data = await axios.post(
+      //     `https://api.zebedee.io/v0/ln-address/send-payment`,
+      //     {
+      //       lnAddress,
+      //       amount: parseInt(amount) * 1000,
+      //       comment: "Withdraw from Supa ZBD",
+      //     },
+      //     {
+      //       headers: {
+      //         apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+      //         "Content-Type": "application/json",
+      //       },
+      //     }
+      //   );
+
+      //   if (data.data.success) {
+      //     supabaseClient.from("settlements").update({
+      //    is_complete: true
+      //       });
+      //   }
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Sufficient Balance",
-          ...data.data,
+          message: "Settlement",
+          //   message: "Successfully withdrawn sats",
+          ...settlement,
         }),
       };
     }
+
+    return {
+      statusCode: 500,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({
+        message: "Server Error",
+      }),
+    };
   } catch (err) {
     return {
       statusCode: 500,
