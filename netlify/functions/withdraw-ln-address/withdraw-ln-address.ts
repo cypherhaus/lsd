@@ -22,7 +22,6 @@ const handler: Handler = async (event, context) => {
   }
 
   if (
-    !event?.queryStringParameters?.lnAddress ||
     !event?.queryStringParameters?.amount ||
     !event?.queryStringParameters?.userId
   ) {
@@ -66,7 +65,6 @@ const handler: Handler = async (event, context) => {
     }
 
     if (balance > parseInt(amount)) {
-      const balance = balanceCheck.data[0].balance;
       const lnAddress = balanceCheck.data[0].ln_address;
 
       const data = await axios.post(
