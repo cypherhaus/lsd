@@ -98,6 +98,8 @@ const handler: Handler = async (event, context) => {
         }
       );
 
+      console.log({ data });
+
       if (!data.data) {
         return {
           statusCode: 500,
