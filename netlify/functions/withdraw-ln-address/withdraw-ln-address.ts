@@ -65,7 +65,7 @@ const handler: Handler = async (event, context) => {
     }
 
     if (balance > parseInt(amount)) {
-      const lnAddress = balance.ln_address;
+      const lnAddress = balance.data[0].ln_address;
 
       const settlement = await supabaseClient.from("settlements").insert({
         type: "WITHDRAW",
