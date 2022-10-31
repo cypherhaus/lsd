@@ -21,6 +21,14 @@ export default class LightningApi {
     return { success: false, message: "Failed to add lightning address" };
   };
 
+  withdrawToAddress = async () => {
+    // send user id to serveles function
+    // Get the wallet and ln address
+    // Check the balance is enough
+    // Initiate the withdraw with zbd
+    // Update supabase with a withdrawl settlement credit
+  };
+
   // Todo - Add RLS
   payUser = async (
     currentUserId: string,
