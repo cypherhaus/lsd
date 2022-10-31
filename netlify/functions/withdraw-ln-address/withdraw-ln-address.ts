@@ -43,14 +43,36 @@ const handler: Handler = async (event, context) => {
       .select()
       .eq("id", userId);
 
-    if (balanceCheck.data) {
+    if (!balanceCheck.data) {
+      return {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Failed to get balance",
+        }),
+      };
+    }
+
+    const balance = balanceCheck.data[0].balance;
+
+    if (balance < parseInt(amount)) {
+      return {
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Insufficient balance",
+        }),
+      };
+    }
+
+    if (balance > parseInt(amount)) {
       const balance = balanceCheck.data[0].balance;
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Successfully withdrawn to lightning address",
+          message: "Has enough balance",
           balance,
         }),
       };
