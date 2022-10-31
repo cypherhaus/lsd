@@ -88,11 +88,14 @@ const handler: Handler = async (event, context) => {
       //     }
       //   );
 
-      //   if (data.data.success) {
-      //     supabaseClient.from("settlements").update({
-      //    is_complete: true
-      //       });
-      //   }
+      if (settlement.data) {
+        supabaseClient
+          .from("settlements")
+          .update({
+            is_complete: true,
+          })
+          .eq("id", settlement.data[0].id);
+      }
 
       return {
         statusCode: 200,
