@@ -89,19 +89,28 @@ const handler: Handler = async (event, context) => {
       //   );
 
       if (settlement.data) {
-        supabaseClient
+        const update = await supabaseClient
           .from("settlements")
           .update({
             is_complete: true,
           })
           .eq("id", settlement.data[0].id);
+
+        return {
+          statusCode: 200,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({
+            message: "Update",
+            ...update,
+          }),
+        };
       }
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Settlement",
+          message: "Here",
           //   message: "Successfully withdrawn sats",
           ...settlement,
         }),
