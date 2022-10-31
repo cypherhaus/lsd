@@ -43,6 +43,19 @@ const handler: Handler = async (event, context) => {
       .select()
       .eq("id", userId);
 
+    if (balanceCheck.data) {
+      const balance = balanceCheck.data[0].balance;
+
+      return {
+        statusCode: 200,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Successfully withdrawn to lightning address",
+          balance,
+        }),
+      };
+    }
+
     // const data = await axios.post(
     //   `https://api.zebedee.io/v0/ln-address/send-payment`,
     //   {
@@ -59,15 +72,6 @@ const handler: Handler = async (event, context) => {
     // );
 
     // console.log({ data });
-
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        message: "Successfully withdrawn to lightning address",
-        ...balanceCheck.data,
-      }),
-    };
   } catch (err) {
     return {
       statusCode: 500,
