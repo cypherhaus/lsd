@@ -36,7 +36,7 @@ const handler: Handler = async (event, context) => {
   }
 
   try {
-    const { lnAddress, amount, userId } = event?.queryStringParameters;
+    const { amount, userId } = event?.queryStringParameters;
 
     const balanceCheck = await supabaseClient
       .from("profiles")
@@ -67,33 +67,32 @@ const handler: Handler = async (event, context) => {
 
     if (balance > parseInt(amount)) {
       const balance = balanceCheck.data[0].balance;
+      const lnAddress = balanceCheck.data[0].ln_address;
+
+      const data = await axios.post(
+        `https://api.zebedee.io/v0/ln-address/send-payment`,
+        {
+          lnAddress,
+          amount: parseInt(amount) * 1000,
+          comment: "Withdraw from Supa ZBD",
+        },
+        {
+          headers: {
+            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Has enough balance",
-          balance,
+          message: "Sufficient Balance",
+          ...data.data,
         }),
       };
     }
-
-    // const data = await axios.post(
-    //   `https://api.zebedee.io/v0/ln-address/send-payment`,
-    //   {
-    //     lnAddress,
-    //     amount: parseInt(amount) * 1000,
-    //     comment: "Withdraw from Supa ZBD",
-    //   },
-    //   {
-    //     headers: {
-    //       apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-    //       "Content-Type": "application/json",
-    //     },
-    //   }
-    // );
-
-    // console.log({ data });
   } catch (err) {
     return {
       statusCode: 500,
