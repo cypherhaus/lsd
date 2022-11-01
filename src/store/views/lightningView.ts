@@ -4,6 +4,8 @@ import { Store } from "../store";
 export default class LightningView {
   private _store: Store;
 
+  withdrawAmount: string = "";
+
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
 
@@ -32,6 +34,19 @@ export default class LightningView {
     );
 
     return response;
+  }
+
+  setWithdrawAmount = (value: string) => {
+    this.withdrawAmount = value;
+  };
+
+  async handleWithdrawClick(id: string) {
+    const response = await this._store.lightningStore.withdraw(
+      this.withdrawAmount,
+      id
+    );
+    console.log({ response });
+    this.withdrawAmount = "";
   }
 
   // Handle click fund account

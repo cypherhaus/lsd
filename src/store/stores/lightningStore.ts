@@ -63,7 +63,14 @@ export default class LightningStore {
   }
 
   // Withdrawal using LNURL
-  async withdraw() {}
+  async withdraw(amount: string, id: string) {
+    const response = await this._store.api.lightningAPI.withdrawToAddress(
+      amount,
+      id
+    );
+
+    return response?.success;
+  }
 
   // Create bolt12 invoice
   async generateInvoice() {}

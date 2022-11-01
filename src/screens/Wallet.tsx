@@ -42,8 +42,6 @@ export const Wallet = observer(() => {
     }
   };
 
-  const handleWithdrawClick = () => {};
-
   const handleSaveLnAddress = async () => {
     const result = await lightningView.updateLnAddress(
       lnAddress,
@@ -63,8 +61,17 @@ export const Wallet = observer(() => {
         {lightningStore.wallet.ln_address ?? "no ln address"}
       </span>
 
+      <input
+        onChange={(e) => lightningView.setWithdrawAmount(e.target.value)}
+        className="border mr-5"
+        placeholder="Amount"
+        type="number"
+        value={lightningView.withdrawAmount}
+      ></input>
       <button
-        onClick={handleWithdrawClick}
+        onClick={() =>
+          lightningView.handleWithdrawClick(authStore.currentUser.id)
+        }
         className="rounded mt-10 mb-20 p-3 text-white bg-black"
       >
         Withdraw

@@ -21,12 +21,22 @@ export default class LightningApi {
     return { success: false, message: "Failed to add lightning address" };
   };
 
-  withdrawToAddress = async () => {
-    // send user id to serveles function
-    // Get the wallet and ln address
-    // Check the balance is enough
-    // Initiate the withdraw with zbd
-    // Update supabase with a withdrawl settlement credit
+  withdrawToAddress = async (amount: string, id: string) => {
+    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVERLESS_BASE_URL}/withdraw-ln-address?amount=${amount}&userId=${id}`
+      );
+
+      if (response.status === 200) {
+        return { success: true, message: "Successful withdrawal" };
+      }
+    } catch (err) {
+      console.log({ err });
+      return { success: false, message: "Failed to withdraw" };
+    }
+    return { success: false, message: "Failed to withdraw" };
   };
 
   // Todo - Add RLS
