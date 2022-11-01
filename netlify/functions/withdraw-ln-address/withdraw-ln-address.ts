@@ -9,6 +9,11 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Methods": "GET, POST, OPTION",
 };
 
+// Todo for withdraws
+// Debug not withdrawing issue
+// Don't add a settlement before zbd withdraw, add a "withdrawal" table
+// Remove is_complete
+
 const handler: Handler = async (event, context) => {
   const supabaseClient = createClient(
     process.env.REACT_APP_SUPABASE_URL ?? "",
@@ -67,13 +72,12 @@ const handler: Handler = async (event, context) => {
     if (balance > parseInt(amount)) {
       const lnAddress = balance.data[0].ln_address;
 
-      const settlement = await supabaseClient.from("settlements").insert({
-        type: "WITHDRAW",
+      const withdrawal = await supabaseClient.from("withdrawals").insert({
         user_id: userId,
-        debit: amount,
+        amount,
       });
 
-      if (!settlement.data) {
+      if (!withdrawal.data) {
         return {
           statusCode: 500,
           headers: CORS_HEADERS,
