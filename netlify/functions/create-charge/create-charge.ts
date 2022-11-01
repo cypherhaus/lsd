@@ -42,6 +42,12 @@ const handler: Handler = async (event, context) => {
     const amountInMsats = (parseInt(amount) * 1000).toString();
     const chargeId = uuidv4();
 
+    await supabaseClient.from("charges").insert({
+      id: chargeId,
+      amount: parseInt(amountInMsats) / 1000,
+      user_id: id,
+    });
+
     const data = await axios.post(
       "https://api.zebedee.io/v0/charges",
       {
@@ -58,12 +64,6 @@ const handler: Handler = async (event, context) => {
         },
       }
     );
-
-    await supabaseClient.from("charges").insert({
-      id: chargeId,
-      amount: parseInt(amountInMsats) / 1000,
-      user_id: id,
-    });
 
     return {
       statusCode: 201,

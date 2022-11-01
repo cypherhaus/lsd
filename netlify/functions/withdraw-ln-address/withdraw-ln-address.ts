@@ -107,8 +107,6 @@ const handler: Handler = async (event, context) => {
         };
       }
 
-      console.log({ withdrawal: withdrawal.data });
-
       await supabaseClient
         .from("withdrawals")
         .update({
