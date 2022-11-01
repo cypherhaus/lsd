@@ -75,8 +75,11 @@ const handler: Handler = async (event, context) => {
     if (balance > parseInt(amount)) {
       const withdrawal = await supabaseClient.from("withdrawals").insert({
         user_id: userId,
+        ln_address: balanceCheck.data.ln_address,
         amount,
       });
+
+      console.log({ withdrawal });
 
       if (!withdrawal.data) {
         return {
