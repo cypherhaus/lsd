@@ -9,11 +9,6 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Methods": "GET, POST, OPTION",
 };
 
-// Todo for withdraws
-// Debug not withdrawing issue
-// Don't add a settlement before zbd withdraw, add a "withdrawal" table
-// Remove is_complete
-
 const handler: Handler = async (event, context) => {
   const supabaseClient = createClient(
     process.env.REACT_APP_SUPABASE_URL ?? "",
