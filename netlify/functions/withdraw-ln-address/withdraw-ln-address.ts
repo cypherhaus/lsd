@@ -73,8 +73,6 @@ const handler: Handler = async (event, context) => {
     }
 
     if (balance > parseInt(amount)) {
-      const lnAddress = balance.data.ln_address;
-
       const withdrawal = await supabaseClient.from("withdrawals").insert({
         user_id: userId,
         amount,
@@ -93,7 +91,7 @@ const handler: Handler = async (event, context) => {
       const data = await axios.post(
         `https://api.zebedee.io/v0/ln-address/send-payment`,
         {
-          lnAddress,
+          lnAddress: balanceCheck.data.ln_address,
           amount: parseInt(amount) * 1000,
           comment: "Withdraw from Supa ZBD",
         },
