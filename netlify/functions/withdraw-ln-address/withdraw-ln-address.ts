@@ -44,8 +44,11 @@ const handler: Handler = async (event, context) => {
 
     const balanceCheck = await supabaseClient
       .from("profiles")
-      .select()
-      .eq("id", userId);
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    console.log({ balanceCheck });
 
     if (!balanceCheck.data) {
       return {
@@ -57,7 +60,7 @@ const handler: Handler = async (event, context) => {
       };
     }
 
-    const balance = balanceCheck.data[0].balance;
+    const balance = balanceCheck.data.balance;
 
     if (balance < parseInt(amount)) {
       return {
@@ -70,7 +73,7 @@ const handler: Handler = async (event, context) => {
     }
 
     if (balance > parseInt(amount)) {
-      const lnAddress = balance.data[0].ln_address;
+      const lnAddress = balance.data.ln_address;
 
       const withdrawal = await supabaseClient.from("withdrawals").insert({
         user_id: userId,
