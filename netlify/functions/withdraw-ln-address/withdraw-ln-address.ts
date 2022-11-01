@@ -48,8 +48,6 @@ const handler: Handler = async (event, context) => {
       .eq("id", userId)
       .single();
 
-    console.log({ balanceCheck });
-
     if (!balanceCheck.data) {
       return {
         statusCode: 500,
@@ -79,8 +77,6 @@ const handler: Handler = async (event, context) => {
         amount,
       });
 
-      console.log({ withdrawal });
-
       if (!withdrawal.data) {
         return {
           statusCode: 500,
@@ -106,8 +102,6 @@ const handler: Handler = async (event, context) => {
         }
       );
 
-      console.log({ data });
-
       if (!data.data) {
         return {
           statusCode: 500,
@@ -118,10 +112,12 @@ const handler: Handler = async (event, context) => {
         };
       }
 
+      console.log({ withdrawal: withdrawal.data });
+
       await supabaseClient
-        .from("settlements")
+        .from("withdrawals")
         .update({
-          is_complete: true,
+          settled: true,
         })
         .eq("id", withdrawal.data[0].id);
 
