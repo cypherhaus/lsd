@@ -119,14 +119,14 @@ const handler: Handler = async (event, context) => {
         .update({
           is_complete: true,
         })
-        .eq("id", settlement.data[0].id);
+        .eq("id", withdrawal.data[0].id);
 
       return {
         statusCode: 200,
         headers: CORS_HEADERS,
         body: JSON.stringify({
           message: "Successfully withdrawn sats",
-          settlementId: settlement.data[0].id,
+          settlementId: withdrawal.data[0].id,
         }),
       };
     }
