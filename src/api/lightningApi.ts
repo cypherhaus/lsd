@@ -102,7 +102,13 @@ export default class LightningApi {
   createCharge = async (sats: string, userId: string) => {
     try {
       const response = await this.api.get(
-        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`
+        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`,
+        {
+          headers: {
+            "Test-Header": "test-value",
+            Authorization: "test-valuez",
+          },
+        }
       );
 
       return response.data;
