@@ -2,6 +2,7 @@ import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import queryString from "query-string";
 // import jwt from "jsonwebtoken";
 
 const CORS_HEADERS = {
@@ -26,7 +27,8 @@ const handler: Handler = async (event, context) => {
 
   console.log(event.body);
   console.log(typeof event.body);
-  console.log(JSON.parse(event.body ? event.body : ""));
+  const params = queryString.parse(event.body ?? "");
+  console.log({ params });
 
   if (
     !event?.queryStringParameters?.amount ||

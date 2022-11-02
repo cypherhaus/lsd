@@ -19,6 +19,7 @@
     "mobx": "^6.6.2",
     "mobx-react-lite": "^3.4.0",
     "postcss": "^8.4.16",
+    "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-animated-number": "^0.4.4",
     "react-dom": "^18.2.0",
