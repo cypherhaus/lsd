@@ -12,9 +12,6 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
-  console.log({ event: event.headers.Authorization });
-  // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
-
   const supabaseClient = createClient(
     process.env.REACT_APP_SUPABASE_URL ?? "",
     process.env.REACT_APP_SUPABASE_KEY ?? ""
@@ -39,6 +36,9 @@ const handler: Handler = async (event, context) => {
       }),
     };
   }
+
+  console.log({ event: event });
+  // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
 
   const { amount, id } = event?.queryStringParameters;
 
