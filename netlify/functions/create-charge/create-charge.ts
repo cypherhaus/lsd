@@ -26,18 +26,21 @@ const handler: Handler = async (event, context) => {
 
   if (
     !event?.queryStringParameters?.amount ||
-    !event?.queryStringParameters?.id
+    !event?.queryStringParameters?.id ||
+    !event.body
   ) {
     return {
       statusCode: 400,
       headers: CORS_HEADERS,
       body: JSON.stringify({
-        message: "Must provide a user id and lightning address",
+        message: "Must provide a user id, lightning address and token",
       }),
     };
   }
 
-  console.log({ event });
+  const token = JSON.parse(event.body).token;
+
+  console.log("token", token);
   // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
 
   const { amount, id } = event?.queryStringParameters;
