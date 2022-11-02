@@ -19,13 +19,14 @@ export default class AuthStore {
     try {
       // Todo fix type
       // @ts-ignore
-      const { user } = await this._store.api.authAPI.signUp(
+      const { user, session } = await this._store.api.authAPI.signUp(
         email,
         username,
         password
       );
-      console.log({ user });
       this.currentUser = user;
+
+      this._store.api.lightningAPI.setToken(session.access_token);
       return user.id;
     } catch (err) {
       console.log("Error signing up user", username);
@@ -39,8 +40,12 @@ export default class AuthStore {
     try {
       // Todo fix type
       // @ts-ignore
-      const { user } = await this._store.api.authAPI.login(email, password);
+      const { user, session } = await this._store.api.authAPI.login(
+        email,
+        password
+      );
       this.currentUser = user;
+      this._store.api.lightningAPI.setToken(session.access_token);
     } catch (err) {
       console.log("Error logging in user", email);
     }
@@ -53,6 +58,8 @@ export default class AuthStore {
         this.currentUser = null;
       });
       await this._store.lightningStore.clearWallet();
+
+      this._store.api.lightningAPI.clearToken();
       window.open("/");
     } catch (err) {
       console.log({ err });

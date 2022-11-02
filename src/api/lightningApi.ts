@@ -1,7 +1,33 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 import { supabase } from "../config/supabase";
+import {
+  BASE_URL,
+  CREATE_CHARGE,
+  UPDATE_LN_ADDRESS,
+  WITHDRAW_LN_ADDRESS,
+} from "../constants/endpoints";
+
 export default class LightningApi {
+  private api: AxiosInstance;
+
+  constructor() {
+    this.api = axios.create({
+      baseURL: BASE_URL,
+      headers: {},
+      timeout: 15000,
+    });
+  }
+
+  setToken = (token: string) => {
+    this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    console.log(this.api.defaults.headers);
+  };
+
+  clearToken = () => {
+    this.api.defaults.headers.common.Authorization = ``;
+  };
+
   fetchWallet = async (userId: string) => {
     const data = await supabase.from("profiles").select().eq("id", userId);
 
@@ -9,9 +35,8 @@ export default class LightningApi {
   };
 
   updateLnAddress = async (lnAddress: string, id: string) => {
-    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
-    const response = await axios.get(
-      `${process.env.REACT_APP_SERVERLESS_BASE_URL}/update-ln-address?lnAddress=${lnAddress}&id=${id}`
+    const response = await this.api.get(
+      `/${UPDATE_LN_ADDRESS}?lnAddress=${lnAddress}&id=${id}`
     );
 
     if (response.status === 201) {
@@ -22,11 +47,9 @@ export default class LightningApi {
   };
 
   withdrawToAddress = async (amount: string, id: string) => {
-    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
-
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVERLESS_BASE_URL}/withdraw-ln-address?amount=${amount}&userId=${id}`
+      const response = await this.api.get(
+        `/${WITHDRAW_LN_ADDRESS}?amount=${amount}&userId=${id}`
       );
 
       if (response.status === 200) {
@@ -39,7 +62,6 @@ export default class LightningApi {
     return { success: false, message: "Failed to withdraw" };
   };
 
-  // Todo - Add RLS
   payUser = async (
     currentUserId: string,
     sendToUsername: string,
@@ -76,11 +98,9 @@ export default class LightningApi {
   };
 
   createCharge = async (sats: string, userId: string) => {
-    if (!process.env.REACT_APP_SERVERLESS_BASE_URL) return;
-
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVERLESS_BASE_URL}/create-charge?amount=${sats}&id=${userId}`
+      const response = await this.api.get(
+        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`
       );
 
       return response.data;

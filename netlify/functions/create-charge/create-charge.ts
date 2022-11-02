@@ -2,6 +2,7 @@ import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
@@ -11,6 +12,9 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
+  console.log({ event });
+  // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
+
   const supabaseClient = createClient(
     process.env.REACT_APP_SUPABASE_URL ?? "",
     process.env.REACT_APP_SUPABASE_KEY ?? ""

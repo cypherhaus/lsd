@@ -8,6 +8,7 @@ export default class AuthAPI {
         email,
         password,
       });
+
       return { user, session, error };
     } catch (error) {
       console.log({ error });
