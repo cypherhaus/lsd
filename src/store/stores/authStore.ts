@@ -66,9 +66,10 @@ export default class AuthStore {
     }
   }
 
-  async setUser(user: any) {
+  async setUser(session: any) {
+    this._store.api.lightningAPI.setToken(session.access_token);
     runInAction(() => {
-      this.currentUser = user;
+      this.currentUser = session.user;
     });
   }
 }

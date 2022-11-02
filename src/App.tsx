@@ -11,7 +11,7 @@ const App = observer(() => {
 
   useEffect(() => {
     const session = supabase.auth.session();
-    if (session) authStore.setUser(session.user);
+    if (session) authStore.setUser(session);
 
     if (!authStore.currentUser) return;
 
