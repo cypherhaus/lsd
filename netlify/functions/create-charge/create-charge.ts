@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import queryString from "query-string";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
@@ -25,10 +25,21 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  console.log(event.body);
-  console.log(typeof event.body);
-  const params = queryString.parse(event.body ?? "");
-  console.log({ params });
+  const { token } = queryString.parse(event.body ?? "");
+
+  if (!token) {
+    return {
+      statusCode: 401,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({
+        message: "Missing authentication",
+      }),
+    };
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  console.log({ decoded });
 
   if (
     !event?.queryStringParameters?.amount ||
