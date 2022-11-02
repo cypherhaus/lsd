@@ -37,7 +37,7 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  console.log({ event: event });
+  console.log({ event: event, clientContext: context.clientContext, context });
   // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
 
   const { amount, id } = event?.queryStringParameters;
