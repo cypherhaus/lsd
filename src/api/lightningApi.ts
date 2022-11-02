@@ -15,19 +15,20 @@ export default class LightningApi {
     this.api = axios.create({
       baseURL: BASE_URL,
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        // "Content-Type": "application/json",
+        // Accept: "application/json",
+        Authorization: "Bearer ey.cjnwuencweuincjnckjcskjdn",
       },
       timeout: 15000,
     });
   }
 
   setToken = (token: string) => {
-    this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    // this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   clearToken = () => {
-    this.api.defaults.headers.common.Authorization = ``;
+    // this.api.defaults.headers.common.Authorization = ``;
   };
 
   fetchWallet = async (userId: string) => {
@@ -101,14 +102,8 @@ export default class LightningApi {
 
   createCharge = async (sats: string, userId: string) => {
     try {
-      const response = await this.api.get(
-        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`,
-        {
-          headers: {
-            "Test-Header": "test-value",
-            Authorization: "test-valuez",
-          },
-        }
+      const response = await this.api.post(
+        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`
       );
 
       return response.data;
