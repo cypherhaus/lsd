@@ -38,8 +38,6 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  console.log("body", JSON.parse(event.body));
-
   const { amount, id } = event?.queryStringParameters;
 
   try {
