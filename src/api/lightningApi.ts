@@ -10,25 +10,22 @@ import {
 
 export default class LightningApi {
   private api: AxiosInstance;
+  private token: string = "";
 
   constructor() {
     this.api = axios.create({
       baseURL: BASE_URL,
-      headers: {
-        // "Content-Type": "application/json",
-        // Accept: "application/json",
-        Authorization: "Bearer ey.cjnwuencweuincjnckjcskjdn",
-      },
+      headers: {},
       timeout: 15000,
     });
   }
 
   setToken = (token: string) => {
-    // this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    this.token = token;
   };
 
   clearToken = () => {
-    // this.api.defaults.headers.common.Authorization = ``;
+    this.token = "";
   };
 
   fetchWallet = async (userId: string) => {
@@ -38,8 +35,11 @@ export default class LightningApi {
   };
 
   updateLnAddress = async (lnAddress: string, id: string) => {
-    const response = await this.api.get(
-      `/${UPDATE_LN_ADDRESS}?lnAddress=${lnAddress}&id=${id}`
+    if (!this.token) return;
+
+    const response = await this.api.post(
+      `/${UPDATE_LN_ADDRESS}?lnAddress=${lnAddress}&id=${id}`,
+      { token: this.token }
     );
 
     if (response.status === 201) {
@@ -50,9 +50,12 @@ export default class LightningApi {
   };
 
   withdrawToAddress = async (amount: string, id: string) => {
+    if (!this.token) return;
+
     try {
-      const response = await this.api.get(
-        `/${WITHDRAW_LN_ADDRESS}?amount=${amount}&userId=${id}`
+      const response = await this.api.post(
+        `/${WITHDRAW_LN_ADDRESS}?amount=${amount}&userId=${id}`,
+        { token: this.token }
       );
 
       if (response.status === 200) {
@@ -101,9 +104,11 @@ export default class LightningApi {
   };
 
   createCharge = async (sats: string, userId: string) => {
+    if (!this.token) return;
     try {
       const response = await this.api.post(
-        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`
+        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`,
+        { token: this.token }
       );
 
       return response.data;
