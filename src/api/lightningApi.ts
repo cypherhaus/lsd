@@ -105,6 +105,7 @@ export default class LightningApi {
 
   createCharge = async (sats: string, userId: string) => {
     if (!this.token) return;
+
     try {
       const response = await this.api.post(
         `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`,

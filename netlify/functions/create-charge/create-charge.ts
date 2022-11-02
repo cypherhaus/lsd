@@ -26,8 +26,7 @@ const handler: Handler = async (event, context) => {
 
   if (
     !event?.queryStringParameters?.amount ||
-    !event?.queryStringParameters?.id ||
-    !event.body
+    !event?.queryStringParameters?.id
   ) {
     return {
       statusCode: 400,
