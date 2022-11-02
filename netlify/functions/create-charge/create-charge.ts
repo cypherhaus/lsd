@@ -37,7 +37,7 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  console.log({ event: event });
+  console.log({ event });
   // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
 
   const { amount, id } = event?.queryStringParameters;
@@ -68,8 +68,6 @@ const handler: Handler = async (event, context) => {
         },
       }
     );
-
-    console.log({ data });
 
     return {
       statusCode: 201,
