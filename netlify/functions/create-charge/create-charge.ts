@@ -17,6 +17,8 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
+  console.log("j", JSON.parse(event?.body ?? ""));
+
   if (event.httpMethod === "OPTION") {
     return {
       statusCode: 200,
