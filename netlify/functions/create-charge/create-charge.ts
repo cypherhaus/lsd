@@ -2,7 +2,7 @@ import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
