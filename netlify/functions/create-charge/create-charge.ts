@@ -17,15 +17,16 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
-  console.log(event.body);
-  console.log(typeof event.body);
-
   if (event.httpMethod === "OPTION") {
     return {
       statusCode: 200,
       headers: CORS_HEADERS,
     };
   }
+
+  console.log(event.body);
+  console.log(typeof event.body);
+  console.log(JSON.parse(event.body ? event.body : ""));
 
   if (
     !event?.queryStringParameters?.amount ||
