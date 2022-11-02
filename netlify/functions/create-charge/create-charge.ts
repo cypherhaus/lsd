@@ -12,7 +12,7 @@ const CORS_HEADERS = {
 };
 
 const handler: Handler = async (event, context) => {
-  console.log({ event: event.headers });
+  console.log({ event: event.headers.Authorization });
   // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
 
   const supabaseClient = createClient(

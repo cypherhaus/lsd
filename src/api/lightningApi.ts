@@ -14,14 +14,12 @@ export default class LightningApi {
   constructor() {
     this.api = axios.create({
       baseURL: BASE_URL,
-      headers: {},
       timeout: 15000,
     });
   }
 
   setToken = (token: string) => {
-    this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
-    console.log(this.api.defaults.headers);
+    this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   clearToken = () => {
