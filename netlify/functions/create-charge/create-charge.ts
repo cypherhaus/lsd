@@ -25,21 +25,11 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  const { token } = queryString.parse(event.body ?? "");
+  const data = JSON.parse(event.body);
+  console.log(data);
 
-  if (!token) {
-    return {
-      statusCode: 401,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        message: "Missing authentication",
-      }),
-    };
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  console.log({ decoded });
+  // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // console.log({ decoded });
 
   if (
     !event?.queryStringParameters?.amount ||
