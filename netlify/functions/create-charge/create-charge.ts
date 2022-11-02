@@ -38,10 +38,7 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  const token = JSON.parse(event.body).token;
-
-  console.log("token", token);
-  // const decoded = jwt.verify(access_token, process.env.JWT_SECRET ?? "");
+  console.log("body", JSON.parse(event.body));
 
   const { amount, id } = event?.queryStringParameters;
 
