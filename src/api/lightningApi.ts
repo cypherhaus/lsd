@@ -14,6 +14,10 @@ export default class LightningApi {
   constructor() {
     this.api = axios.create({
       baseURL: BASE_URL,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       timeout: 15000,
     });
   }
