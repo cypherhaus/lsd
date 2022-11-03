@@ -25,11 +25,12 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  const data = JSON.parse(event.body);
-  console.log(data);
-
-  // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  // console.log({ decoded });
+  if (event.httpMethod === "POST") {
+    const data = JSON.parse(event.body);
+    console.log(data);
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // console.log({ decoded });
+  }
 
   if (
     !event?.queryStringParameters?.amount ||
