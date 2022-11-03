@@ -89,6 +89,11 @@ const handler: Handler = async (event, context) => {
       };
     }
   }
+  return {
+    statusCode: 500,
+    headers: CORS_HEADERS,
+    body: JSON.stringify({ message: "Error creating charge" }),
+  };
 };
 
 export { handler };
