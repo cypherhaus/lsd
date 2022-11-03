@@ -25,6 +25,8 @@ const handler: Handler = async (event, context) => {
     };
   }
 
+  console.log("method", event.httpMethod);
+
   if (event.httpMethod === "POST") {
     const data = JSON.parse(event.body);
     console.log(data);
