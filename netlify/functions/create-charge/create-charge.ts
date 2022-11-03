@@ -25,15 +25,6 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  console.log("method", event.httpMethod);
-
-  if (event.httpMethod === "POST") {
-    const data = JSON.parse(event.body);
-    console.log(data);
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log({ decoded });
-  }
-
   if (
     !event?.queryStringParameters?.amount ||
     !event?.queryStringParameters?.id
@@ -47,50 +38,56 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  const { amount, id } = event?.queryStringParameters;
+  if (event.httpMethod === "POST") {
+    const { token } = JSON.parse(event.body);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log({ decoded });
 
-  try {
-    const amountInMsats = (parseInt(amount) * 1000).toString();
-    const chargeId = uuidv4();
+    const { amount, id } = event?.queryStringParameters;
 
-    await supabaseClient.from("charges").insert({
-      id: chargeId,
-      amount: parseInt(amountInMsats) / 1000,
-      user_id: id,
-    });
+    try {
+      const amountInMsats = (parseInt(amount) * 1000).toString();
+      const chargeId = uuidv4();
 
-    const data = await axios.post(
-      "https://api.zebedee.io/v0/charges",
-      {
-        expiresIn: 600,
-        amount: amountInMsats,
-        description: "-",
-        internalId: chargeId,
-        callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/settle-charge?id=${chargeId}`,
-      },
-      {
-        headers: {
-          apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-          "Content-Type": "application/json",
+      await supabaseClient.from("charges").insert({
+        id: chargeId,
+        amount: parseInt(amountInMsats) / 1000,
+        user_id: id,
+      });
+
+      const data = await axios.post(
+        "https://api.zebedee.io/v0/charges",
+        {
+          expiresIn: 600,
+          amount: amountInMsats,
+          description: "-",
+          internalId: chargeId,
+          callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/settle-charge?id=${chargeId}`,
         },
-      }
-    );
+        {
+          headers: {
+            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    return {
-      statusCode: 201,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        message: "Successfully created charge",
-        ...data.data,
-      }),
-    };
-  } catch (err) {
-    console.log({ err });
-    return {
-      statusCode: 500,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ message: "Error creating charge" }),
-    };
+      return {
+        statusCode: 201,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Successfully created charge",
+          ...data.data,
+        }),
+      };
+    } catch (err) {
+      console.log({ err });
+      return {
+        statusCode: 500,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ message: "Error creating charge" }),
+      };
+    }
   }
 };
 
