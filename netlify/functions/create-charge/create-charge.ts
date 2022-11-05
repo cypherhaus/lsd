@@ -48,6 +48,16 @@ const handler: Handler = async (event, context) => {
         user_id: sub,
       });
 
+      if (response.status === 403) {
+        return {
+          statusCode: 403,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({
+            message: "You do not have the authorization to create a charge",
+          }),
+        };
+      }
+
       console.log({ response });
       const data = await axios.post(
         "https://api.zebedee.io/v0/charges",
