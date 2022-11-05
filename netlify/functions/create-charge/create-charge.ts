@@ -22,15 +22,18 @@ const handler: Handler = async (event, context) => {
 
   if (event.httpMethod === "POST") {
     const { token, amount, userId } = JSON.parse(event.body);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      process.env.JWT_SECRET
+    );
     console.log({ decoded, token, amount, userId });
 
-    if (!amount || !userId) {
+    if (!amount) {
       return {
         statusCode: 400,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Must provide a user id, lightning address and token",
+          message: "Must provide an amount",
         }),
       };
     }
