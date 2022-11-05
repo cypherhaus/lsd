@@ -33,12 +33,6 @@ const handler: Handler = async (event, context) => {
     try {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET);
 
-      // supabaseClient.auth.session = () => ({
-      //   access_token: token,
-      //   token_type: "",
-      //   user: null,
-      // });
-
       const amountInMsats = (parseInt(amount) * 1000).toString();
       const chargeId = uuidv4();
 
@@ -58,7 +52,6 @@ const handler: Handler = async (event, context) => {
         };
       }
 
-      console.log({ response });
       const data = await axios.post(
         "https://api.zebedee.io/v0/charges",
         {
