@@ -43,6 +43,16 @@ const handler: Handler = async (event, context) => {
         .eq("id", sub)
         .single();
 
+      if (!balanceCheck.data.lnAddress) {
+        return {
+          statusCode: 404,
+          headers: CORS_HEADERS,
+          body: JSON.stringify({
+            message: "No lightning address associated with that account",
+          }),
+        };
+      }
+
       if (!balanceCheck.data) {
         return {
           statusCode: 500,
