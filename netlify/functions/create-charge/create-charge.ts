@@ -33,11 +33,11 @@ const handler: Handler = async (event, context) => {
     try {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET);
 
-      supabaseClient.auth.session = () => ({
-        access_token: token,
-        token_type: "",
-        user: null,
-      });
+      // supabaseClient.auth.session = () => ({
+      //   access_token: token,
+      //   token_type: "",
+      //   user: null,
+      // });
 
       const amountInMsats = (parseInt(amount) * 1000).toString();
       const chargeId = uuidv4();
