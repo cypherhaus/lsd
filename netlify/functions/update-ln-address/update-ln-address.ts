@@ -31,12 +31,6 @@ const handler: Handler = async (event, context) => {
     try {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET);
 
-      supabaseClient.auth.session = () => ({
-        access_token: token,
-        token_type: "",
-        user: null,
-      });
-
       const data = await axios.get(
         `https://api.zebedee.io/v0/ln-address/validate/${lnAddress}`,
         {
