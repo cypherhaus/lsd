@@ -2,7 +2,6 @@ import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import queryString from "query-string";
 import jwt from "jsonwebtoken";
 
 const CORS_HEADERS = {
@@ -18,33 +17,27 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
-  console.log({ e: event.httpMethod });
+  const { token, amount } = JSON.parse(event.body);
+  if (!amount) {
+    return {
+      statusCode: 400,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({
+        message: "Must provide an amount",
+      }),
+    };
+  }
 
   if (event.httpMethod === "POST") {
-    const { token, amount, userId } = JSON.parse(event.body);
-    const decoded = jwt.verify(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-      process.env.JWT_SECRET
-    );
-    console.log({ decoded, token, amount, userId });
-
-    if (!amount) {
-      return {
-        statusCode: 400,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({
-          message: "Must provide an amount",
-        }),
-      };
-    }
-
     try {
+      const { sub } = jwt.verify(token, process.env.JWT_SECRET);
+
       const amountInMsats = (parseInt(amount) * 1000).toString();
       const chargeId = uuidv4();
       await supabaseClient.from("charges").insert({
         id: chargeId,
         amount: parseInt(amountInMsats) / 1000,
-        user_id: userId,
+        user_id: sub,
       });
       const data = await axios.post(
         "https://api.zebedee.io/v0/charges",
