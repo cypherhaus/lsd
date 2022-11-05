@@ -17,7 +17,6 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
-  const { token, amount } = JSON.parse(event.body);
   if (!amount) {
     return {
       statusCode: 400,
@@ -29,6 +28,8 @@ const handler: Handler = async (event, context) => {
   }
 
   if (event.httpMethod === "POST") {
+    const { token, amount } = JSON.parse(event.body);
+
     try {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET);
 
