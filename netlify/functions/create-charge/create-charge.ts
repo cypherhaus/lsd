@@ -25,24 +25,21 @@ const handler: Handler = async (event, context) => {
     };
   }
 
-  if (
-    !event?.queryStringParameters?.amount ||
-    !event?.queryStringParameters?.id
-  ) {
-    return {
-      statusCode: 400,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        message: "Must provide a user id, lightning address and token",
-      }),
-    };
-  }
-
   if (event.httpMethod === "POST") {
-    const decoded = jwt.verify(event.body.token, process.env.JWT_SECRET);
+    const { token, amount, userId } = JSON.parse(event.body);
+    console.log({ token, amount, userId });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log({ decoded });
 
-    const { amount, id } = event?.queryStringParameters;
+    if (!amount || !userId) {
+      return {
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Must provide a user id, lightning address and token",
+        }),
+      };
+    }
 
     try {
       const amountInMsats = (parseInt(amount) * 1000).toString();
@@ -51,7 +48,7 @@ const handler: Handler = async (event, context) => {
       await supabaseClient.from("charges").insert({
         id: chargeId,
         amount: parseInt(amountInMsats) / 1000,
-        user_id: id,
+        user_id: userId,
       });
 
       const data = await axios.post(
@@ -89,7 +86,7 @@ const handler: Handler = async (event, context) => {
     }
   }
   return {
-    statusCode: 500,
+    statusCode: 400,
     headers: CORS_HEADERS,
     body: JSON.stringify({ message: "Error creating charge" }),
   };

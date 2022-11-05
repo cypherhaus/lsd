@@ -107,10 +107,11 @@ export default class LightningApi {
     if (!this.token) return;
 
     try {
-      const response = await this.api.post(
-        `/${CREATE_CHARGE}?amount=${sats}&id=${userId}`,
-        { token: this.token }
-      );
+      const response = await this.api.post(`/${CREATE_CHARGE}`, {
+        token: this.token,
+        userId,
+        amount: sats,
+      });
 
       return response.data;
     } catch (err) {
