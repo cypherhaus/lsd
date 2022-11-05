@@ -17,13 +17,13 @@ const handler: Handler = async (event, context) => {
   );
 
   if (event.httpMethod === "POST") {
-    const { amount, lnAddress, token } = JSON.parse(event.body);
-    if (!amount || !lnAddress) {
+    const { lnAddress, token } = JSON.parse(event.body);
+    if (!lnAddress) {
       return {
         statusCode: 400,
         headers: CORS_HEADERS,
         body: JSON.stringify({
-          message: "Must provide an amount",
+          message: "Must provide a lightning address",
         }),
       };
     }

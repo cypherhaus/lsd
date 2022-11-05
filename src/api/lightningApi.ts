@@ -37,10 +37,10 @@ export default class LightningApi {
   updateLnAddress = async (lnAddress: string, id: string) => {
     if (!this.token) return;
 
-    const response = await this.api.post(
-      `/${UPDATE_LN_ADDRESS}?lnAddress=${lnAddress}&id=${id}`,
-      { token: this.token }
-    );
+    const response = await this.api.post(`/${UPDATE_LN_ADDRESS}`, {
+      token: this.token,
+      lnAddress,
+    });
 
     if (response.status === 201) {
       return { success: true, message: "Successfully added lightning address" };
