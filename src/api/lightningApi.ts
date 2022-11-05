@@ -53,10 +53,10 @@ export default class LightningApi {
     if (!this.token) return;
 
     try {
-      const response = await this.api.post(
-        `/${WITHDRAW_LN_ADDRESS}?amount=${amount}&userId=${id}`,
-        { token: this.token }
-      );
+      const response = await this.api.post(`/${WITHDRAW_LN_ADDRESS}`, {
+        token: this.token,
+        amount,
+      });
 
       if (response.status === 200) {
         return { success: true, message: "Successful withdrawal" };
