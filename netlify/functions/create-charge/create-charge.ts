@@ -39,8 +39,7 @@ const handler: Handler = async (event, context) => {
   }
 
   if (event.httpMethod === "POST") {
-    const { token } = JSON.parse(event.body);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(event.body.token, process.env.JWT_SECRET);
     console.log({ decoded });
 
     const { amount, id } = event?.queryStringParameters;
