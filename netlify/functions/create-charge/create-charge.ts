@@ -18,63 +18,55 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
-  if (event.httpMethod === "OPTION") {
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-    };
-  }
-
   console.log({ e: event.httpMethod });
 
   if (event.httpMethod === "POST") {
-    const json = JSON.parse(event.body);
-    console.log({ json });
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log({ decoded });
+    const { token, amount, userId } = JSON.parse(event.body);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log({ decoded, token, amount, userId });
 
-    // if (!json.amount || !json.userId) {
-    //   return {
-    //     statusCode: 400,
-    //     headers: CORS_HEADERS,
-    //     body: JSON.stringify({
-    //       message: "Must provide a user id, lightning address and token",
-    //     }),
-    //   };
-    // }
+    if (!amount || !userId) {
+      return {
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Must provide a user id, lightning address and token",
+        }),
+      };
+    }
 
     try {
-      // const amountInMsats = (parseInt(amount) * 1000).toString();
-      // const chargeId = uuidv4();
-      // await supabaseClient.from("charges").insert({
-      //   id: chargeId,
-      //   amount: parseInt(amountInMsats) / 1000,
-      //   user_id: userId,
-      // });
-      // const data = await axios.post(
-      //   "https://api.zebedee.io/v0/charges",
-      //   {
-      //     expiresIn: 600,
-      //     amount: amountInMsats,
-      //     description: "-",
-      //     internalId: chargeId,
-      //     callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/settle-charge?id=${chargeId}`,
-      //   },
-      //   {
-      //     headers: {
-      //       apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // return {
-      //   statusCode: 201,
-      //   headers: CORS_HEADERS,
-      //   body: JSON.stringify({
-      //     message: "Successfully created charge",
-      //     ...data.data,
-      //   }),
-      // };
+      const amountInMsats = (parseInt(amount) * 1000).toString();
+      const chargeId = uuidv4();
+      await supabaseClient.from("charges").insert({
+        id: chargeId,
+        amount: parseInt(amountInMsats) / 1000,
+        user_id: userId,
+      });
+      const data = await axios.post(
+        "https://api.zebedee.io/v0/charges",
+        {
+          expiresIn: 600,
+          amount: amountInMsats,
+          description: "-",
+          internalId: chargeId,
+          callbackUrl: `${process.env.REACT_APP_SERVERLESS_BASE_URL}/settle-charge?id=${chargeId}`,
+        },
+        {
+          headers: {
+            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return {
+        statusCode: 201,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Successfully created charge",
+          ...data.data,
+        }),
+      };
     } catch (err) {
       console.log({ err });
       return {
@@ -83,12 +75,12 @@ const handler: Handler = async (event, context) => {
         body: JSON.stringify({ message: "Error creating charge" }),
       };
     }
+  } else {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+    };
   }
-  return {
-    statusCode: 400,
-    headers: CORS_HEADERS,
-    body: JSON.stringify({ message: "Error creating charge" }),
-  };
 };
 
 export { handler };
