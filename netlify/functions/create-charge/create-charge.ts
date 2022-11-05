@@ -17,18 +17,18 @@ const handler: Handler = async (event, context) => {
     process.env.REACT_APP_SUPABASE_KEY ?? ""
   );
 
-  if (!amount) {
-    return {
-      statusCode: 400,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({
-        message: "Must provide an amount",
-      }),
-    };
-  }
-
   if (event.httpMethod === "POST") {
     const { token, amount } = JSON.parse(event.body);
+
+    if (!amount) {
+      return {
+        statusCode: 400,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({
+          message: "Must provide an amount",
+        }),
+      };
+    }
 
     try {
       const { sub } = jwt.verify(token, process.env.JWT_SECRET);
