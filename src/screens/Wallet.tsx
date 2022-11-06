@@ -22,7 +22,7 @@ export const Wallet = observer(() => {
         supabase.removeSubscription(chargeSub);
       };
     }
-  }, [lightningStore, lightningStore.charge]);
+  }, [lightningStore, lightningStore.charge, walletView]);
 
   if (!lightningStore.wallet) return <div>no profile</div>;
 

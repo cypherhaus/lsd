@@ -23,7 +23,7 @@ const App = observer(() => {
     return () => {
       supabase.removeSubscription(balanceSub);
     };
-  }, [authStore, authStore.currentUser, lightningStore]);
+  }, [authStore, authStore.currentUser, walletView]);
 
   useEffect(() => {
     if (authStore.currentUser) {
