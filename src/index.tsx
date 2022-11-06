@@ -5,6 +5,7 @@ import App from "./App";
 import { StoreProvider } from "./store/provider";
 import { SupabaseWrapper } from "./config/supabase";
 import { createStore } from "./store/store";
+import { Toaster } from "react-hot-toast";
 
 const store = createStore();
 
@@ -16,6 +17,7 @@ root.render(
     {/* @ts-ignore */}
     <SupabaseWrapper>
       <StoreProvider store={store}>
+        <Toaster />
         <App />
       </StoreProvider>
     </SupabaseWrapper>

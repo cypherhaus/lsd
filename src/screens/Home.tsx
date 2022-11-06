@@ -1,33 +1,17 @@
-import { ChangeEvent, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { ChangeEvent } from "react";
 import { Screen } from "../components/Screen";
 import { useStore } from "../store";
 
-export const Home = () => {
-  const [username, setUsername] = useState<string>("");
-  const [amount, setAmount] = useState<null | number>(null);
-
-  const { lightningView, authStore } = useStore();
-
-  const handleSendClick = async () => {
-    if (!amount || !username) return;
-    const result = await lightningView.handlePayUsername(
-      authStore.currentUser.id,
-      username,
-      amount
-    );
-
-    if (result.success) {
-      setUsername("");
-      setAmount(null);
-    }
-  };
+export const Home = observer(() => {
+  const { walletView, authStore } = useStore();
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    walletView.setSendUsername(e.target.value);
   };
 
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(parseInt(e.target.value));
+    walletView.setSendAmount(e.target.value);
   };
   return (
     <Screen>
@@ -36,21 +20,21 @@ export const Home = () => {
         onChange={(e) => handleTextChange(e)}
         className="border mb-5"
         placeholder="Username"
-        value={username}
+        value={walletView.sendUsername}
       />
       <input
         onChange={(e) => handleAmountChange(e)}
         className="border mb-5"
         placeholder="Amount"
         type="number"
-        value={amount ? amount : ""}
+        value={walletView.sendAmount}
       ></input>
       <button
-        onClick={handleSendClick}
+        onClick={() => walletView.handlePayUsername(authStore.currentUser.id)}
         className="rounded p-3  text-white bg-black"
       >
         Send
       </button>
     </Screen>
   );
-};
+});

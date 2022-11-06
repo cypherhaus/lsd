@@ -44,6 +44,7 @@ export default class AuthStore {
         email,
         password
       );
+      console.log({ user, session });
       this.currentUser = user;
       this._store.api.lightningAPI.setToken(session.access_token);
     } catch (err) {

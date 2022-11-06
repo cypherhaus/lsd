@@ -24,7 +24,7 @@ export const Navigation = observer(() => {
         </div>
       )}
       <div className="ml-8 font-bold text-2xl">{`${
-        lightningStore.wallet?.balance ?? 0
+        lightningStore.wallet?.balance ?? "-"
       } sats`}</div>
     </div>
   );

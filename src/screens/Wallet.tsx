@@ -1,56 +1,28 @@
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 import QRCode from "react-qr-code";
 import { Screen } from "../components/Screen";
 import { supabase } from "../config/supabase";
 import { useStore } from "../store";
 
 export const Wallet = observer(() => {
-  const { lightningStore, lightningView, authStore } = useStore();
-  const [amount, setAmount] = useState<string>("");
-  const [lnAddress, setLnAddress] = useState("");
+  const { lightningStore, walletView } = useStore();
 
   useEffect(() => {
     if (lightningStore.charge) {
       const chargeSub = supabase
         .from(`charges:id=eq.${lightningStore.charge.internalId}`)
-        .on("UPDATE", (message) => {
-          if (message.new.settled) {
-            lightningStore.chargeSettled();
-            setAmount("");
-          }
-        })
+        .on(
+          "UPDATE",
+          (message) => message.new.settled && walletView.handleChargeSettled()
+        )
         .subscribe();
 
       return () => {
         supabase.removeSubscription(chargeSub);
       };
     }
-  }, [lightningStore, lightningStore.charge, authStore]);
-
-  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
-  };
-
-  const handleLnAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLnAddress(e.target.value);
-  };
-
-  const handleFundClick = () => {
-    if (amount) {
-      lightningStore.createCharge(amount, authStore.currentUser.id);
-    }
-  };
-
-  const handleSaveLnAddress = async () => {
-    const result = await lightningView.updateLnAddress(
-      lnAddress,
-      authStore.currentUser.id
-    );
-    if (result) {
-      setLnAddress("");
-    }
-  };
+  }, [lightningStore, lightningStore.charge]);
 
   if (!lightningStore.wallet) return <div>no profile</div>;
 
@@ -62,41 +34,39 @@ export const Wallet = observer(() => {
       </span>
 
       <input
-        onChange={(e) => lightningView.setWithdrawAmount(e.target.value)}
+        onChange={(e) => walletView.setWithdrawAmount(e.target.value)}
         className="border mr-5"
         placeholder="Amount"
         type="number"
-        value={lightningView.withdrawAmount}
+        value={walletView.withdrawAmount}
       ></input>
       <button
-        onClick={() =>
-          lightningView.handleWithdrawClick(authStore.currentUser.id)
-        }
+        onClick={walletView.handleWithdrawClick}
         className="rounded mt-10 mb-20 p-3 text-white bg-black"
       >
         Withdraw
       </button>
       <input
-        onChange={(e) => handleTextChange(e)}
+        onChange={(e) => walletView.setFundAmount(e.target.value)}
         className="border mr-5"
         placeholder="Amount"
         type="number"
-        value={amount}
+        value={walletView.fundAmount}
       ></input>
       <button
-        onClick={handleFundClick}
+        onClick={walletView.handleFundClick}
         className="rounded p-3 mt-5 text-white bg-black"
       >
         Fund
       </button>
       <input
-        onChange={(e) => handleLnAddressChange(e)}
+        onChange={(e) => walletView.setLightningAddress(e.target.value)}
         className="border mt-10 mr-5"
         placeholder="Lightning Address"
-        value={lnAddress}
+        value={walletView.lnAddress}
       ></input>
       <button
-        onClick={handleSaveLnAddress}
+        onClick={walletView.handleUpdateAddressClick}
         className="rounded p-3 mt-5 text-white bg-black"
       >
         Save

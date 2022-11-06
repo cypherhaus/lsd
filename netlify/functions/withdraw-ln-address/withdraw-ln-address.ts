@@ -43,7 +43,7 @@ const handler: Handler = async (event, context) => {
         .eq("id", sub)
         .single();
 
-      if (!balanceCheck.data.lnAddress) {
+      if (!balanceCheck.data.ln_address) {
         return {
           statusCode: 404,
           headers: CORS_HEADERS,

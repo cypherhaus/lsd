@@ -24,52 +24,45 @@ export default class LightningStore {
     this.wallet = null;
   }
 
-  async fetchWallet(userId: string) {
-    const data = await this._store.api.lightningAPI.fetchWallet(userId);
+  async fetchWallet(id: string) {
+    const data = await this._store.api.lightningAPI.fetchWallet(id);
     this.wallet = data;
   }
 
-  async createCharge(amount: string, userId: string) {
-    const result = await this._store.api.lightningAPI.createCharge(
-      amount,
-      userId
-    );
+  async createCharge(amount: string) {
+    const result = await this._store.api.lightningAPI.createCharge(amount);
 
     if (result?.data) this.charge = result?.data;
   }
 
   // Pay a user by username
-  async payUsername(
-    currentUserId: string,
-    sendToUsername: string,
-    amount: number
-  ) {
+  async payUsername(currentUserId: string, username: string, amount: string) {
     const data = await this._store.api.lightningAPI.payUser(
       currentUserId,
-      sendToUsername,
+      username,
       amount
     );
 
     return data;
   }
 
-  async updateLnAddress(address: string, id: string) {
+  async updateLnAddress(address: string) {
     const response = await this._store.api.lightningAPI.updateLnAddress(
-      address,
-      id
+      address
     );
 
-    return response?.success;
+    console.log({ response });
+
+    return response;
   }
 
   // Withdrawal using LNURL
-  async withdraw(amount: string, id: string) {
+  async withdraw(amount: string) {
     const response = await this._store.api.lightningAPI.withdrawToAddress(
-      amount,
-      id
+      amount
     );
 
-    return response?.success;
+    return response;
   }
 
   // Create bolt12 invoice

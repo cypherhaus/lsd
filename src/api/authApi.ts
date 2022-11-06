@@ -9,6 +9,10 @@ export default class AuthAPI {
         password,
       });
 
+      if (user) {
+        await supabase.from("profiles").update({ username }).eq("id", user.id);
+      }
+
       return { user, session, error };
     } catch (error) {
       console.log({ error });

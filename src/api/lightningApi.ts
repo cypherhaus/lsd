@@ -34,7 +34,7 @@ export default class LightningApi {
     return data?.data?.[0];
   };
 
-  updateLnAddress = async (lnAddress: string, id: string) => {
+  updateLnAddress = async (lnAddress: string) => {
     if (!this.token) return;
 
     const response = await this.api.post(`/${UPDATE_LN_ADDRESS}`, {
@@ -49,14 +49,18 @@ export default class LightningApi {
     return { success: false, message: "Failed to add lightning address" };
   };
 
-  withdrawToAddress = async (amount: string, id: string) => {
+  withdrawToAddress = async (amount: string) => {
     if (!this.token) return;
+
+    console.log("called");
 
     try {
       const response = await this.api.post(`/${WITHDRAW_LN_ADDRESS}`, {
         token: this.token,
         amount,
       });
+
+      console.log({ response });
 
       if (response.status === 200) {
         return { success: true, message: "Successful withdrawal" };
@@ -71,7 +75,7 @@ export default class LightningApi {
   payUser = async (
     currentUserId: string,
     sendToUsername: string,
-    amount: number
+    amount: string
   ) => {
     try {
       const response = await supabase
@@ -81,7 +85,7 @@ export default class LightningApi {
 
       if (response.data?.length) {
         const data = await supabase.from("payments").insert({
-          debit: amount,
+          debit: parseInt(amount),
           user_id: currentUserId,
           participant_id: response.data[0].id,
         });
@@ -103,13 +107,12 @@ export default class LightningApi {
     return { success: false, message: "Internal Error" };
   };
 
-  createCharge = async (sats: string, userId: string) => {
+  createCharge = async (sats: string) => {
     if (!this.token) return;
 
     try {
       const response = await this.api.post(`/${CREATE_CHARGE}`, {
         token: this.token,
-        userId,
         amount: sats,
       });
 
