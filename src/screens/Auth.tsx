@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "../store";
 import { observer } from "mobx-react-lite";
+import { Input } from "../components/common/Input";
 
 export const Auth = observer(() => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
@@ -17,28 +18,21 @@ export const Auth = observer(() => {
   const handleLogin = async () => authView.login(email, password);
 
   return (
-    <div>
+    <div className="p-10">
       <div className="flex flex-col items-center justify-center">
         <p>{isSignUp ? "Sign Up" : "Login"}</p>
         {isSignUp && (
-          <input
-            className="my-2 border-2 border-black"
+          <Input
             placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={setUsername}
             value={username}
           />
         )}
 
-        <input
-          className="my-2 border-2 border-black"
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="my-2 border-2 border-black"
+        <Input placeholder="email" value={email} onChange={setEmail} />
+        <Input
           type="password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           placeholder="password"
           value={password}
         />

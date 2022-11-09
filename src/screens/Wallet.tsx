@@ -1,12 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import QRCode from "react-qr-code";
-import { Screen } from "../components/Screen";
+import {
+  RiFlashlightFill,
+  RiUserReceived2Fill,
+  RiCoinFill,
+} from "react-icons/ri";
 import { supabase } from "../config/supabase";
 import { useStore } from "../store";
+import { FUND, LN_ADDRESS, WITHDRAW } from "../constants/sidebar";
 
 export const Wallet = observer(() => {
-  const { lightningStore, walletView } = useStore();
+  const { lightningStore, walletView, sidebarView } = useStore();
 
   useEffect(() => {
     if (lightningStore.charge) {
@@ -26,59 +30,50 @@ export const Wallet = observer(() => {
 
   if (!lightningStore.wallet) return <div>no profile</div>;
 
+  const actions = [
+    {
+      title: "Withdraw",
+      icon: <RiUserReceived2Fill size={30} color="white" />,
+      modalType: WITHDRAW,
+    },
+    {
+      title: "Fund",
+      icon: <RiCoinFill size={30} color="white" />,
+      modalType: FUND,
+    },
+    {
+      title: "LN Address",
+      icon: <RiFlashlightFill size={30} color="white" />,
+      modalType: LN_ADDRESS,
+    },
+  ];
+
   return (
-    <Screen>
-      <span className="text-2xl">
-        Hello {lightningStore.wallet.username} /{" "}
-        {lightningStore.wallet.ln_address ?? "no ln address"}
+    <div className="w-full flex-col items-center flex justify-center">
+      <span className="text-2xl font-bold">
+        {lightningStore.wallet.username}
       </span>
+      <div className="pt-2 flex flex-row items-center justify-center">
+        <RiFlashlightFill />
+        <span className="pl-1">
+          {lightningStore.wallet.ln_address
+            ? lightningStore.wallet.ln_address
+            : ""}
+        </span>
+      </div>
 
-      <input
-        onChange={(e) => walletView.setWithdrawAmount(e.target.value)}
-        className="border mr-5"
-        placeholder="Amount"
-        type="number"
-        value={walletView.withdrawAmount}
-      ></input>
-      <button
-        onClick={walletView.handleWithdrawClick}
-        className="rounded mt-10 mb-20 p-3 text-white bg-black"
-      >
-        Withdraw
-      </button>
-      <input
-        onChange={(e) => walletView.setFundAmount(e.target.value)}
-        className="border mr-5"
-        placeholder="Amount"
-        type="number"
-        value={walletView.fundAmount}
-      ></input>
-      <button
-        onClick={walletView.handleFundClick}
-        className="rounded p-3 mt-5 text-white bg-black"
-      >
-        Fund
-      </button>
-      <input
-        onChange={(e) => walletView.setLightningAddress(e.target.value)}
-        className="border mt-10 mr-5"
-        placeholder="Lightning Address"
-        value={walletView.lnAddress}
-      ></input>
-      <button
-        onClick={walletView.handleUpdateAddressClick}
-        className="rounded p-3 mt-5 text-white bg-black"
-      >
-        Save
-      </button>
-
-      {lightningStore.charge && (
-        <QRCode
-          style={{ height: "auto", maxWidth: "300px", width: "300px" }}
-          value={lightningStore.charge.invoice.request}
-          viewBox={`0 0 256 256`}
-        />
-      )}
-    </Screen>
+      <div className="w-full flex justify-center pt-10">
+        {actions.map((item) => (
+          <div
+            onClick={() => sidebarView.handleOpenModal(item.modalType)}
+            key={item.title}
+            className="rounded w-52 h-28 bg-dark300 hover:bg-dark200 m-2 cursor-pointer flex items-center justify-center p-4"
+          >
+            <div className="pr-2">{item.icon}</div>
+            <div className="text-2xl font-bold">{item.title}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 });

@@ -59,9 +59,7 @@ export default class AuthStore {
         this.currentUser = null;
       });
       await this._store.lightningStore.clearWallet();
-
       this._store.api.lightningAPI.clearToken();
-      window.open("/");
     } catch (err) {
       console.log({ err });
     }

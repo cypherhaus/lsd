@@ -1,8 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
+import { toast } from "react-hot-toast";
 import {
   paymentRecievedToast,
   paymentSuccessToast,
   successToast,
+  basicToastStyle,
 } from "../../utils/toast";
 import { Store } from "../store";
 
@@ -67,15 +69,23 @@ export default class WalletView {
 
   // Handle pressing the withdraw button
   async handleWithdrawClick() {
-    const response = await this._store.lightningStore.withdraw(
-      this.withdrawAmount
+    toast.promise(
+      this._store.lightningStore.withdraw(this.withdrawAmount),
+      {
+        loading: "Processing withdrawal..",
+        success: "Withdraw successful",
+        error: "Error withdrawing sats",
+      },
+      {
+        success: {
+          style: basicToastStyle,
+          duration: 5000,
+          icon: "🔥",
+        },
+        style: basicToastStyle,
+      }
     );
-
-    if (response?.success) {
-      runInAction(() => {
-        this.withdrawAmount = "";
-      });
-    }
+    this.withdrawAmount = "";
   }
 
   handleFundClick() {
@@ -88,6 +98,10 @@ export default class WalletView {
   handleChargeSettled() {
     this._store.lightningStore.chargeSettled();
     paymentRecievedToast();
+
+    runInAction(() => {
+      this.fundAmount = "";
+    });
   }
 
   // Handle any events for the wallet profile

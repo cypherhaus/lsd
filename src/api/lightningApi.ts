@@ -7,6 +7,7 @@ import {
   UPDATE_LN_ADDRESS,
   WITHDRAW_LN_ADDRESS,
 } from "../constants/endpoints";
+import { errorToast } from "../utils/toast";
 
 export default class LightningApi {
   private api: AxiosInstance;
@@ -52,15 +53,11 @@ export default class LightningApi {
   withdrawToAddress = async (amount: string) => {
     if (!this.token) return;
 
-    console.log("called");
-
     try {
       const response = await this.api.post(`/${WITHDRAW_LN_ADDRESS}`, {
         token: this.token,
         amount,
       });
-
-      console.log({ response });
 
       if (response.status === 200) {
         return { success: true, message: "Successful withdrawal" };
@@ -77,6 +74,10 @@ export default class LightningApi {
     sendToUsername: string,
     amount: string
   ) => {
+    if (parseInt(amount) < 0) {
+      errorToast("Amount must be more than zero");
+      return { success: false, message: "Invalid amount" };
+    }
     try {
       const response = await supabase
         .from("profiles")
@@ -98,12 +99,13 @@ export default class LightningApi {
           };
         }
       } else {
-        console.log("no matching user");
+        errorToast(`No user matching username ${sendToUsername}`);
         return { success: false, message: "No Matching User" };
       }
     } catch (err) {
       console.log({ err });
     }
+    errorToast(`Error with payment. Try again later.`);
     return { success: false, message: "Internal Error" };
   };
 

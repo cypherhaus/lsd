@@ -1,3 +1,5 @@
+import { FUND, LN_ADDRESS } from "../constants/sidebar";
+
 // User credentials for local state
 export interface User {
   email: string;

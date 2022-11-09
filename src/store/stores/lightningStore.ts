@@ -51,8 +51,6 @@ export default class LightningStore {
       address
     );
 
-    console.log({ response });
-
     return response;
   }
 
@@ -64,9 +62,6 @@ export default class LightningStore {
 
     return response;
   }
-
-  // Create bolt12 invoice
-  async generateInvoice() {}
 
   // Get Transactions
   async getTxs() {}

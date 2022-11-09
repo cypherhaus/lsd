@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Auth } from "../screens/Auth";
-import { Home } from "../screens/Home";
+import { Dashboard } from "../screens/Dashboard";
 import { Wallet } from "../screens/Wallet";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Dashboard />,
   },
   {
     path: "/auth",
