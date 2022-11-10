@@ -5,7 +5,7 @@ import { Input } from "./common/Input";
 export const Withdraw = observer(() => {
   const { dashboardView, lightningStore } = useStore();
 
-  if (!lightningStore.wallet.ln_address) {
+  if (!lightningStore?.wallet?.ln_address) {
     return (
       <div className="flex flex-col items-center h-full p-10 flex-1">
         <p className="text-xl font-bold text-center mb-8">

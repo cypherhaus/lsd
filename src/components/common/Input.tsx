@@ -8,7 +8,7 @@ interface InputProps {
 export const Input = ({ onChange, ...rest }: InputProps) => (
   <input
     onChange={(e) => onChange(e.target.value)}
-    className="border my-2 border-2 border-black text-dark400 p-2 text-xl"
+    className="placeholder:text-dark200 font-white my-2 border-b-2 rounded border-white  p-2 text-xl bg-dark300"
     {...rest}
   />
 );
