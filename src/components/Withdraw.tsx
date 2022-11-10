@@ -18,6 +18,10 @@ export const Withdraw = observer(() => {
   return (
     <div className="flex flex-col items-center h-full p-10 flex-1">
       <p className="text-xl font-bold text-center mb-8">Make a withdrawal</p>
+
+      <p className="text-xl text-center mb-8">
+        Your satoshis will be sent to {lightningStore.wallet.ln_address}
+      </p>
       <Input
         type="number"
         onChange={dashboardView.setWithdrawAmount}

@@ -90,7 +90,22 @@ export default class DashboardView {
 
   handleFundClick() {
     if (this.fundAmount) {
-      this._store.lightningStore.createCharge(this.fundAmount);
+      toast.promise(
+        this._store.lightningStore.createCharge(this.fundAmount),
+        {
+          loading: "Creating a charge..",
+          success: "Charge created, please pay the invoice",
+          error: "Error creating a charge",
+        },
+        {
+          success: {
+            style: basicToastStyle,
+            duration: 5000,
+            icon: "🔥",
+          },
+          style: basicToastStyle,
+        }
+      );
     }
   }
 

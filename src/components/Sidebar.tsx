@@ -49,11 +49,16 @@ export const Sidebar = observer(() => {
 
   return (
     <div className="p-4 bg-dark300 min-w-[280px]">
-      <div className="mb-6 mt-10 font-bold text-2xl text-white">{`${
-        lightningStore.wallet?.balance
+      <p className="text-white text-center">
+        Hi {lightningStore?.wallet?.username}!
+      </p>
+      <p className="mt-2 font-bold text-4xl text-white text-center">
+        {lightningStore.wallet?.balance
           ? formatNumber(lightningStore.wallet?.balance)
-          : "-"
-      } sats`}</div>
+          : "-"}
+      </p>
+      <p className="mb-4 text-white text-center">SATS</p>
+      <hr className="mb-8" />
       {sidebarItems.map((item) => (
         <div className="w-full flex pb-4">
           <div className="pr-4">{item.icon}</div>
