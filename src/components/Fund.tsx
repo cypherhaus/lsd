@@ -6,7 +6,7 @@ import { useStore } from "../store";
 import { Input } from "./common/Input";
 
 export const Fund = observer(() => {
-  const { walletView, lightningStore } = useStore();
+  const { dashboardView, lightningStore } = useStore();
 
   useEffect(() => {
     if (lightningStore.charge) {
@@ -14,7 +14,8 @@ export const Fund = observer(() => {
         .from(`charges:id=eq.${lightningStore.charge.internalId}`)
         .on(
           "UPDATE",
-          (message) => message.new.settled && walletView.handleChargeSettled()
+          (message) =>
+            message.new.settled && dashboardView.handleChargeSettled()
         )
         .subscribe();
 
@@ -22,21 +23,21 @@ export const Fund = observer(() => {
         supabase.removeSubscription(chargeSub);
       };
     }
-  }, [lightningStore, lightningStore.charge, walletView]);
+  }, [lightningStore, lightningStore.charge, dashboardView]);
 
   return (
-    <div className="flex flex-col items-center h-full p-10">
+    <div className="flex flex-col items-center h-full p-10 flex-1">
       <p className="text-xl font-bold text-center mb-8">
         Create a charge to fund your account
       </p>
       <Input
-        onChange={walletView.setFundAmount}
+        onChange={dashboardView.setFundAmount}
         placeholder="Amount"
         type="number"
-        value={walletView.fundAmount}
+        value={dashboardView.fundAmount}
       ></Input>
       <button
-        onClick={walletView.handleFundClick}
+        onClick={dashboardView.handleFundClick}
         className="rounded p-3 mt-5 text-white bg-black text-xl font-bold mb-6"
       >
         Fund

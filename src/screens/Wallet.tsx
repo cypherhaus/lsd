@@ -10,7 +10,7 @@ import { useStore } from "../store";
 import { FUND, LN_ADDRESS, WITHDRAW } from "../constants/sidebar";
 
 export const Wallet = observer(() => {
-  const { lightningStore, walletView, sidebarView } = useStore();
+  const { lightningStore, dashboardView, sidebarView } = useStore();
 
   useEffect(() => {
     if (lightningStore.charge) {
@@ -18,7 +18,8 @@ export const Wallet = observer(() => {
         .from(`charges:id=eq.${lightningStore.charge.internalId}`)
         .on(
           "UPDATE",
-          (message) => message.new.settled && walletView.handleChargeSettled()
+          (message) =>
+            message.new.settled && dashboardView.handleChargeSettled()
         )
         .subscribe();
 
@@ -26,7 +27,7 @@ export const Wallet = observer(() => {
         supabase.removeSubscription(chargeSub);
       };
     }
-  }, [lightningStore, lightningStore.charge, walletView]);
+  }, [lightningStore, lightningStore.charge, dashboardView]);
 
   if (!lightningStore.wallet) return <div>no profile</div>;
 

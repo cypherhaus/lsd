@@ -3,18 +3,29 @@ import { useStore } from "../store";
 import { Input } from "./common/Input";
 
 export const Withdraw = observer(() => {
-  const { walletView } = useStore();
+  const { dashboardView, lightningStore } = useStore();
+
+  if (!lightningStore.wallet.ln_address) {
+    return (
+      <div className="flex flex-col items-center h-full p-10 flex-1">
+        <p className="text-xl font-bold text-center mb-8">
+          You must Add a Lightning Address before you can make withdrawals
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center h-full p-10">
+    <div className="flex flex-col items-center h-full p-10 flex-1">
       <p className="text-xl font-bold text-center mb-8">Make a withdrawal</p>
       <Input
         type="number"
-        onChange={walletView.setWithdrawAmount}
+        onChange={dashboardView.setWithdrawAmount}
         placeholder="Amount"
-        value={walletView.withdrawAmount}
+        value={dashboardView.withdrawAmount}
       />
       <button
-        onClick={walletView.handleWithdrawClick}
+        onClick={dashboardView.handleWithdrawClick}
         className="rounded p-3 mt-5 text-white bg-black text-xl font-bold"
       >
         Withdraw

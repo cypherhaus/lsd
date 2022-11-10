@@ -7,7 +7,7 @@ import { Auth } from "./screens/Auth";
 import { useStore } from "./store";
 
 const App = observer(() => {
-  const { authStore, lightningStore, walletView } = useStore();
+  const { authStore, lightningStore, dashboardView } = useStore();
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -17,13 +17,13 @@ const App = observer(() => {
 
     const balanceSub = supabase
       .from(`profiles:id=eq.${authStore.currentUser.id}`)
-      .on("UPDATE", (message) => walletView.handleWalletUpdate(message.new))
+      .on("UPDATE", (message) => dashboardView.handleWalletUpdate(message.new))
       .subscribe();
 
     return () => {
       supabase.removeSubscription(balanceSub);
     };
-  }, [authStore, authStore.currentUser, walletView]);
+  }, [authStore, authStore.currentUser, dashboardView]);
 
   useEffect(() => {
     if (authStore.currentUser) {

@@ -3,19 +3,19 @@ import { useStore } from "../store";
 import { Input } from "./common/Input";
 
 export const LNAddress = observer(() => {
-  const { walletView } = useStore();
+  const { dashboardView } = useStore();
   return (
-    <div className="flex flex-col items-center h-full p-10">
+    <div className="flex flex-col items-center h-full p-10 flex-1">
       <p className="text-xl font-bold text-center mb-8">
         Update your Lightning Address for withdrawals
       </p>
       <Input
-        onChange={walletView.setLightningAddress}
+        onChange={dashboardView.setLightningAddress}
         placeholder="Lightning Address"
-        value={walletView.lnAddress}
+        value={dashboardView.lnAddress}
       />
       <button
-        onClick={walletView.handleUpdateAddressClick}
+        onClick={dashboardView.handleUpdateAddressClick}
         className="rounded p-3 mt-5 text-white bg-black text-xl font-bold"
       >
         Save

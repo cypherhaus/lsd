@@ -2,21 +2,15 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
 import { Input } from "./common/Input";
 
-export const Transfer = observer(() => {
+export const Stream = observer(() => {
   const { dashboardView, authStore } = useStore();
   return (
     <div className="flex flex-col items-center h-full p-10 flex-1">
-      <p className="text-xl font-bold text-center mb-8">Transfer to username</p>
+      <p className="text-xl font-bold text-center mb-8">Stream to username</p>
       <Input
         onChange={dashboardView.setSendUsername}
         placeholder="Username"
         value={dashboardView.sendUsername}
-      />
-      <Input
-        onChange={dashboardView.setSendAmount}
-        placeholder="Amount"
-        type="number"
-        value={dashboardView.sendAmount}
       />
       <button
         onClick={() =>
@@ -24,7 +18,7 @@ export const Transfer = observer(() => {
         }
         className="rounded p-3 mt-5 text-white bg-black text-xl font-bold"
       >
-        Send
+        Start
       </button>
     </div>
   );

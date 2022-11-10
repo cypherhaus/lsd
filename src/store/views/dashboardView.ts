@@ -8,7 +8,7 @@ import {
 } from "../../utils/toast";
 import { Store } from "../store";
 
-export default class WalletView {
+export default class DashboardView {
   private _store: Store;
 
   withdrawAmount: string = "";
