@@ -1,11 +1,5 @@
 import { observer } from "mobx-react-lite";
-import {
-  FUND,
-  LN_ADDRESS,
-  STREAM,
-  TRANSFER,
-  WITHDRAW,
-} from "../constants/sidebar";
+import { FUND, LN_ADDRESS, TRANSFER, WITHDRAW } from "../constants/sidebar";
 
 import { Navigation } from "../navigation";
 import { useStore } from "../store";
@@ -14,7 +8,6 @@ import { LNAddress } from "../components/LNAddress";
 import { Sidebar } from "../components/Sidebar";
 import { Transfer } from "../components/Transfer";
 import { Withdraw } from "../components/Withdraw";
-import { Stream } from "../components/Stream";
 
 export const Dashboard = observer(() => {
   const { sidebarView } = useStore();
@@ -27,8 +20,6 @@ export const Dashboard = observer(() => {
         return <LNAddress />;
       case WITHDRAW:
         return <Withdraw />;
-      case STREAM:
-        return <Stream />;
       case TRANSFER:
         return <Transfer />;
       default:

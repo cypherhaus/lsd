@@ -6,7 +6,7 @@ export const Transfer = observer(() => {
   const { dashboardView, authStore } = useStore();
   return (
     <div className="flex flex-col items-center h-full p-10 flex-1">
-      <p className="text-xl font-bold text-center mb-8">Transfer to username</p>
+      <p className="text-xl font-bold text-center mb-8">Pay a username</p>
       <Input
         onChange={dashboardView.setSendUsername}
         placeholder="Username"

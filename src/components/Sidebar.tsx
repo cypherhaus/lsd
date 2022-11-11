@@ -1,31 +1,19 @@
 import { observer } from "mobx-react-lite";
 import {
   RiFlashlightFill,
-  RiPlayCircleFill,
   RiSendPlaneFill,
   RiCoinFill,
   RiUserReceivedFill,
 } from "react-icons/ri";
-import {
-  FUND,
-  LN_ADDRESS,
-  STREAM,
-  TRANSFER,
-  WITHDRAW,
-} from "../constants/sidebar";
+import { FUND, LN_ADDRESS, TRANSFER, WITHDRAW } from "../constants/sidebar";
 import { useStore } from "../store";
 import { formatNumber } from "../utils/number";
 
 const sidebarItems = [
   {
-    title: "Transfer to username",
+    title: "Pay username",
     icon: <RiSendPlaneFill size={18} color="white" />,
     type: TRANSFER,
-  },
-  {
-    title: "Stream to username",
-    icon: <RiPlayCircleFill size={18} color="white" />,
-    type: STREAM,
   },
   {
     title: "Fund your account",
@@ -60,8 +48,14 @@ export const Sidebar = observer(() => {
       <p className="mb-4 text-white text-center">SATS</p>
       <hr className="mb-8" />
       {sidebarItems.map((item) => (
-        <div className="w-full flex pb-4 items-center">
-          <div className="pr-4 [&>svg]:fill-bolt">{item.icon}</div>
+        <div className={`w-full flex pb-4 items-center`}>
+          <div
+            className={`pr-4 [&>svg]:fill-${
+              sidebarView.activePanel === item.type ? "bolt" : "white"
+            } `}
+          >
+            {item.icon}
+          </div>
           <div
             onClick={() => sidebarView.handleSidebarItemPress(item.type)}
             className={`cursor-pointer pb-2 hover:text-bolt ${
