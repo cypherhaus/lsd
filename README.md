@@ -1,4 +1,4 @@
-# Supabase x ZEBEDEE
+# JuicePack
 
 An easy Bitcoin Lightning Network web app template using [Supabase](http://supabase.com) and [ZEBEDEE](http://zebedee.io)
 
@@ -7,7 +7,7 @@ An easy Bitcoin Lightning Network web app template using [Supabase](http://supab
 - Database (Supabase)
 - State management (Mobx)
 
-## Running supa-zbd
+## Running JuicePack
 
 ### Create accounts
 

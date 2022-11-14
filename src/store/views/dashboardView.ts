@@ -88,6 +88,7 @@ export default class DashboardView {
     this.withdrawAmount = "";
   }
 
+  // Called when clicking Fund button
   handleFundClick() {
     if (this.fundAmount) {
       toast.promise(

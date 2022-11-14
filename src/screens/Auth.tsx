@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useStore } from "../store";
 import { observer } from "mobx-react-lite";
 import { Input } from "../components/common/Input";
+import { JuicePackSVG } from "../components/JuicePackSVG";
 
 export const Auth = observer(() => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("danramac");
-  const [email, setEmail] = useState<string>("dr.mcgrane@gmail.com");
-  const [password, setPassword] = useState<string>("passwordtest");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const { authView } = useStore();
 
@@ -19,7 +20,8 @@ export const Auth = observer(() => {
 
   return (
     <div className="flex flex-col items-center h-full p-10 flex-1">
-      <p className="text-xl font-bold text-center mb-8">
+      <JuicePackSVG width={100} />
+      <p className="mt-10 text-xl font-bold text-center mb-2">
         {isSignUp ? "Sign Up" : "Login"}
       </p>
       {isSignUp && (

@@ -8,6 +8,7 @@ import { Input } from "./common/Input";
 export const Fund = observer(() => {
   const { dashboardView, lightningStore } = useStore();
 
+  // Subscribe to charges to listen for when invoice is settled
   useEffect(() => {
     if (lightningStore.charge) {
       const chargeSub = supabase

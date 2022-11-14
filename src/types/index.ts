@@ -1,5 +1,4 @@
-import { FUND, LN_ADDRESS } from "../constants/sidebar";
-
+import { ApiError, Session, User as SupaUser } from "@supabase/supabase-js";
 // User credentials for local state
 export interface User {
   email: string;

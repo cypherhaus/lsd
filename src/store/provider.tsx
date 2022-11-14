@@ -1,4 +1,4 @@
-import React, { useContext, FC, createContext } from "react";
+import { useContext, FC, createContext } from "react";
 import { Store } from "./store";
 
 const StoreContext = createContext<Store | undefined>(undefined);

@@ -2,14 +2,20 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store";
 
 export const Navigation = observer(() => {
-  const { authStore } = useStore();
+  const { authStore, lightningStore } = useStore();
   return (
     <div className="flex justify-end pt-5 px-5 items-center">
       {authStore.currentUser && (
-        <div>
+        <div className="flex flex-1 justify-between">
           <span
             onClick={() => authStore.logout()}
-            className="ml-8 font-bold cursor-pointer text-offWhite"
+            className="font-bold cursor-pointer text-offWhite"
+          >
+            hi {lightningStore.wallet?.username}!
+          </span>
+          <span
+            onClick={() => authStore.logout()}
+            className="font-bold cursor-pointer text-offWhite"
           >
             LOGOUT
           </span>

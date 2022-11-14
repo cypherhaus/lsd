@@ -19,7 +19,6 @@ export default class AuthView {
 
   //  Signs up a user to Supabase and creates a Lightning Wallet
   async createUser(email: string, username: string, password: string) {
-    // Create a new user on Supabase Authentication
     const userId = await this._store.authStore.signUp(
       email,
       username,

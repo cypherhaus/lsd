@@ -12,46 +12,46 @@ export default class AuthStore {
     this._store = store;
   }
 
-  /**
-   * Signup User
-   */
+  // Sign Up User
   async signUp(email: string, username: string, password: string) {
     try {
-      // Todo fix type
-      // @ts-ignore
-      const { user, session } = await this._store.api.authAPI.signUp(
+      const response = await this._store.api.authAPI.signUp(
         email,
         username,
         password
       );
-      this.currentUser = user;
 
-      this._store.api.lightningAPI.setToken(session.access_token);
-      return user.id;
+      if (response?.session) {
+        this._store.api.lightningAPI.setToken(response.session.access_token);
+      }
+
+      if (response?.user) {
+        this.currentUser = response.user;
+        return response;
+      }
     } catch (err) {
       console.log("Error signing up user", username);
     }
   }
 
-  /**
-   * Login User
-   */
+  // Login User
   async login(email: string, password: string) {
     try {
-      // Todo fix type
-      // @ts-ignore
-      const { user, session } = await this._store.api.authAPI.login(
-        email,
-        password
-      );
-      console.log({ user, session });
-      this.currentUser = user;
-      this._store.api.lightningAPI.setToken(session.access_token);
+      const response = await this._store.api.authAPI.login(email, password);
+
+      if (response?.user) {
+        this.currentUser = response.user;
+      }
+
+      if (response?.session) {
+        this._store.api.lightningAPI.setToken(response.session.access_token);
+      }
     } catch (err) {
       console.log("Error logging in user", email);
     }
   }
 
+  // Logout User
   async logout() {
     try {
       await this._store.api.authAPI.signOut();
@@ -65,6 +65,7 @@ export default class AuthStore {
     }
   }
 
+  // Set User in state
   async setUser(session: any) {
     this._store.api.lightningAPI.setToken(session.access_token);
     runInAction(() => {

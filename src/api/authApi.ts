@@ -1,5 +1,6 @@
 import { supabase } from "../config/supabase";
 import { definitions } from "../types/supabase";
+import { errorToast } from "../utils/toast";
 
 export default class AuthAPI {
   signUp = async (email: string, username: string, password: string) => {
@@ -9,11 +10,16 @@ export default class AuthAPI {
         password,
       });
 
-      if (user) {
-        await supabase.from("profiles").update({ username }).eq("id", user.id);
+      if (error) {
+        errorToast(error.message);
       }
 
-      return { user, session, error };
+      if (user) {
+        await supabase.from("profiles").update({ username }).eq("id", user.id);
+        return { user, session, error };
+      }
+
+      return null;
     } catch (error) {
       console.log({ error });
     }
@@ -25,7 +31,11 @@ export default class AuthAPI {
         email,
         password,
       });
-      console.log({ user, session });
+
+      if (error) {
+        errorToast(error.message);
+      }
+
       return { user, session, error };
     } catch (error) {
       console.log({ error });

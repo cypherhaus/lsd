@@ -12,23 +12,28 @@ export default class LightningStore {
     this._store = store;
   }
 
+  // Set wallet in state
   setWallet(wallet: any) {
     this.wallet = wallet;
   }
 
+  // Rest state after settled
   chargeSettled() {
     this.charge = null;
   }
 
+  // Reset Wallet State
   clearWallet() {
     this.wallet = null;
   }
 
+  // Fetch user wallet
   async fetchWallet(id: string) {
     const data = await this._store.api.lightningAPI.fetchWallet(id);
     this.wallet = data;
   }
 
+  // Create a charge
   async createCharge(amount: string) {
     const result = await this._store.api.lightningAPI.createCharge(amount);
 
@@ -46,6 +51,7 @@ export default class LightningStore {
     return data;
   }
 
+  // Updating Lightning Address
   async updateLnAddress(address: string) {
     const response = await this._store.api.lightningAPI.updateLnAddress(
       address
@@ -62,7 +68,4 @@ export default class LightningStore {
 
     return response;
   }
-
-  // Get Transactions
-  async getTxs() {}
 }
