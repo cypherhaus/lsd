@@ -58,4 +58,4 @@ Deploy the edge functions to your Supabase project with `supabase functions depl
 
 Readme Todos
 
-- Guide on database functions/triggers
+[] A Guide on database functions/triggers
