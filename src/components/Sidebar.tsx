@@ -6,13 +6,14 @@ import { JuicePackSVG } from "./JuicePackSVG";
 
 const sidebarItems = [
   {
-    title: "Pay username",
+    title: "Pay",
     type: TRANSFER,
   },
   {
-    title: "Fund your account",
+    title: "Fund",
     type: FUND,
   },
+
   {
     title: "Update LN Address",
     type: LN_ADDRESS,
@@ -37,7 +38,7 @@ export const Sidebar = observer(() => {
       <p className="mb-4 mt-2 text-white text-center">SATS</p>
       <hr className="mb-8" />
       {sidebarItems.map((item) => (
-        <div className="w-full flex pb-4 items-center text-xl">
+        <div className="w-full flex pb-2 items-center text-xl">
           <div
             onClick={() => sidebarView.handleSidebarItemPress(item.type)}
             className={`cursor-pointer pb-2 hover:text-bolt ${
