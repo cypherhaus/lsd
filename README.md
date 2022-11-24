@@ -57,5 +57,4 @@ Link your project with `supabase link --project-ref your-project-ref` (replace `
 Deploy the edge functions to your Supabase project with `supabase functions deploy create-charge`. (Repeat this step for all of the Edge Functions).
 
 Readme Todos
-
-[] A Guide on database functions/triggers
+- A Guide on database functions/triggers
