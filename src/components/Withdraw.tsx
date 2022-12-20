@@ -30,7 +30,7 @@ export const Withdraw = observer(() => {
       />
       <button
         onClick={dashboardView.handleWithdrawClick}
-        className="rounded p-3 mt-5 text-white bg-orange text-xl font-bold"
+        className="rounded p-3 mt-5 text-white bg-cypherhaus text-xl font-bold"
       >
         Withdraw
       </button>

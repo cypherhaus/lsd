@@ -8,7 +8,6 @@ import { LNAddress } from "../components/LNAddress";
 import { Sidebar } from "../components/Sidebar";
 import { Transfer } from "../components/Transfer";
 import { Withdraw } from "../components/Withdraw";
-import { CypherhausSVG } from "../components/CypherhausSVG";
 
 export const Dashboard = observer(() => {
   const { sidebarView } = useStore();
@@ -35,10 +34,6 @@ export const Dashboard = observer(() => {
         <Navigation />
         <div className="p-5 flex flex-row items-center pt-12 pl-40 pr-40">
           {renderPanel()}
-        </div>
-        <div className="pb-4 flex flex-row mt-auto items-center justify-center">
-          <p className="text-black pr-2">Built with love by</p>
-          <CypherhausSVG />
         </div>
       </div>
     </div>

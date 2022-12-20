@@ -21,7 +21,7 @@ export const Auth = observer(() => {
 
   return (
     <div className="flex flex-col items-center h-full p-10 flex-1">
-      <img height={120} width={120} src={logo} alt="logo" />
+      {/* <img height={120} width={120} src={logo} alt="logo" /> */}
       <p className="mt-6 text-xl font-bold text-center mb-2">
         {isSignUp ? "Sign Up" : "Login"}
       </p>
@@ -37,7 +37,7 @@ export const Auth = observer(() => {
         value={password}
       />
       <button
-        className="rounded p-3 mt-5 mb-5 text-white bg-orange text-xl font-bold"
+        className="rounded p-3 mt-5 mb-5 text-white bg-cypherhaus text-xl font-bold"
         onClick={() => (isSignUp ? handleSignup() : handleLogin())}
       >
         SUBMIT
