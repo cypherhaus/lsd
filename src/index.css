@@ -9,8 +9,8 @@ body {
   font-family: "Source Code Pro", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1c1c1c;
-  color: #ffffff;
+  background-color: #ffd2b2;
+  color: black;
 }
 
 code {

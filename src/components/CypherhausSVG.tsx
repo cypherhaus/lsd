@@ -1,4 +1,4 @@
-export const CypherhausSVG = ({ fill = "#666666" }: { fill?: string }) => (
+export const CypherhausSVG = ({ fill = "black" }: { fill?: string }) => (
   <a href="http://cypherha.us" className="cursor-pointer">
     <svg
       width="100"

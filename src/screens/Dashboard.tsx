@@ -37,7 +37,7 @@ export const Dashboard = observer(() => {
           {renderPanel()}
         </div>
         <div className="pb-4 flex flex-row mt-auto items-center justify-center">
-          <p className="text-dark200 pr-2">Built with love by</p>
+          <p className="text-black pr-2">Built with love by</p>
           <CypherhausSVG />
         </div>
       </div>

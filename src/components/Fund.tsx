@@ -39,7 +39,7 @@ export const Fund = observer(() => {
       ></Input>
       <button
         onClick={dashboardView.handleFundClick}
-        className="rounded p-3 mt-5 text-white bg-black text-xl font-bold mb-6"
+        className="rounded p-3 mt-5 text-white bg-orange text-xl font-bold mb-6"
       >
         Fund
       </button>

@@ -1,4 +1,4 @@
-export const BASE_URL = "https://supa-zbd.netlify.app/.netlify/functions";
+export const BASE_URL = `${process.env.REACT_APP_NETLIFY_URL}/.netlify/functions`;
 
 export const CREATE_CHARGE = "create-charge";
 export const SETTLE_CHARGE = "settle-charge";

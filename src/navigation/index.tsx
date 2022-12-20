@@ -9,13 +9,13 @@ export const Navigation = observer(() => {
         <div className="flex flex-1 justify-between">
           <span
             onClick={() => authStore.logout()}
-            className="font-bold cursor-pointer text-offWhite"
+            className="font-bold cursor-pointer text-black"
           >
             hi {lightningStore.wallet?.username}!
           </span>
           <span
             onClick={() => authStore.logout()}
-            className="font-bold cursor-pointer text-offWhite"
+            className="font-bold cursor-pointer text-black"
           >
             LOGOUT
           </span>
