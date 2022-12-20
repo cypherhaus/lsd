@@ -2,9 +2,7 @@ import { observer } from "mobx-react-lite";
 import { FUND, LN_ADDRESS, TRANSFER, WITHDRAW } from "../constants/sidebar";
 import { useStore } from "../store";
 import { formatNumber } from "../utils/number";
-import { CypherhausSVG } from "./CypherhausSVG";
 // @ts-ignore
-// import alternateLogo from "../assets/alternate.png";
 
 const sidebarItems = [
   {
@@ -45,7 +43,7 @@ export const Sidebar = observer(() => {
       </p>
       <p className="mb-4 mt-2 text-cypherhaus text-center">SATS</p>
       {sidebarItems.map((item) => (
-        <div className="w-full flex pb-2 items-center text-xl">
+        <div key={item.title} className="w-full flex pb-2 items-center text-xl">
           <div
             onClick={() => sidebarView.handleSidebarItemPress(item.type)}
             className={`cursor-pointer pb-2 hover:text-cypherhaus ${

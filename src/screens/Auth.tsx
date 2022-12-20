@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useStore } from "../store";
 import { observer } from "mobx-react-lite";
 import { Input } from "../components/common/Input";
-// @ts-ignore
-import logo from "../assets/logo.png";
 
 export const Auth = observer(() => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
