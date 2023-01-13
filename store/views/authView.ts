@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { Store } from "../store";
+import Router from "next/router";
 
 export default class AuthView {
   private _store: Store;
@@ -13,19 +14,20 @@ export default class AuthView {
   }
 
   // Login user
-  login(email: string, password: string) {
-    this._store.authStore.login(email, password);
+  async login(email: string, password: string) {
+    const response = await this._store.authStore.login(email, password);
+    if (response) Router.push("/dashboard/home");
+  }
+
+  // Logout user
+  async logout() {
+    const success = await this._store.authStore.logout();
+    if (success) Router.push("/login");
   }
 
   //  Signs up a user to Supabase and creates a Lightning Wallet
-  async createUser(email: string, username: string, password: string) {
-    const user = await this._store.authStore.signUp(email, username, password);
-
-    this.user = {
-      email,
-      id: user.id,
-    };
-
-    console.log(this.user);
+  async createUser(email: string, password: string) {
+    const success = await this._store.authStore.signUp(email, password);
+    if (success) Router.push("/dashboard/home");
   }
 }

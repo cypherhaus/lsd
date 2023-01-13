@@ -1,5 +1,3 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { Input } from "../components/common/Input";
 import { useEffect, useState } from "react";
 import { useStore } from "../store";
@@ -8,7 +6,6 @@ import { useRouter } from "next/router";
 
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
@@ -16,16 +13,18 @@ export default function Login() {
   const { authView, authStore } = useStore();
 
   const handleSignup = async () => {
-    authView.createUser(email, username, password);
+    authView.createUser(email, password);
   };
 
-  const handleLogin = async () => authView.login(email, password);
+  const handleLogin = async () => {
+    authView.login(email, password);
+  };
 
   const rerieveSession = async () => {
-    const session = await supabase.auth.getSession();
-    if (session) {
-      authStore.setUser(session);
-      router.push("/");
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      authStore.setUser(data.session);
+      router.push("/dashboard/home");
     }
   };
 
@@ -39,13 +38,6 @@ export default function Login() {
         <p className="mt-6 text-xl font-bold text-center mb-2">
           {isSignUp ? "Sign Up" : "Login"}
         </p>
-        {isSignUp && (
-          <Input
-            placeholder="username"
-            onChange={setUsername}
-            value={username}
-          />
-        )}
 
         <Input placeholder="email" value={email} onChange={setEmail} />
         <Input

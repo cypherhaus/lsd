@@ -13,20 +13,16 @@ export default class AuthStore {
   }
 
   // Sign Up User
-  async signUp(email: string, username: string, password: string) {
+  async signUp(email: string, password: string) {
     try {
-      const response = await this._store.api.authAPI.signUp(
-        email,
-        username,
-        password
-      );
-
-      if (response) {
-        this.currentUser = response.user;
-        return response;
+      const response = await this._store.api.authAPI.signUp(email, password);
+      if (response.user) {
+        return true;
+      } else {
+        return false;
       }
     } catch (err) {
-      console.log("Error signing up user", username);
+      console.log("Error signing up user", email);
     }
   }
 
@@ -35,9 +31,12 @@ export default class AuthStore {
     try {
       const response = await this._store.api.authAPI.login(email, password);
 
-      if (response?.user) {
-        this.currentUser = response.user;
+      if (response.data) {
+        this.currentUser = response.data.user;
+        return response.data.user;
       }
+
+      return null;
     } catch (err) {
       console.log("Error logging in user", email);
     }
@@ -46,12 +45,15 @@ export default class AuthStore {
   // Logout User
   async logout() {
     try {
-      await this._store.api.authAPI.signOut();
+      const success = await this._store.api.authAPI.signOut();
       runInAction(() => {
         this.currentUser = null;
       });
+      return success;
     } catch (err) {
       console.log({ err });
+
+      return null;
     }
   }
 
