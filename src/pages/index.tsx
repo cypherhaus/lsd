@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useStore } from "../store";
 import { supabase } from "../config/supabase";
 import { useRouter } from "next/router";
+import { Button } from "../components/common/Button";
 
 export default function Home() {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
@@ -45,12 +46,7 @@ export default function Home() {
         placeholder="password"
         value={password}
       />
-      <button
-        className="rounded p-3 mt-5 mb-5 bg-black text-white text-xl font-bold"
-        onClick={() => (isSignUp ? handleSignup() : handleLogin())}
-      >
-        SUBMIT
-      </button>
+      <Button onClick={isSignUp ? handleSignup : handleLogin}>SUBMIT</Button>
       <div className="cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? "Have an account?" : "Don't have an account?"}
       </div>
