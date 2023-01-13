@@ -13,10 +13,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   // Check auth condition
-  if (session) {
-    console.log({ session });
-    return res;
-  }
+  if (session) return res;
 
   // Auth condition not met, redirect to home page.
   const redirectUrl = req.nextUrl.clone();

@@ -4,13 +4,14 @@ import { errorToast } from "../utils/toast";
 export default class AuthAPI {
   signUp = async (email: string, password: string) => {
     try {
-      const { data } = await supabase.auth.signUp({
+      const response = await supabase.auth.signUp({
         email,
         password,
       });
 
-      return data;
+      return response;
     } catch (error) {
+      errorToast("Failed to signup");
       console.log({ error });
     }
   };
@@ -23,6 +24,7 @@ export default class AuthAPI {
 
       return data;
     } catch (error) {
+      errorToast("Failed to login");
       console.log({ error });
     }
   };
@@ -32,6 +34,7 @@ export default class AuthAPI {
       if (!error) return true;
       return false;
     } catch (error) {
+      errorToast("Failed to signout");
       console.log({ error });
     }
   };

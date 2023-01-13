@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
+import { errorToast } from "../../utils/toast";
 import { Store } from "../store";
 
 export default class AuthStore {
@@ -16,11 +17,13 @@ export default class AuthStore {
   async signUp(email: string, password: string) {
     try {
       const response = await this._store.api.authAPI.signUp(email, password);
-      if (response.user) {
-        return true;
-      } else {
-        return false;
+      if (response.error) {
+        errorToast(response.error.message);
+        return;
       }
+
+      if (response.data.user) return true;
+      return false;
     } catch (err) {
       console.log("Error signing up user", email);
     }
@@ -30,6 +33,11 @@ export default class AuthStore {
   async login(email: string, password: string) {
     try {
       const response = await this._store.api.authAPI.login(email, password);
+
+      if (response.error) {
+        errorToast(response.error.message);
+        return;
+      }
 
       if (response.data) {
         this.currentUser = response.data.user;
