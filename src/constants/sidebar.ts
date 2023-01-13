@@ -1,10 +1,22 @@
 export const SIDEBAR_ITEMS = [
   {
-    label: "One",
-    href: "/dashboard/home",
+    label: "Bookings",
+    href: "/dashboard/bookings",
   },
   {
-    label: "Two",
-    href: "/dashboard/another",
+    label: "Availability",
+    href: "/dashboard/availability",
+  },
+  {
+    label: "Website",
+    href: "/dashboard/website",
+  },
+  {
+    label: "Prices",
+    href: "/dashboard/prices",
+  },
+  {
+    label: "Settings",
+    href: "/dashboard/settings",
   },
 ];

@@ -24,7 +24,7 @@ export default function Home() {
     const { data } = await supabase.auth.getSession();
     if (data.session) {
       authStore.setUser(data.session);
-      router.push("/dashboard/home");
+      router.push("/dashboard/bookings");
     }
   };
 

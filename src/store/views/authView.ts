@@ -16,7 +16,7 @@ export default class AuthView {
   // Login user
   async login(email: string, password: string) {
     const response = await this._store.authStore.login(email, password);
-    if (response) Router.push("/dashboard/home");
+    if (response) Router.push("/dashboard/bookings");
   }
 
   // Logout user
@@ -28,6 +28,6 @@ export default class AuthView {
   //  Signs up a user to Supabase and creates a Lightning Wallet
   async createUser(email: string, password: string) {
     const success = await this._store.authStore.signUp(email, password);
-    if (success) Router.push("/dashboard/home");
+    if (success) Router.push("/dashboard/bookings");
   }
 }

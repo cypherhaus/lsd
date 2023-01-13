@@ -7,6 +7,7 @@ export const Sidebar = () => {
     <aside className="p-4 w-80 h-full bg-[lightGrey] flex gap-4 flex-col">
       {SIDEBAR_ITEMS.map((navItem) => (
         <div
+          key={navItem.href}
           className="cursor-pointer"
           onClick={() => router.push(navItem.href)}
         >
