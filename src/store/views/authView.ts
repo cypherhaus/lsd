@@ -22,7 +22,7 @@ export default class AuthView {
   // Logout user
   async logout() {
     const success = await this._store.authStore.logout();
-    if (success) Router.push("/login");
+    if (success) Router.push("/");
   }
 
   //  Signs up a user to Supabase and creates a Lightning Wallet
