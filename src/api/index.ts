@@ -1,1 +1,2 @@
-export { default as AuthAPI } from "./authApi";
+export { default as AuthAPI } from "./auth";
+export { default as DogmoAPI } from "./dogmo";
