@@ -6,7 +6,7 @@ interface ButtonProps {
 export const Button = ({ children, ...rest }: ButtonProps) => {
   return (
     <button
-      className="rounded p-3 mt-5 mb-5 bg-black text-white text-xl font-bold"
+      className="rounded p-3 bg-black text-white text-xl font-bold"
       {...rest}
     >
       {children}

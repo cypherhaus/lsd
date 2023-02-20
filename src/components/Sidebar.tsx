@@ -4,7 +4,7 @@ import { SIDEBAR_ITEMS } from "../constants/sidebar";
 export const Sidebar = () => {
   const router = useRouter();
   return (
-    <aside className="p-4 w-80 h-full bg-[lightGrey] flex gap-4 flex-col">
+    <aside className="p-4 w-40 h-full bg-[lightGrey] flex gap-4 flex-col">
       {SIDEBAR_ITEMS.map((navItem) => (
         <div
           key={navItem.href}

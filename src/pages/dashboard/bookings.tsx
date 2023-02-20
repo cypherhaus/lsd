@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { useStore } from "../../store";
 import { useUser } from "@supabase/auth-helpers-react";
 import { observer } from "mobx-react-lite";
+import { Button } from "../../components/common/Button";
+import { ADD_BLOCK_MODAL } from "../../constants/modals";
 
 const Bookings = observer(() => {
-  const { bookingView } = useStore();
+  const { bookingView, modalView, bookingStore } = useStore();
 
   const user = useUser();
 
@@ -15,6 +17,7 @@ const Bookings = observer(() => {
 
     bookingView.fetchProfile(user.id);
     bookingView.fetchBookings(user.id);
+    bookingView.fetchBlockedTimes(user.id);
   }, [user]);
 
   return (
@@ -29,22 +32,30 @@ const Bookings = observer(() => {
           <div onClick={bookingView.nextDay}>next</div>
         </div>
         <div className="flex flex-col items-center">
-          {bookingView.dayBookings &&
-            bookingView.dayBookings.map((item) => (
+          {bookingView.dayTimeBlocks &&
+            bookingView.dayTimeBlocks.map((item) => (
               <div
                 key={item.id}
-                className="w-80 h-28 bg-[lightGrey] mt-8 p-4 rounded flex-row flex gap-8"
+                className={`w-80 h-28 bg-[lightGrey] mt-8 p-4 rounded flex-row flex gap-8 ${
+                  item.type === "blocked" ? "bg-[red]" : ""
+                }`}
               >
                 <div className="flex flex-col justify-between">
                   <div>{moment(item.start).format("HH:mm")}</div>
                   <div>{moment(item.end).format("HH:mm")}</div>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold">Rio</div>
-                  <div>Maltipoo</div>
-                </div>
+                {item.type === "booking" && (
+                  <div>
+                    <div className="text-2xl font-bold">Rio</div>
+                    <div>Maltipoo</div>
+                  </div>
+                )}
               </div>
             ))}
+        </div>
+
+        <div>
+          <Button onClick={bookingView.addBlockClick}>Add Blocked Time</Button>
         </div>
       </div>
     </Layout>

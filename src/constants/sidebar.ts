@@ -4,12 +4,12 @@ export const SIDEBAR_ITEMS = [
     href: "/dashboard/bookings",
   },
   {
-    label: "Availability",
+    label: "Working Hours",
     href: "/dashboard/availability",
   },
   {
-    label: "Website",
-    href: "/dashboard/website",
+    label: "Shopfront",
+    href: "/dashboard/shopfront",
   },
   {
     label: "Prices",

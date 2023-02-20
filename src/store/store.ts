@@ -1,32 +1,40 @@
 import { makeAutoObservable } from "mobx";
-import { AuthAPI, DogmoAPI } from "../api";
-import { AuthStore, BookingStore, AvailabilityStore } from "./stores";
-import { AuthView, BookingView, AvailabilityView } from "./views";
+import { AuthAPI, DashAPI } from "../api";
+import { AuthStore, BookingStore, ShiftsStore } from "./stores";
+import {
+  AuthView,
+  BookingView,
+  ModalView,
+  ShiftsView,
+  ShopfrontView,
+} from "./views";
 
 export class Store {
   // Child Stores
   authStore = new AuthStore(this);
   bookingStore = new BookingStore(this);
-  availabilityStore = new AvailabilityStore(this);
+  shiftsStore = new ShiftsStore(this);
 
   // Views - UI interaction state
   authView = new AuthView(this);
   bookingView = new BookingView(this);
-  availabilityView = new AvailabilityView(this);
+  shiftsView = new ShiftsView(this);
+  modalView = new ModalView(this);
+  shopfrontView = new ShopfrontView(this);
 
   api: {
     authAPI: AuthAPI;
-    dogmoAPI: DogmoAPI;
+    dashAPI: DashAPI;
   };
 
-  constructor(authAPI: AuthAPI, dogmoAPI: DogmoAPI) {
+  constructor(authAPI: AuthAPI, dashAPI: DashAPI) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
-    this.api = { authAPI, dogmoAPI };
+    this.api = { authAPI, dashAPI };
   }
 }
 
 export const createStore = () => {
   const authAPI = new AuthAPI();
-  const dogmoAPI = new DogmoAPI();
-  return new Store(authAPI, dogmoAPI);
+  const dashAPI = new DashAPI();
+  return new Store(authAPI, dashAPI);
 };
