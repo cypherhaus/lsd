@@ -22,7 +22,7 @@ export const LoginForm = observer(() => {
       onSubmit={(values) => authView.handleLoginClick(values)}
     >
       {() => (
-        <Form>
+        <Form className="flex flex-col">
           <div className="flex flex-col">
             <Field name="email">
               {({ field, meta }: any) => (

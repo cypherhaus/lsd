@@ -59,23 +59,23 @@ export const SignUpForm = observer(() => {
               {({ field, meta }: any) => (
                 <Input
                   {...field}
-                  // error={!!(meta.touched && meta.error)}
+                  error={!!(meta.touched && meta.error)}
                   type="password"
                   placeholder="Password"
                 />
               )}
             </Field>
             {errors.password && touched.password ? (
-              <div>
-                8 Characters minimum
-                <br />1 Lowercase
-                <br /> 1 Uppercase
-                <br />1 Number
-              </div>
+              <ul className="text-brandOrange text-xs font-normal list-inside list-disc">
+                <li>8 Characters minimum</li>
+                <li>At least 1 lowercase letter</li>
+                <li>At least 1 uppercase letter</li>
+                <li>At least 1 number</li>
+              </ul>
             ) : null}
           </div>
 
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit">Sign up</Button>
         </Form>
       )}
     </Formik>

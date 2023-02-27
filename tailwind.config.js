@@ -20,6 +20,7 @@ module.exports = {
     },
     fontFamily: {
       'sans': 'Rubik, sans-serif',
+      'button': 'Inter, sans-serif'
     }
   },
   plugins: [],

@@ -9,8 +9,8 @@ const Auth = observer(() => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
   return (
-    <div className="p-10 bg-white">
-      <p className="text-6xl font-bold text-center text-brandOrange mb-2">
+    <div className="flex flex-col bg-white gap-4 rounded-xl p-10">
+      <p className="text-6xl font-bold text-center text-brandOrange">
         {isSignUp ? "Sign Up" : "Welcome"}
       </p>
 
