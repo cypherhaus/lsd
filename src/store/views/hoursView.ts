@@ -11,7 +11,7 @@ import moment, { Moment } from "moment";
 import { EditShift, Shift } from "../../../types/bookings";
 import { ADD_MODAL, DELETE_MODAL } from "../../constants/modals";
 
-export default class ShiftsView {
+export default class HoursView {
   private _store: Store;
 
   weekStart: Moment | null = null;

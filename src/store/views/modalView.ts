@@ -22,8 +22,8 @@ export default class ModalView {
   closeModal = () => {
     this.modalOpen = false;
     this.modalType = null;
-    this._store.shiftsView.shiftToDelete = null;
-    this._store.shiftsView.shiftToDeleteDate = null;
+    this._store.hoursView.shiftToDelete = null;
+    this._store.hoursView.shiftToDeleteDate = null;
   };
 
   openModal = (type: string) => {

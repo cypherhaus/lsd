@@ -9,7 +9,7 @@ import { TimeInput } from "../../components/common/TimeInput";
 import { Profile } from "../../../types/members";
 
 export const MemberShifts = observer(({ member }: { member: Profile }) => {
-  const { shiftsView } = useStore();
+  const { hoursView } = useStore();
   const [thisWeek, setThisWeek] = useState<Moment[]>([]);
 
   const user = useUser();
@@ -17,28 +17,28 @@ export const MemberShifts = observer(({ member }: { member: Profile }) => {
   useEffect(() => {
     if (!user) return;
 
-    shiftsView.fetchShifts(user.id);
+    hoursView.fetchShifts(user.id);
   }, [user]);
 
   useEffect(() => {
-    if (!shiftsView.weekStart || !shiftsView.weekEnd) return;
-    let day = shiftsView.weekStart.clone();
+    if (!hoursView.weekStart || !hoursView.weekEnd) return;
+    let day = hoursView.weekStart.clone();
     const days = [];
-    while (day < shiftsView.weekEnd) {
+    while (day < hoursView.weekEnd) {
       days.push(day);
       day = day.clone().add(1, "days");
     }
     setThisWeek(days);
-  }, [shiftsView.weekStart, shiftsView.weekEnd]);
+  }, [hoursView.weekStart, hoursView.weekEnd]);
 
-  if (!shiftsView.weekStart || !shiftsView.weekEnd) return <></>;
+  if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
-  const editMode = shiftsView.dayInAddMode || shiftsView.dayInEditMode;
+  const editMode = hoursView.dayInAddMode || hoursView.dayInEditMode;
 
   return (
     <div className="mt-10 flex gap-4">
       {thisWeek.map((day, index) => {
-        const shifts = shiftsView.activeWeekShifts?.[index] ?? [];
+        const shifts = hoursView.activeWeekShifts?.[index] ?? [];
 
         return (
           <div
@@ -55,7 +55,7 @@ export const MemberShifts = observer(({ member }: { member: Profile }) => {
                       <TimeInput
                         time={shift.start}
                         onChange={(v) =>
-                          shiftsView.handleEditShift({
+                          hoursView.handleEditShift({
                             slot: v as Slot,
                             shifts,
                             day,
@@ -67,7 +67,7 @@ export const MemberShifts = observer(({ member }: { member: Profile }) => {
                       <TimeInput
                         time={shift.end}
                         onChange={(v) =>
-                          shiftsView.handleEditShift({
+                          hoursView.handleEditShift({
                             slot: v as Slot,
                             shifts,
                             day,
@@ -79,7 +79,7 @@ export const MemberShifts = observer(({ member }: { member: Profile }) => {
                     </div>
                     {!editMode && (
                       <Button
-                        onClick={() => shiftsView.deleteShift(shift.id, day)}
+                        onClick={() => hoursView.deleteShift(shift.id, day)}
                       >
                         Delete
                       </Button>

@@ -8,21 +8,21 @@ import { useUser } from "@supabase/auth-helpers-react";
 
 export const DeleteShift = observer(() => {
   const [shift, setShift] = useState<Shift | null>(null);
-  const { shiftsView } = useStore();
+  const { hoursView } = useStore();
   const user = useUser();
 
   useEffect(() => {
-    if (!shiftsView.activeWeekShifts) return;
-    if (!shiftsView.shiftToDelete) return;
+    if (!hoursView.activeWeekShifts) return;
+    if (!hoursView.shiftToDelete) return;
 
-    const foundShift = shiftsView.activeWeekShifts
+    const foundShift = hoursView.activeWeekShifts
       .flat()
-      .find((shift) => shift.id === shiftsView.shiftToDelete);
+      .find((shift) => shift.id === hoursView.shiftToDelete);
 
     if (foundShift) {
       setShift(foundShift);
     }
-  }, [shiftsView.shiftToDelete]);
+  }, [hoursView.shiftToDelete]);
 
   if (!shift) return null;
 
@@ -36,12 +36,12 @@ export const DeleteShift = observer(() => {
         </div>
         Pick an option below
         <Button
-          onClick={() => shiftsView.deleteShiftOnce(shift.id, user?.id ?? "")}
+          onClick={() => hoursView.deleteShiftOnce(shift.id, user?.id ?? "")}
         >
           Delete Once
         </Button>
         <Button
-          onClick={() => shiftsView.deleteShiftAll(shift.id, user?.id ?? "")}
+          onClick={() => hoursView.deleteShiftAll(shift.id, user?.id ?? "")}
         >
           Delete All
         </Button>

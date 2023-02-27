@@ -5,7 +5,7 @@ import {
   AuthView,
   BookingView,
   ModalView,
-  ShiftsView,
+  HoursView,
   ShopfrontView,
 } from "./views";
 
@@ -18,7 +18,7 @@ export class Store {
   // Views - UI interaction state
   authView = new AuthView(this);
   bookingView = new BookingView(this);
-  shiftsView = new ShiftsView(this);
+  hoursView = new HoursView(this);
   modalView = new ModalView(this);
   shopfrontView = new ShopfrontView(this);
 
