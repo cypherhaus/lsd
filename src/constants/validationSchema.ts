@@ -17,7 +17,7 @@ export const SignupSchema = Yup.object().shape({
   password: Yup.string()
     .matches(
       PASSWORD_REGEX,
-      "Contains 1 uppercase letter, 1 lowercase letter, 1 number, and greater than 8 characters"
+      "password-contains"
     )
     .required("Required"),
 });

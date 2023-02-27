@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       backgroundImage:
          {
-           'paw_background': "url(../media/paw.svg)"
+           'pawBackground': "url(../media/paw.svg)"
          }
     },
     colors: {

@@ -8,6 +8,7 @@ import { Input } from "../common/Input";
 // Constants
 import { SignupSchema } from "../../constants/validationSchema";
 import { Button } from "../common/Button";
+import { ErrorLabel } from "../common/ErrorLabel";
 import { useStore } from "../../store";
 
 export const SignUpForm = observer(() => {
@@ -35,7 +36,9 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
-
+            {errors.firstName && touched.firstName ? (
+              <ErrorLabel>{errors.firstName}</ErrorLabel>
+            ) : null}
             <Field name="lastName">
               {({ field, meta }: any) => (
                 <Input
@@ -45,7 +48,9 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
-
+            {errors.lastName && touched.lastName ? (
+              <ErrorLabel>{errors.lastName}</ErrorLabel>
+            ) : null}
             <Field name="email">
               {({ field, meta }: any) => (
                 <Input
@@ -55,6 +60,9 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
+            {errors.email && touched.email ? (
+              <ErrorLabel>{errors.email}</ErrorLabel>
+            ) : null}
             <Field name="password">
               {({ field, meta }: any) => (
                 <Input
@@ -66,12 +74,7 @@ export const SignUpForm = observer(() => {
               )}
             </Field>
             {errors.password && touched.password ? (
-              <ul className="text-brandOrange text-xs font-normal list-inside list-disc">
-                <li>8 Characters minimum</li>
-                <li>At least 1 lowercase letter</li>
-                <li>At least 1 uppercase letter</li>
-                <li>At least 1 number</li>
-              </ul>
+              <ErrorLabel>{errors.password}</ErrorLabel>
             ) : null}
           </div>
 
