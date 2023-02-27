@@ -11,7 +11,7 @@ const Auth = observer(() => {
   return (
     <div className="flex flex-col bg-white gap-4 rounded-xl p-10">
       <p className="text-6xl font-bold text-center text-brandOrange">
-        {isSignUp ? "Sign Up" : "Welcome"}
+        Welcome
       </p>
 
       {isSignUp ? <SignUpForm /> : <LoginForm />}
