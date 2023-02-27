@@ -51,7 +51,7 @@ export const LoginForm = observer(() => {
             </Field>
           </div>
 
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit">LOGIN</Button>
         </Form>
       )}
     </Formik>
