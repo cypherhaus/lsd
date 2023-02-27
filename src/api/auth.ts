@@ -1,13 +1,28 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
+import { SignUpValues, SignInValues } from "../../types/auth";
 import { supabase } from "../config/supabase";
 import { errorToast } from "../utils/toast";
 
 export default class AuthAPI {
-  signUp = async (email: string, password: string) => {
+  signUp = async ({ email, password, firstName, lastName }: SignUpValues) => {
     try {
       const response = await supabase.auth.signUp({
         email,
         password,
       });
+
+      if (response.data?.user?.id) {
+        await supabase
+          .from("profiles")
+          .update({ first_name: firstName, last_name: lastName })
+          .eq("id", response.data?.user?.id);
+      }
 
       return response;
     } catch (error) {
@@ -15,7 +30,8 @@ export default class AuthAPI {
       console.log({ error });
     }
   };
-  login = async (email: string, password: string) => {
+
+  login = async ({ email, password }: SignInValues) => {
     try {
       const data = await supabase.auth.signInWithPassword({
         email,

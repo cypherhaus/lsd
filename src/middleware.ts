@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
 import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";

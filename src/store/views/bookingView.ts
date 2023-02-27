@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import { BlockedTime, Booking, DayTimeBlock } from "../../../types/bookings";
@@ -107,11 +114,12 @@ export default class BookingView {
       });
 
     const allBlocks = [...blockedTimes, ...bookings];
-    console.log({ allBlocks });
 
-    this.dayTimeBlocks = allBlocks.sort((a, b) =>
-      moment(a.start).diff(b.start)
-    );
+    runInAction(() => {
+      this.dayTimeBlocks = allBlocks.sort((a, b) =>
+        moment(a.start).diff(b.start)
+      ) as DayTimeBlock[];
+    });
   };
 
   nextDay = () => {

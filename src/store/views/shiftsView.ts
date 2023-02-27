@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import moment, { Moment } from "moment";
@@ -10,6 +17,7 @@ export default class ShiftsView {
   weekStart: Moment | null = null;
   weekEnd: Moment | null = null;
   activeWeekShifts: Shift[][] | null = null;
+  teamShifts: any = [];
 
   // Edit shifts
   editDayShifts: Shift[] = [];
@@ -29,8 +37,14 @@ export default class ShiftsView {
     this.resetWeek();
   }
 
+  handleAddMember = async () => {
+    await this._store.teamStore.addTeamMember(
+      this._store.authStore.currentUser.business_id
+    );
+  };
+
   fetchShifts = async (user: string) => {
-    await this._store.shiftsStore.fetchShifts(user);
+    await this._store.teamStore.fetchShifts(user);
     this.setActiveWeekShifts();
   };
 
@@ -45,7 +59,7 @@ export default class ShiftsView {
     let day = this.weekStart;
     const shiftDays: any = [];
     while (day < this.weekEnd) {
-      const repeatShifts = this._store.shiftsStore?.shifts?.filter((shift) => {
+      const repeatShifts = this._store.teamStore?.shifts?.filter((shift) => {
         const isoWeekday = day.isoWeekday();
         return shift.isoWeekday === isoWeekday;
       });
@@ -55,7 +69,7 @@ export default class ShiftsView {
       });
 
       const filteredShifts = repeatShiftsWithDates.filter((shift) => {
-        const foundException = this._store.shiftsStore.shiftExceptions.find(
+        const foundException = this._store.teamStore.shiftExceptions.find(
           (e) => {
             return (
               e.shift_id === shift.id &&
@@ -123,14 +137,14 @@ export default class ShiftsView {
   };
 
   deleteOneTimeShift = async (id: string, userId: string) => {
-    await this._store.shiftsStore.deleteOneTimeShift(id);
+    await this._store.teamStore.deleteOneTimeShift(id);
     await this.fetchShifts(userId);
     this._store.modalView.closeModal();
   };
 
   deleteShiftOnce = async (id: string, userId: string) => {
     if (!this.shiftToDeleteDate) return;
-    await this._store.shiftsStore.deleteShiftById(
+    await this._store.teamStore.deleteShiftById(
       id,
       this.shiftToDeleteDate,
       userId
@@ -140,7 +154,7 @@ export default class ShiftsView {
   };
 
   deleteShiftAll = async (id: string, userId: string) => {
-    await this._store.shiftsStore.deleteShiftById(id);
+    await this._store.teamStore.deleteShiftById(id);
     await this.fetchShifts(userId);
     this._store.modalView.closeModal();
 
@@ -150,7 +164,7 @@ export default class ShiftsView {
   handleNewShiftSingle = async (userId: string) => {
     if (!this.dayInAddMode || !this.shiftToAdd) return;
 
-    await this._store.shiftsStore.addShiftSingle({
+    await this._store.teamStore.addShiftSingle({
       isoWeekday: this.dayInAddMode.isoWeekday(),
       start: this.shiftToAdd.start,
       end: this.shiftToAdd.end,
@@ -172,7 +186,7 @@ export default class ShiftsView {
   handleNewShiftRepeat = async (userId: string) => {
     if (!this.dayInAddMode || !this.shiftToAdd) return;
 
-    await this._store.shiftsStore.addShift({
+    await this._store.teamStore.addShift({
       isoWeekday: this.dayInAddMode.isoWeekday(),
       start: this.shiftToAdd.start,
       end: this.shiftToAdd.end,
@@ -190,7 +204,7 @@ export default class ShiftsView {
   };
 
   handleUpdateShift = () => {
-    this._store.shiftsStore.updateShifts(this.editDayShifts);
+    this._store.teamStore.updateShifts(this.editDayShifts);
   };
 
   // Todo finish update shift
@@ -206,4 +220,6 @@ export default class ShiftsView {
       this.dayInEditMode = day;
     });
   };
+
+  fetchTeamShifts = () => {};
 }

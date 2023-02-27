@@ -6,6 +6,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { observer } from "mobx-react-lite";
 import { Button } from "../../components/common/Button";
 import { ADD_BLOCK_MODAL } from "../../constants/modals";
+import { errorToast } from "../../utils/toast";
 
 const Bookings = observer(() => {
   const { bookingView, modalView, bookingStore } = useStore();

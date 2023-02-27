@@ -1,55 +1,47 @@
-import { Input } from "../components/common/Input";
 import { useEffect, useState } from "react";
-import { useStore } from "../store";
-import { supabase } from "../config/supabase";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
-import { Button } from "../components/common/Button";
+import { useStore } from "../store";
 
-export default function Home() {
-  const [isSignUp, setIsSignUp] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+// Config
+import { supabase } from "../config/supabase";
+
+// Components
+import Auth from "../components/auth";
+import Onboarding from "../components/Onboarding";
+
+const Home = observer(() => {
   const router = useRouter();
+  const [isOnboarding, setIsOnboarding] = useState(false);
 
-  const { authView, authStore } = useStore();
-
-  const handleSignup = async () => {
-    authView.createUser(email, password);
-  };
-
-  const handleLogin = async () => {
-    authView.login(email, password);
-  };
+  const { authStore, authView } = useStore();
 
   const rerieveSession = async () => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) {
-      authStore.setUser(data.session);
-      router.push("/dashboard/bookings");
-    }
+
+    if (data.session) authView.init(data.session?.user?.id);
   };
 
   useEffect(() => {
     rerieveSession();
+
+    if (!authStore.currentUser) return;
+    if (authStore.currentUser && !authStore.currentUser.business_id) {
+      setIsOnboarding(true);
+      return;
+    }
+    if (authStore.currentUser) {
+      if (!router.pathname.includes("/dashboard/hours")) {
+        router.push("/dashboard/hours");
+      }
+    }
   }, [authStore.currentUser]);
 
   return (
     <div className="flex flex-col items-center h-screen p-10 flex-1 justify-center">
-      <p className="mt-6 text-xl font-bold text-center mb-2">
-        {isSignUp ? "Sign Up" : "Login"}
-      </p>
-
-      <Input placeholder="email" value={email} onChange={setEmail} />
-      <Input
-        type="password"
-        onChange={setPassword}
-        placeholder="password"
-        value={password}
-      />
-      <Button onClick={isSignUp ? handleSignup : handleLogin}>SUBMIT</Button>
-      <div className="cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? "Have an account?" : "Don't have an account?"}
-      </div>
+      {isOnboarding ? <Onboarding /> : <Auth />}
     </div>
   );
-}
+});
+
+export default Home;

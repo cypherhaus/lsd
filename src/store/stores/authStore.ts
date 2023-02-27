@@ -1,6 +1,14 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
 import { makeAutoObservable, runInAction } from "mobx";
 import { errorToast } from "../../utils/toast";
 import { Store } from "../store";
+import { SignInValues, SignUpValues } from "../../../types/auth";
 
 export default class AuthStore {
   private _store: Store;
@@ -13,10 +21,22 @@ export default class AuthStore {
     this._store = store;
   }
 
-  // Sign Up User
-  async signUp(email: string, password: string) {
+  async postBusiness(name: string) {
+    if (!this.currentUser.id) return;
     try {
-      const response = await this._store.api.authAPI.signUp(email, password);
+      const response = await this._store.api.dashAPI.postBusiness(
+        name,
+        this.currentUser.id
+      );
+    } catch (err) {
+      console.log({ err });
+    }
+  }
+
+  // Sign Up User
+  async signUp(values: SignUpValues) {
+    try {
+      const response = await this._store.api.authAPI.signUp(values);
       if (response.error) {
         errorToast(response.error.message);
         return;
@@ -25,14 +45,14 @@ export default class AuthStore {
       if (response.data.user) return true;
       return false;
     } catch (err) {
-      console.log("Error signing up user", email);
+      console.log("Error signing up user", values.email);
     }
   }
 
   // Login User
-  async login(email: string, password: string) {
+  async login(values: SignInValues) {
     try {
-      const response = await this._store.api.authAPI.login(email, password);
+      const response = await this._store.api.authAPI.login(values);
 
       if (response.error) {
         errorToast(response.error.message);
@@ -46,7 +66,7 @@ export default class AuthStore {
 
       return null;
     } catch (err) {
-      console.log("Error logging in user", email);
+      console.log("Error logging in user", values.email);
     }
   }
 
@@ -65,10 +85,15 @@ export default class AuthStore {
     }
   }
 
-  // Set User in state
-  async setUser(session: any) {
-    runInAction(() => {
-      this.currentUser = session.user;
-    });
+  async fetchProfile(id: string) {
+    try {
+      const data = await this._store.api.dashAPI.fetchProfile(id);
+
+      runInAction(() => {
+        this.currentUser = data;
+      });
+    } catch (err) {
+      console.log("Error fetching profile", err);
+    }
   }
 }

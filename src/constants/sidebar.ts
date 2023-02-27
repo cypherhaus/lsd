@@ -1,22 +1,22 @@
 export const SIDEBAR_ITEMS = [
+  // {
+  //   label: "Bookings",
+  //   href: "/dashboard/bookings",
+  // },
   {
-    label: "Bookings",
-    href: "/dashboard/bookings",
+    label: "Hours",
+    href: "/dashboard/hours",
   },
-  {
-    label: "Working Hours",
-    href: "/dashboard/availability",
-  },
-  {
-    label: "Shopfront",
-    href: "/dashboard/shopfront",
-  },
-  {
-    label: "Prices",
-    href: "/dashboard/prices",
-  },
-  {
-    label: "Settings",
-    href: "/dashboard/settings",
-  },
+  // {
+  //   label: "Shopfront",
+  //   href: "/dashboard/shopfront",
+  // },
+  // {
+  //   label: "Prices",
+  //   href: "/dashboard/prices",
+  // },
+  // {
+  //   label: "Settings",
+  //   href: "/dashboard/settings",
+  // },
 ];

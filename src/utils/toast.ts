@@ -1,4 +1,5 @@
 import { toast } from "react-hot-toast";
+import { Ri24HoursFill } from "react-icons/ri";
 
 export const basicToastStyle = {
   borderRadius: "20px",
@@ -15,10 +16,10 @@ export const successToast = (message: string) => {
 };
 
 export const errorToast = (message: string) => {
-  toast(message, {
-    icon: "🚨",
+  toast.error(message, {
     duration: 3000,
     style: basicToastStyle,
+    // style: basicToastStyle,
   });
 };
 

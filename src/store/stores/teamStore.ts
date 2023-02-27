@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Daramac LTD. and its affiliates.
+ *
+ * This code can not be copied and/or distributed
+ * without the express permission of Daramac LTD. and its affiliates.
+ */
+
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import {
@@ -8,14 +15,17 @@ import {
   ShiftSingle,
 } from "../../../types/bookings";
 import { Moment } from "moment";
+import { Profile } from "../../../types/members";
 
-export default class ShiftsStore {
+export default class TeamStore {
   private _store: Store;
 
   bookings: Hours[] = [];
   shifts: Shift[] = [];
   shiftSingles: ShiftSingle[] = [];
   shiftExceptions: ShiftException[] = [];
+
+  members: Profile[] = [];
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -46,4 +56,22 @@ export default class ShiftsStore {
   async deleteOneTimeShift(id: string) {
     await this._store.api.dashAPI.deleteShift(id);
   }
+
+  async fetchTeamMembers(businessId: string) {
+    const data = await this._store.api.dashAPI.fetchTeam(businessId);
+
+    if (data) {
+      runInAction(() => (this.members = data));
+    }
+  }
+
+  async addTeamMember(businessId: string) {
+    const response = await this._store.api.dashAPI.addTeamMember(businessId);
+
+    console.log({ response });
+  }
+
+  // async fetchTeamShifts = async () => {
+  //   // await this._store.api.dashAPI.fetch
+  // }
 }

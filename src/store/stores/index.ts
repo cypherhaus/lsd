@@ -1,3 +1,3 @@
 export { default as AuthStore } from "./authStore";
 export { default as BookingStore } from "./bookingStore";
-export { default as ShiftsStore } from "./shiftsStore";
+export { default as TeamStore } from "./teamStore";

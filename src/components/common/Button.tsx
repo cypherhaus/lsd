@@ -1,6 +1,7 @@
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children: string;
+  type?: "button" | "submit" | "reset";
 }
 
 export const Button = ({ children, ...rest }: ButtonProps) => {

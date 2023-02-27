@@ -1,14 +1,15 @@
 interface InputProps {
-  onChange: (value: string) => void;
-  value: string;
+  error: boolean;
   placeholder: string;
-  type?: string;
+  onChange?: (e: any) => void;
+  value?: string;
 }
 
-export const Input = ({ onChange, ...rest }: InputProps) => (
+export const Input = ({ error, ...rest }: InputProps) => (
   <input
-    onChange={(e) => onChange(e.target.value)}
-    className="placeholder:text-dark200 outline-none font-white my-2 border-b-2  border-black  p-2 text-xl bg-transparent"
+    className={`placeholder:text-dark200 outline-none font-white my-2 border-b-2  border-black  p-2 text-xl bg-transparent ${
+      error && "border-[red]"
+    }`}
     {...rest}
   />
 );

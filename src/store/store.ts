@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { AuthAPI, DashAPI } from "../api";
-import { AuthStore, BookingStore, ShiftsStore } from "./stores";
+import { AuthStore, BookingStore, TeamStore } from "./stores";
 import {
   AuthView,
   BookingView,
@@ -13,7 +13,7 @@ export class Store {
   // Child Stores
   authStore = new AuthStore(this);
   bookingStore = new BookingStore(this);
-  shiftsStore = new ShiftsStore(this);
+  teamStore = new TeamStore(this);
 
   // Views - UI interaction state
   authView = new AuthView(this);
