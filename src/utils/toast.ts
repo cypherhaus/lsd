@@ -1,5 +1,4 @@
 import { toast } from "react-hot-toast";
-import { Ri24HoursFill } from "react-icons/ri";
 
 export const basicToastStyle = {
   borderRadius: "20px",
@@ -8,8 +7,7 @@ export const basicToastStyle = {
 };
 
 export const successToast = (message: string) => {
-  toast(message, {
-    icon: "⚡️",
+  toast.success(message, {
     duration: 3000,
     style: basicToastStyle,
   });
@@ -17,23 +15,6 @@ export const successToast = (message: string) => {
 
 export const errorToast = (message: string) => {
   toast.error(message, {
-    duration: 3000,
-    style: basicToastStyle,
-    // style: basicToastStyle,
-  });
-};
-
-export const paymentSuccessToast = () => {
-  toast("Payment Sent!", {
-    icon: "⚡️",
-    duration: 3000,
-    style: basicToastStyle,
-  });
-};
-
-export const paymentRecievedToast = () => {
-  toast("Received Sats!", {
-    icon: "⚡️",
     duration: 3000,
     style: basicToastStyle,
   });
