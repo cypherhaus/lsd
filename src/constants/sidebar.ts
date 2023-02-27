@@ -1,8 +1,8 @@
 export const SIDEBAR_ITEMS = [
-  // {
-  //   label: "Bookings",
-  //   href: "/dashboard/bookings",
-  // },
+  {
+    label: "Bookings",
+    href: "/dashboard/bookings",
+  },
   {
     label: "Hours",
     href: "/dashboard/hours",
