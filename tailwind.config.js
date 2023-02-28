@@ -5,7 +5,23 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage:
+         {
+           'pawBackground': "url(../media/paw.svg)"
+         }
+    },
+    colors: {
+      'brandOrange': '#ED5520',
+      'brandLavendar': '#D9C5F6',
+      'brandGreen': '#14353F',
+      'brandWhite': '#EDECDF',
+      'white': '#fff',
+    },
+    fontFamily: {
+      'sans': 'Rubik, sans-serif',
+      'button': 'Inter, sans-serif'
+    }
   },
   plugins: [],
 };

@@ -8,6 +8,7 @@ import { Input } from "../common/Input";
 // Constants
 import { SignupSchema } from "../../constants/validationSchema";
 import { Button } from "../common/Button";
+import { ErrorLabel } from "../common/ErrorLabel";
 import { useStore } from "../../store";
 
 export const SignUpForm = observer(() => {
@@ -35,7 +36,9 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
-
+            {errors.firstName && touched.firstName ? (
+              <ErrorLabel>{errors.firstName}</ErrorLabel>
+            ) : null}
             <Field name="lastName">
               {({ field, meta }: any) => (
                 <Input
@@ -45,7 +48,9 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
-
+            {errors.lastName && touched.lastName ? (
+              <ErrorLabel>{errors.lastName}</ErrorLabel>
+            ) : null}
             <Field name="email">
               {({ field, meta }: any) => (
                 <Input
@@ -55,27 +60,25 @@ export const SignUpForm = observer(() => {
                 />
               )}
             </Field>
+            {errors.email && touched.email ? (
+              <ErrorLabel>{errors.email}</ErrorLabel>
+            ) : null}
             <Field name="password">
               {({ field, meta }: any) => (
                 <Input
                   {...field}
-                  // error={!!(meta.touched && meta.error)}
+                  error={!!(meta.touched && meta.error)}
                   type="password"
                   placeholder="Password"
                 />
               )}
             </Field>
             {errors.password && touched.password ? (
-              <div>
-                8 Characters minimum
-                <br />1 Lowercase
-                <br /> 1 Uppercase
-                <br />1 Number
-              </div>
+              <ErrorLabel>{errors.password}</ErrorLabel>
             ) : null}
           </div>
 
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit">Sign up</Button>
         </Form>
       )}
     </Formik>

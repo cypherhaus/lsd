@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 
 // Components
 import { Input } from "../common/Input";
+import { ErrorLabel } from "../common/ErrorLabel";
 
 // Constants
 import { LoginSchema } from "../../constants/validationSchema";
@@ -21,7 +22,7 @@ export const LoginForm = observer(() => {
       validationSchema={LoginSchema}
       onSubmit={(values) => authView.handleLoginClick(values)}
     >
-      {() => (
+      {({ errors, touched }) => (
         <Form>
           <div className="flex flex-col">
             <Field name="email">
@@ -33,6 +34,9 @@ export const LoginForm = observer(() => {
                 />
               )}
             </Field>
+            {errors.email ? (
+              <ErrorLabel>{errors.email}</ErrorLabel>
+            ) : null}
             <Field
               validate={(v: string) => {
                 if (v.length < 8)
@@ -49,9 +53,12 @@ export const LoginForm = observer(() => {
                 />
               )}
             </Field>
+            {errors.password && touched.password ? (
+              <ErrorLabel>{errors.password}</ErrorLabel>
+            ) : null}
           </div>
 
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit">LOGIN</Button>
         </Form>
       )}
     </Formik>

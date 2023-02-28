@@ -9,17 +9,17 @@ const Auth = observer(() => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
   return (
-    <>
-      <p className="mt-6 text-xl font-bold text-center mb-2">
-        {isSignUp ? "Sign Up" : "Login"}
+    <div className="flex flex-col bg-white gap-4 rounded-xl p-10">
+      <p className="text-6xl font-bold text-center text-brandOrange">
+        Welcome
       </p>
 
       {isSignUp ? <SignUpForm /> : <LoginForm />}
 
-      <div className="cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
+      <div className="text-2xl text-center cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? "Have an account?" : "Don't have an account?"}
       </div>
-    </>
+    </div>
   );
 });
 
