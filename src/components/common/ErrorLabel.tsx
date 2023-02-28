@@ -1,3 +1,5 @@
+import { PASSWORD_CONTAINS } from "../../constants/validationSchema";
+
 interface Props {
     children: string
 }
@@ -5,7 +7,7 @@ interface Props {
 const errorStyle = 'text-brandOrange text-xs font-normal list-inside list-disc'
 
 export const ErrorLabel = ({ children }: Props) => {
-    if(children === 'password-contains') {
+    if(children === PASSWORD_CONTAINS) {
         return (
             <ul>
                 <li className={errorStyle}>8 Characters minimum</li>
@@ -14,9 +16,7 @@ export const ErrorLabel = ({ children }: Props) => {
                 <li className={errorStyle}>At least 1 number</li>
             </ul>
         )
-    } else {
-        return (
-            <li className={errorStyle}>{children}</li>
-          );
-    }
+    } 
+    
+    return (<li className={errorStyle}>{children}</li>);
 };

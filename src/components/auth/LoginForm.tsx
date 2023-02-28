@@ -34,7 +34,7 @@ export const LoginForm = observer(() => {
                 />
               )}
             </Field>
-            {errors.email && touched.email ? (
+            {errors.email ? (
               <ErrorLabel>{errors.email}</ErrorLabel>
             ) : null}
             <Field
