@@ -33,14 +33,6 @@ export default class DashAPI {
     return data;
   };
 
-  fetchShiftExceptions = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("shift_exceptions")
-      .select("*")
-      .eq("user_id", userId);
-    return data;
-  };
-
   addShift = async ({ start, end, isoWeekday, user_id }: AddShift) => {
     const res = await supabase.from("shifts").upsert({
       start,
@@ -56,18 +48,6 @@ export default class DashAPI {
     const res = await supabase.from("shifts").upsert(newShifts);
 
     console.log({ res });
-  };
-
-  deleteShiftOnce = async (id: string, date: Moment, userId?: string) => {
-    if (!userId) return;
-    const reso = await supabase
-      .from("shift_exceptions")
-      .insert({
-        shift_id: id,
-        shift_date: date.format(),
-        user_id: userId,
-      })
-      .eq("id", id);
   };
 
   deleteShift = async (id: string) => {

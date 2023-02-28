@@ -34,7 +34,6 @@ export const Modal = observer(() => {
       isOpen={modalView.modalOpen}
       contentLabel="Example Modal"
     >
-      {modalView.modalType === DELETE_MODAL && <DeleteShift />}
       {modalView.modalType === ADD_MODAL && <AddShift />}
       {modalView.modalType === ADD_BLOCK_MODAL && <AddBlock />}
     </RModal>

@@ -7,13 +7,7 @@
 
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
-import {
-  AddShift,
-  Hours,
-  Shift,
-  ShiftException,
-  ShiftSingle,
-} from "../../../types/bookings";
+import { AddShift, Hours, Shift, ShiftSingle } from "../../../types/bookings";
 import { Moment } from "moment";
 import { Profile } from "../../../types/members";
 
@@ -23,7 +17,6 @@ export default class TeamStore {
   bookings: Hours[] = [];
   shifts: Shift[] = [];
   shiftSingles: ShiftSingle[] = [];
-  shiftExceptions: ShiftException[] = [];
 
   members: Profile[] = [];
 
@@ -35,9 +28,6 @@ export default class TeamStore {
 
   async fetchShifts(id: string) {
     this.shifts = await this._store.api.dashAPI.fetchShifts(id);
-    this.shiftExceptions = await this._store.api.dashAPI.fetchShiftExceptions(
-      id
-    );
   }
 
   async addShift(shift: AddShift) {

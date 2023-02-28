@@ -68,20 +68,7 @@ export default class HoursView {
         return { ...shift, shiftDate: day };
       });
 
-      const filteredShifts = repeatShiftsWithDates.filter((shift) => {
-        const foundException = this._store.teamStore.shiftExceptions.find(
-          (e) => {
-            return (
-              e.shift_id === shift.id &&
-              shift.shiftDate.isSame(moment(e.shift_date), "day")
-            );
-          }
-        );
-        if (foundException) return false;
-        return true;
-      });
-
-      shiftDays.push(filteredShifts);
+      shiftDays.push(repeatShiftsWithDates);
 
       day = day.clone().add(1, "days");
     }
@@ -157,8 +144,6 @@ export default class HoursView {
     await this._store.teamStore.deleteShiftById(id);
     await this.fetchShifts(userId);
     this._store.modalView.closeModal();
-
-    // Add a supabase database function to clear up any shift exceptions related to this shift id
   };
 
   handleNewShiftSingle = async (userId: string) => {

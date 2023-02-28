@@ -47,14 +47,6 @@ export interface AddShift {
   date?: Moment;
 }
 
-export interface ShiftException {
-  created_at: string;
-  id: string;
-  user_id: string;
-  shift_id: string;
-  shift_date: string;
-}
-
 export interface EditShift {
   slot: Slot;
   shifts: Shift[];
