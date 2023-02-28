@@ -31,7 +31,10 @@ export default class AuthView {
   setLastName = (v: string) => (this.lastName = v);
   setFirstName = (v: string) => (this.firstName = v);
 
-  setBusinessName = (v: string) => (this.businessName = v);
+  setBusinessName = (v: string) => {
+    this.onboardingError = null;
+    this.businessName = v;
+  }
 
   async init(id: string) {
     // Fetch the current users profile info
@@ -57,23 +60,19 @@ export default class AuthView {
   }
 
   // Login user
-  async handleLoginClick(values: SignInValues) {
-    const response = await this._store.authStore.login(values);
-    if (response) Router.push("/dashboard/hours");
-  }
+  async handleLoginClick(values: SignInValues) { await this._store.authStore.login(values); }
 
   //  Signs up a user to Supabase and creates a Lightning Wallet
-  async handleSignUpClick(values: SignUpValues) {
-    const success = await this._store.authStore.signUp(values);
-    if (success) Router.push("/dashboard/hours");
-  }
+  async handleSignUpClick(values: SignUpValues) { await this._store.authStore.signUp(values); }
 
   async handleBusinessInfo() {
     if (!this.businessName) {
       runInAction(() => {
         this.onboardingError = "Please enter a business name";
       });
+    } else {
+      const success = await this._store.authStore.postBusiness(this.businessName);
+      if (success) Router.push("/dashboard/hours");
     }
-    await this._store.authStore.postBusiness(this.businessName);
   }
 }

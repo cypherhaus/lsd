@@ -28,6 +28,7 @@ export default class AuthStore {
         name,
         this.currentUser.id
       );
+      if (response) return true;
     } catch (err) {
       console.log({ err });
     }
@@ -60,7 +61,10 @@ export default class AuthStore {
       }
 
       if (response.data) {
-        this.currentUser = response.data.user;
+        const userData = response.data.user;
+        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user.id);
+        userData.business_id = userProfile.business_id;
+        this.currentUser = userData;
         return response.data.user;
       }
 

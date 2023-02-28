@@ -25,7 +25,7 @@ const Home = observer(() => {
   useEffect(() => {
     rerieveSession();
 
-    if (!authStore.currentUser) return;
+    if (!authStore.currentUser) setIsOnboarding(false);
     if (authStore.currentUser && !authStore.currentUser.business_id) {
       setIsOnboarding(true);
       return;
