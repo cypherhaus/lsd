@@ -43,8 +43,12 @@ export default class AuthStore {
         return;
       }
 
-      if (response.data.user) return true;
-      return false;
+      if (response.data) {
+        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user.id);
+        this.currentUser = userProfile;
+      }
+
+      return null;
     } catch (err) {
       console.log("Error signing up user", values.email);
     }
@@ -61,11 +65,8 @@ export default class AuthStore {
       }
 
       if (response.data) {
-        const userData = response.data.user;
         const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user.id);
-        userData.business_id = userProfile.business_id;
-        this.currentUser = userData;
-        return response.data.user;
+        this.currentUser = userProfile;
       }
 
       return null;
