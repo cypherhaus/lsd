@@ -6,7 +6,7 @@
  */
 
 import { makeAutoObservable, runInAction } from "mobx";
-import { errorToast } from "../../utils/toast";
+import { errorToast, successToast } from "../../utils/toast";
 import { Store } from "../store";
 import { SignInValues, SignUpValues } from "../../../types/auth";
 
@@ -28,6 +28,10 @@ export default class AuthStore {
         name,
         this.currentUser.id
       );
+      if (response) {
+        successToast('Business added successfully')
+        return true;
+      }
     } catch (err) {
       console.log({ err });
     }
@@ -42,8 +46,15 @@ export default class AuthStore {
         return;
       }
 
-      if (response.data.user) return true;
-      return false;
+      if (response.data) {
+        successToast('Account created successfully')
+        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user?.id);
+        runInAction(() => {
+          this.currentUser = userProfile;
+       })
+      }
+
+      return null;
     } catch (err) {
       console.log("Error signing up user", values.email);
     }
@@ -60,8 +71,11 @@ export default class AuthStore {
       }
 
       if (response.data) {
-        this.currentUser = response.data.user;
-        return response.data.user;
+        successToast('Signed in successfully')
+        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user?.id);
+        runInAction(() => {
+          this.currentUser = userProfile;
+       })
       }
 
       return null;
@@ -77,6 +91,7 @@ export default class AuthStore {
       runInAction(() => {
         this.currentUser = null;
       });
+      successToast('Signed out')
       return success;
     } catch (err) {
       console.log({ err });

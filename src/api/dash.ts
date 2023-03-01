@@ -62,7 +62,9 @@ export default class DashAPI {
   };
 
   postBusiness = async (name: string, id: string) => {
-    await supabase.from("businesses").insert({ name, owner_id: id });
+    const res = await supabase.from("businesses").insert({ name, owner_id: id });
+    if (res?.status === 201) return true;
+    return false;
   };
 
   fetchBlockedTimes = async (userId: string) => {

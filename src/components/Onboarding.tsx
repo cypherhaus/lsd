@@ -4,6 +4,9 @@ import { Button } from "./common/Button";
 import { useStore } from "../store";
 import { observer } from "mobx-react-lite";
 
+// Components
+import { ErrorLabel } from "./common/ErrorLabel";
+
 const Onboarding = observer(() => {
   const { authView } = useStore();
 
@@ -19,10 +22,18 @@ const Onboarding = observer(() => {
           value={authView.businessName}
           placeholder="Business Name"
         />
+        {authView.onboardingError ? (
+              <ErrorLabel>{authView.onboardingError}</ErrorLabel>
+            ) : null}
         <Button onClick={authView.handleBusinessInfo} type="submit">
           NEXT
         </Button>
       </div>
+      <div
+          onClick={authView.handleLogoutClick}
+          className="text-2xl text-center cursor-pointer">
+            logout
+        </div>
     </div>
   );
 });
