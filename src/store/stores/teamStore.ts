@@ -27,7 +27,10 @@ export default class TeamStore {
   }
 
   async fetchShifts(id: string) {
-    this.shifts = await this._store.api.dashAPI.fetchShifts(id);
+    const res = await this._store.api.dashAPI.fetchShifts(id);
+    runInAction(() => {
+      this.shifts = res;
+   })
   }
 
   async addShift(shift: AddShift) {
