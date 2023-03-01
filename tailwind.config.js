@@ -17,6 +17,7 @@ module.exports = {
       'brandGreen': '#14353F',
       'brandWhite': '#EDECDF',
       'white': '#fff',
+      'black': '#000',
     },
     fontFamily: {
       'sans': 'Rubik, sans-serif',

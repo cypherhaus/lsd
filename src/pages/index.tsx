@@ -31,6 +31,7 @@ const Home = observer(() => {
       return;
     }
     if (authStore.currentUser) {
+      console.log('there is user')
       if (!router.pathname.includes("/dashboard/hours")) {
         router.push("/dashboard/hours");
       }
