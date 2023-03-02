@@ -17,11 +17,11 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
     styles={{
       control: (base, state) => ({
         ...base,
-        borderColor: "#000",
-        display: 'flex',
-        "&:hover": {
-          borderColor: "#ED5520"
-        },
+        boxShadow: 'none',
+        borderColor: state.menuIsOpen ? "#ED5520" : '#000',
+        '&:hover': {
+          borderColor: '#ED5520',
+        }
       }),
       dropdownIndicator: (base) => ({
         ...base,
@@ -29,10 +29,17 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
         padding: 1,
         paddingRight: 7
       }),
-      valueContainer: (base) => ({
+      valueContainer: (base, state) => ({
         ...base,
         paddingLeft: 7,
         padding: 1
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isFocused ? '#EDECDF' : state.isSelected ? "#ED5520" : "#fff",
+        '&:hover': {
+          backgroundColor: '#EDECDF'
+        }
       }),
     }}
     defaultValue={{

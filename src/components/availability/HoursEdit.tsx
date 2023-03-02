@@ -28,7 +28,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]);
-  const handleShiftDelete = (props: Shift) => setShiftsToDelete([...shiftEdits, props]);
+  const handleShiftDelete = (props: Shift) => {
+    console.log(props)
+    setShiftsToDelete([...shiftsToDelete, props]);
+  }
 
   return (
     <div className="flex flex-col m-4 mx-12 gap-10">
@@ -44,7 +47,8 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
       <div className="flex flex-col basis-auto items-center gap-5">
         {DAYS_IN_WEEK.map((day) => {
         
-        const filteredShift = teamStore?.shifts.filter((shift) => shift.iso_weekday === day.number)
+        const filteredShift = teamStore?.shifts.filter((shift) => 
+            shift.iso_weekday === day.number && !shiftsToDelete.find(shiftToDelete => shift.id === shiftToDelete.id))
 
         return (
             <div key={day.number} className="w-full lg:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6">
@@ -63,8 +67,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                         <span className="text-xl">-</span>
                                         <TimeInput onChange={() => handleShiftInputChange} time={shift.end_time} />
                                     </div>
-                                    <div className="flex flex-col items-end">
-                                        <RiDeleteBinLine className="text-3xl text-brandOrange" />
+                                    <div 
+                                        onClick={() => handleShiftDelete(shift)} 
+                                        className="flex flex-col items-end cursor-pointer">
+                                            <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                     </div>
                                 </div>)
                             }
