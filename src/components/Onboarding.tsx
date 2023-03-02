@@ -33,7 +33,7 @@ const Onboarding = observer(() => {
           onClick={authView.handleLogoutClick}
           className="text-2xl text-center cursor-pointer">
             logout
-        </div>
+      </div>
     </div>
   );
 });

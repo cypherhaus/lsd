@@ -31,7 +31,7 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
   }
 
   return (
-    <div className="pt-5 pb-5">
+    <div className="pt-3 px-1">
       <table className="flex flex-wrap flex-row lg:flex-col border-separate border-spacing-3">
         <thead className="flex flex-col lg:justify-around">
           <tr className='text-3xl flex gap-2 ml-10 lg:ml-0 mr-6 lg:mr-0 lg:flex-wrap flex-col lg:flex-row'>
