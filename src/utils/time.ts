@@ -2,7 +2,7 @@ import moment from "moment";
 
 export const formatHours = (time: string) => {
   const string = moment().format("DD/MM/YYYY") + " " + time;
-  return moment(string, "DD/MM/YYYY HH:mm:ss").format("HH:mm");
+  return moment(string, "DD/MM/YYYY HH:mm:ss").format("h:mma");
 };
 
 export const getAllTimeSlots = () => {
@@ -14,7 +14,7 @@ export const getAllTimeSlots = () => {
   while (start.isBefore(end)) {
     slots.push({
       value: start.format("HH:mm:ss"),
-      label: start.format("HH:mm"),
+      label: start.format("h:mma"),
       hour: start.hour(),
       minute: start.minute(),
       moment: start.clone(),
