@@ -55,7 +55,7 @@ export const HoursNavigation = observer(({ user }: Props) => {
             <th className='xl:basis-9-perc basis-11-perc'>Thu</th>
             <th className='xl:basis-9-perc basis-11-perc'>Fri</th>
             <th className='xl:basis-9-perc basis-11-perc'>Sat</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Sun</th>
+            <th className='xl:basis-9-perc basis-11-perc'>Sun2</th>
             <th className='xl:basis-9-perc basis-11-perc'></th>
           </tr>
         </thead>
