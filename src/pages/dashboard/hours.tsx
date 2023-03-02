@@ -12,27 +12,24 @@ import { supabase } from "../../config/supabase";
 
 const Availability = observer(() => {
   const { hoursView, authStore, authView } = useStore();
-  const [firstName, setFirstName] = useState('')
+  const [currentUserData, setCurrentUserData] = useState({firstName: '', lastName: ''})
 
   const rerieveSession = async () => {
     const { data } = await supabase.auth.getSession();
-
     if (data.session) authView.init(data.session?.user?.id);
   };
 
   useEffect(() => {
     rerieveSession();
     if(authStore.currentUser) {
-      console.log('there is user')
-      hoursView.fetchShifts('f53eefda-eb16-4e1d-8023-dd126b7183bb');
-      console.log(authStore.currentUser.first_name)
-      setFirstName(authStore.currentUser.first_name)
+      hoursView.fetchShifts(authStore.currentUser.id);
+      setCurrentUserData({firstName: authStore.currentUser.first_name, lastName: authStore.currentUser.last_name})
     }
   }, [authStore.currentUser]);
 
   return (
     <Layout>
-      {firstName !== '' && <HoursNavigation firstName={firstName} />}
+      <HoursNavigation user={currentUserData} />
       <div className="flex flex-row justify-center">
         <Button 
           icon={<RiGroupLine />} 

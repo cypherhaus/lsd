@@ -61,7 +61,7 @@ export default class HoursView {
     while (day < this.weekEnd) {
       const repeatShifts = this._store.teamStore?.shifts?.filter((shift) => {
         const isoWeekday = day.isoWeekday();
-        return shift.isoWeekday === isoWeekday;
+        return shift.iso_weekday === isoWeekday;
       });
 
       const repeatShiftsWithDates = repeatShifts.map((shift) => {
@@ -197,8 +197,8 @@ export default class HoursView {
     const index = shifts.map((s: Shift) => s.id).indexOf(shiftId);
     const newShifts = [...shifts];
 
-    if (!close) newShifts[index].start = slot.value;
-    if (close) newShifts[index].end = slot.value;
+    if (!close) newShifts[index].start_time = slot.value;
+    if (close) newShifts[index].end_time = slot.value;
 
     runInAction(() => {
       this.editDayShifts = newShifts;

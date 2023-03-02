@@ -3,7 +3,7 @@ import { Navbar } from "./Navbar";
 
 export const Layout = ({ children }: any) => {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen bg-brandWhite flex flex-col">
       <Navbar />
       <main className="flex h-full">
         <Sidebar />
