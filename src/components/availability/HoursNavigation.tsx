@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 import { RiEditLine } from 'react-icons/ri';
-import { Shift } from '../../../types/bookings';
 
 interface Props {
   user: {
@@ -10,6 +9,29 @@ interface Props {
     lastName: string
   }
 }
+
+const DAYS_IN_WEEK = [{
+  label: 'Mon',
+  number: 1
+}, {
+  label: 'Tue',
+  number: 2
+}, {
+  label: 'Wed',
+  number: 3
+}, {
+  label: 'Thu',
+  number: 4
+}, {
+  label: 'Fri',
+  number: 5
+}, {
+  label: 'Sat',
+  number: 6
+}, {
+  label: 'Sun',
+  number: 7
+}]
 
 export const HoursNavigation = observer(({ user }: Props) => {
 
@@ -27,35 +49,13 @@ export const HoursNavigation = observer(({ user }: Props) => {
     return null;
   }
 
-  const sumOfShiftsPerDay = (): Shift[] => {
-    const shifts = teamStore?.shifts;
-    
-    teamStore?.shifts.map((shift, index) => {
-      shifts.map((newShift, newIndex) => {
-        if(newShift.id !== shift.id){
-          if(newShift.iso_weekday === shift.iso_weekday){
-            shifts.splice(index, 1)
-            shifts[index] = [newShift, shift];
-          }
-        }
-      })
-    })
-    return shifts;
-  }
-
   return (
     <div className="pt-5 pb-5">
       <table className="flex flex-wrap flex-row lg:flex-col border-separate border-spacing-3">
         <thead className="flex flex-col lg:justify-around">
           <tr className='text-3xl flex gap-2 ml-10 lg:ml-0 mr-6 lg:mr-0 lg:flex-wrap flex-col lg:flex-row'>
             <th className='xl:basis-9-perc basis-11-perc'></th>
-            <th className='xl:basis-9-perc basis-11-perc'>Mon</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Tue</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Wed</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Thu</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Fri</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Sat</th>
-            <th className='xl:basis-9-perc basis-11-perc'>Sun2</th>
+            {DAYS_IN_WEEK.map(day => <th key={day.label} className='xl:basis-9-perc basis-11-perc'>{day.label}</th>)}
             <th className='xl:basis-9-perc basis-11-perc'></th>
           </tr>
         </thead>
@@ -71,41 +71,22 @@ export const HoursNavigation = observer(({ user }: Props) => {
                 <span>{lastName}</span>
               </div>
             </td>
-            {sumOfShiftsPerDay().map((shift: Shift | Shift[]) => {
+            {DAYS_IN_WEEK.map((day) => {
 
-              const oneShift = shift as Shift;
-              const multiShift = shift as Shift[];
+              const filteredShift = teamStore?.shifts.filter((shift) => shift.iso_weekday === day.number)
 
-              if(multiShift.length !== undefined) {
-                return (
-                  <td className="flex align-baseline gap-2 justify-start items-center flex-col xl:basis-9-perc basis-11-perc" key={'multi'+multiShift[0].iso_weekday}>
-                    {multiShift.map((singleShift: Shift) => {
-                      const { start_time, end_time } = singleShift;
+              return(
+                <td className="flex align-baseline gap-2 justify-start items-center flex-col xl:basis-9-perc basis-11-perc" key={day.label}>
+                  {filteredShift.map((shift) => {
+                    if(shift.start_time !== null){
                       return(
-                        <span key={singleShift.id} className="rounded-md text-center bg-white px-3 py-2">
-                          {timeConverter(start_time as string) + ' - ' + timeConverter(end_time as string)}
+                        <span key={shift.iso_weekday+''+shift.start_time} className="rounded-md text-center bg-white px-3 py-2">
+                          {timeConverter(shift.start_time) + ' - ' + timeConverter(shift.end_time)}
                         </span>)
-                    })}
-                  </td>)
-              }
-
-              if(oneShift.start_time) {
-                const { start_time, end_time } = oneShift; 
-                return (
-                  <td className="flex flex-wrap align-baseline content-start justify-around xl:basis-9-perc basis-11-perc" key={oneShift.id}>
-                    <span className="rounded-md text-center bg-white px-3 py-2">
-                      {timeConverter(start_time as string) + ' - ' + timeConverter(end_time as string)}
-                    </span>
-                  </td>)
-              }
-
-              return <td className="flex flex-wrap align-baseline content-start justify-around xl:basis-9-perc basis-11-perc" key={oneShift.id}>
-                <span className="rounded-md text-center bg-white px-3 py-2">
-                  NONE
-                </span>
-              </td>
-              })
-            }
+                    }
+                  })}
+                </td>)
+            })}
             <td className="align-top">
               <RiEditLine className="text-3xl text-brandOrange" />
             </td>

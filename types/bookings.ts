@@ -20,14 +20,13 @@ export interface Hours {
 }
 
 export interface Shift {
-  [x: number]: Shift;
-  created_at?: string;
-  end_time?: string;
-  id?: string;
-  iso_weekday?: number;
-  repeat?: boolean;
-  start_time?: string;
-  user_id?: string;
+  created_at: string;
+  end_time: string;
+  id: string;
+  iso_weekday: number;
+  repeat: boolean;
+  start_time: string;
+  user_id: string;
 }
 
 export interface ShiftSingle {
