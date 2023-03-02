@@ -1,0 +1,29 @@
+export const DAYS_IN_WEEK = [{
+    label: 'Mon',
+    fullLabel: "Monday's",
+    number: 1
+  }, {
+    label: 'Tue',
+    fullLabel: "Tuesday's",
+    number: 2
+  }, {
+    label: 'Wed',
+    fullLabel: "Wednesday's",
+    number: 3
+  }, {
+    label: 'Thu',
+    fullLabel: "Thursday's",
+    number: 4
+  }, {
+    label: 'Fri',
+    fullLabel: "Friday's",
+    number: 5
+  }, {
+    label: 'Sat',
+    fullLabel: "Saturday's",
+    number: 6
+  }, {
+    label: 'Sun',
+    fullLabel: "Sunday's",
+    number: 7
+  }]

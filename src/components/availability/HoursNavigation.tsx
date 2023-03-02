@@ -3,37 +3,18 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 import { RiEditLine } from 'react-icons/ri';
 
+// Constants
+import { DAYS_IN_WEEK } from '../../constants/other';
+
 interface Props {
   user: {
     firstName: string
     lastName: string
-  }
+  },
+  setEditOpen: (value: boolean | ((prevVar: boolean) => boolean)) => void
 }
 
-const DAYS_IN_WEEK = [{
-  label: 'Mon',
-  number: 1
-}, {
-  label: 'Tue',
-  number: 2
-}, {
-  label: 'Wed',
-  number: 3
-}, {
-  label: 'Thu',
-  number: 4
-}, {
-  label: 'Fri',
-  number: 5
-}, {
-  label: 'Sat',
-  number: 6
-}, {
-  label: 'Sun',
-  number: 7
-}]
-
-export const HoursNavigation = observer(({ user }: Props) => {
+export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
 
   const { hoursView, teamStore } = useStore();
   const { firstName, lastName } = user;
@@ -72,9 +53,7 @@ export const HoursNavigation = observer(({ user }: Props) => {
               </div>
             </td>
             {DAYS_IN_WEEK.map((day) => {
-
               const filteredShift = teamStore?.shifts.filter((shift) => shift.iso_weekday === day.number)
-
               return(
                 <td className="flex align-baseline gap-2 justify-start items-center flex-col xl:basis-9-perc basis-11-perc" key={day.label}>
                   {filteredShift.map((shift) => {
@@ -88,7 +67,9 @@ export const HoursNavigation = observer(({ user }: Props) => {
                 </td>)
             })}
             <td className="align-top">
-              <RiEditLine className="text-3xl text-brandOrange" />
+              <div className="cursor-pointer" onClick={() => setEditOpen(true)}>
+                <RiEditLine className="text-3xl text-brandOrange" />
+              </div>
             </td>
           </tr>
         </tbody>

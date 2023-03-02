@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { Layout } from "../../components/common/Layout";
 import { useStore } from "../../store";;
 import { HoursNavigation } from "../../components/availability/HoursNavigation";
+import { HoursEdit } from '../../components/availability/HoursEdit';
 import { MemberShifts } from "../../components/availability/MemberShifts";
 import { Button } from "../../components/common/Button";
 import { RiGroupLine } from "react-icons/ri";
@@ -13,6 +14,7 @@ import { supabase } from "../../config/supabase";
 const Availability = observer(() => {
   const { hoursView, authStore, authView } = useStore();
   const [currentUserData, setCurrentUserData] = useState({firstName: '', lastName: ''})
+  const [editOpen, setEditOpen] = useState(false);
 
   const rerieveSession = async () => {
     const { data } = await supabase.auth.getSession();
@@ -29,13 +31,15 @@ const Availability = observer(() => {
 
   return (
     <Layout>
-      <HoursNavigation user={currentUserData} />
-      <div className="flex flex-row justify-center">
+      {!editOpen 
+        ? <HoursNavigation setEditOpen={setEditOpen} user={currentUserData} />
+        :<HoursEdit setEditOpen={setEditOpen} user={currentUserData} />}
+      {!editOpen && <div className="flex flex-row justify-center">
         <Button 
           icon={<RiGroupLine />} 
           onClick={hoursView.handleAddMember}
           variant="white">Add Team Member</Button>
-      </div>
+      </div>}
     </Layout>
   );
 });
