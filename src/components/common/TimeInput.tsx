@@ -36,6 +36,7 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
       }),
       option: (base, state) => ({
         ...base,
+        color: state.isSelected ? "#000" : "#000",
         backgroundColor: state.isFocused ? '#EDECDF' : state.isSelected ? "#ED5520" : "#fff",
         '&:hover': {
           backgroundColor: '#EDECDF'

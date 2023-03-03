@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from "mobx-react-lite";
 import { Layout } from "../../components/common/Layout";
-import { useStore } from "../../store";;
+import { useStore } from "../../store";
 import { HoursNavigation } from "../../components/availability/HoursNavigation";
 import { HoursEdit } from '../../components/availability/HoursEdit';
 import { MemberShifts } from "../../components/availability/MemberShifts";

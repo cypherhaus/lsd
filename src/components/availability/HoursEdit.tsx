@@ -5,6 +5,7 @@ import { RiCloseFill, RiDeleteBinLine } from 'react-icons/ri';
 import { Button } from '../common/Button';
 import { TimeInput } from '../common/TimeInput';
 import { Shift } from '../../../types/bookings';
+import { ConfirmationModal } from '../common/ConfirmationModal';
 
 // Constants
 import { DAYS_IN_WEEK } from '../../constants/other';
@@ -15,6 +16,14 @@ interface Props {
     lastName: string
   },
   setEditOpen: (value: boolean | ((prevVar: boolean) => boolean)) => void
+}
+
+const UnsavedChange = () => {
+  return(
+    <ConfirmationModal>
+      <p>test</p>
+    </ConfirmationModal>
+  )
 }
 
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
@@ -34,6 +43,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   }
 
   return (
+    <>
     <div className="flex flex-col m-4 mx-12 gap-10">
       <div className="flex flex-row items-center justify-between">
         <RiCloseFill className="text-4xl" />
@@ -86,5 +96,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         )})}
       </div>
     </div>
+    <UnsavedChange />
+    </>
   ); 
 });
