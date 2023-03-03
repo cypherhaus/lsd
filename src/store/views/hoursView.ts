@@ -28,7 +28,7 @@ export default class HoursView {
   shiftToAdd: { start: string; end: string } | null = null;
 
   // Shift to be deleted
-  shiftToDelete: string | null = null;
+  shiftsToDelete: string[] = [];
   shiftToDeleteDate: Moment | null = null;
 
   constructor(store: Store) {
@@ -114,12 +114,12 @@ export default class HoursView {
 
   addShift = () => this._store.modalView.openModal(ADD_MODAL);
 
-  deleteShift = (shiftId: string, day: Moment) => {
-    this._store.modalView.openModal(DELETE_MODAL);
+  deleteShift = (shiftId: string/* , day: Moment */) => {
+    const newShiftsToDelete = [...this.shiftsToDelete];
 
     runInAction(() => {
-      this.shiftToDelete = shiftId;
-      this.shiftToDeleteDate = day;
+      this.shiftsToDelete = [...newShiftsToDelete, shiftId];
+      /* this.shiftToDeleteDate = day; */
     });
   };
 

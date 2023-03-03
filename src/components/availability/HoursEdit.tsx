@@ -9,6 +9,7 @@ import { ConfirmationModal } from '../common/ConfirmationModal';
 
 // Constants
 import { DAYS_IN_WEEK } from '../../constants/other';
+import { UNSAVED_CHANGES } from '../../constants/modals';
 
 interface Props {
   user: {
@@ -18,35 +19,32 @@ interface Props {
   setEditOpen: (value: boolean | ((prevVar: boolean) => boolean)) => void
 }
 
-const UnsavedChange = () => {
-  return(
-    <ConfirmationModal>
-      <p>test</p>
-    </ConfirmationModal>
-  )
-}
-
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
     const initialShifts: Shift[] = [];
-    const { hoursView, teamStore } = useStore();
+    const { hoursView, teamStore, modalView } = useStore();
+    const { shiftsToDelete, editDayShifts, deleteShift } = hoursView;
+    const { openModal, modalOpen } = modalView;
     const { firstName, lastName } = user;
-    const [shiftEdits, setShiftEdits] = useState(initialShifts);
-    const [shiftsToDelete, setShiftsToDelete] = useState(initialShifts);
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
-  const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]);
-  const handleShiftDelete = (props: Shift) => {
-    console.log(props)
-    setShiftsToDelete([...shiftsToDelete, props]);
-  }
+  /* const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]); */
+  const handleClose = () => {
+    if(shiftsToDelete.length === 0 && editDayShifts.length === 0){
+      setEditOpen(false);
+    } else {
+      openModal(UNSAVED_CHANGES);
+    }
+  };
 
   return (
     <>
     <div className="flex flex-col m-4 mx-12 gap-10">
       <div className="flex flex-row items-center justify-between">
-        <RiCloseFill className="text-4xl" />
+        <div className="cursor-pointer" onClick={() => handleClose()}>
+          <RiCloseFill className="text-4xl" />
+        </div>
         <span className="font-button text-2xl">
             Edit Shifts for <span className="font-bold">{firstName} {lastName}</span>
         </span>
@@ -58,7 +56,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         {DAYS_IN_WEEK.map((day) => {
         
         const filteredShift = teamStore?.shifts.filter((shift) => 
-            shift.iso_weekday === day.number && !shiftsToDelete.find(shiftToDelete => shift.id === shiftToDelete.id))
+            shift.iso_weekday === day.number && !hoursView.shiftsToDelete?.find(shiftToDelete => shift.id === shiftToDelete))
 
         return (
             <div key={day.number} className="w-full lg:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6">
@@ -78,7 +76,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                         <TimeInput onChange={() => handleShiftInputChange} time={shift.end_time} />
                                     </div>
                                     <div 
-                                        onClick={() => handleShiftDelete(shift)} 
+                                        onClick={() => deleteShift(shift.id)} 
                                         className="flex flex-col items-end cursor-pointer">
                                             <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                     </div>
@@ -96,7 +94,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         )})}
       </div>
     </div>
-    <UnsavedChange />
+    {modalOpen && <ConfirmationModal type={UNSAVED_CHANGES} />}
     </>
   ); 
 });

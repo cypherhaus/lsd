@@ -33,7 +33,7 @@ const Availability = observer(() => {
     <Layout>
       {!editOpen 
         ? <HoursNavigation setEditOpen={setEditOpen} user={currentUserData} />
-        :<HoursEdit setEditOpen={setEditOpen} user={currentUserData} />}
+        : <HoursEdit setEditOpen={setEditOpen} user={currentUserData} />}
       {!editOpen && <div className="flex flex-row justify-center">
         <Button 
           icon={<RiGroupLine />} 

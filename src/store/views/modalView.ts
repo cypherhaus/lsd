@@ -5,7 +5,7 @@
  * without the express permission of Daramac LTD. and its affiliates.
  */
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 
 export default class ModalView {
@@ -20,14 +20,18 @@ export default class ModalView {
   }
 
   closeModal = () => {
-    this.modalOpen = false;
-    this.modalType = null;
-    this._store.hoursView.shiftToDelete = null;
-    this._store.hoursView.shiftToDeleteDate = null;
+    runInAction(() => {
+      this.modalOpen = false;
+      this.modalType = null;
+      this._store.hoursView.shiftsToDelete = [];
+      this._store.hoursView.shiftToDeleteDate = null;
+    });
   };
 
   openModal = (type: string) => {
-    this.modalType = type;
-    this.modalOpen = true;
+    runInAction(() => {
+      this.modalType = type;
+      this.modalOpen = true;
+    });
   };
 }
