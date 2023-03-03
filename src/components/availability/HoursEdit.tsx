@@ -6,6 +6,7 @@ import { Button } from '../common/Button';
 import { TimeInput } from '../common/TimeInput';
 import { Shift } from '../../../types/bookings';
 import { ConfirmationModal } from '../common/ConfirmationModal';
+import { Slot } from '../../../types/bookings';
 
 // Constants
 import { DAYS_IN_WEEK } from '../../constants/other';
@@ -19,11 +20,17 @@ interface Props {
   setEditOpen: (value: boolean | ((prevVar: boolean) => boolean)) => void
 }
 
+interface InputChangeProps {
+  newValue: any
+  startOrEnd: string
+  shift: Shift
+}
+
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
     const initialShifts: Shift[] = [];
     const { hoursView, teamStore, modalView } = useStore();
-    const { shiftsToDelete, editDayShifts, deleteShift } = hoursView;
+    const { shiftsToDelete, shiftsToEdit, addShiftToDelete, updateShiftsToEdit } = hoursView;
     const { openModal, modalOpen } = modalView;
     const { firstName, lastName } = user;
 
@@ -31,12 +38,27 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
   /* const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]); */
   const handleClose = () => {
-    if(shiftsToDelete.length === 0 && editDayShifts.length === 0){
+    if(shiftsToDelete.length === 0 && shiftsToEdit.length === 0){
       setEditOpen(false);
     } else {
       openModal(UNSAVED_CHANGES);
     }
   };
+
+  const handleShiftInputChange = ({ newValue, startOrEnd, shift }: InputChangeProps) => {
+    const newShiftsToEdit = [...shiftsToEdit];
+    
+    if(shiftsToEdit.length === 0) {
+      if(startOrEnd === "start"){
+        newShiftsToEdit.push({...shift, start_time: newValue.value})
+      } else {
+        newShiftsToEdit.push({...shift, end_time: newValue.value})
+      }
+      updateShiftsToEdit(newShiftsToEdit);
+    }
+  };
+
+  console.log(shiftsToEdit)
 
   return (
     <>
@@ -71,12 +93,20 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                     key={shift.iso_weekday+''+shift.start_time}
                                 >
                                     <div className="flex flex-row items-center gap-1 rounded-md font-button text-center bg-white px-3">
-                                        <TimeInput onChange={() => handleShiftInputChange} time={shift.start_time} />
+                                        <TimeInput 
+                                          handleChange={handleShiftInputChange} 
+                                          startOrEnd="start"
+                                          shift={shift}
+                                          time={shift.start_time} />
                                         <span className="text-xl">-</span>
-                                        <TimeInput onChange={() => handleShiftInputChange} time={shift.end_time} />
+                                        <TimeInput 
+                                          handleChange={handleShiftInputChange} 
+                                          startOrEnd="end"
+                                          shift={shift}
+                                          time={shift.end_time} />
                                     </div>
                                     <div 
-                                        onClick={() => deleteShift(shift.id)} 
+                                        onClick={() => addShiftToDelete(shift.id)} 
                                         className="flex flex-col items-end cursor-pointer">
                                             <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                     </div>

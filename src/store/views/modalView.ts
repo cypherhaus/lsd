@@ -23,8 +23,6 @@ export default class ModalView {
     runInAction(() => {
       this.modalOpen = false;
       this.modalType = null;
-      this._store.hoursView.shiftsToDelete = [];
-      this._store.hoursView.shiftToDeleteDate = null;
     });
   };
 

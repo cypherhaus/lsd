@@ -2,15 +2,25 @@ import React from "react";
 import { Slot } from "../../../types/bookings";
 import { formatHours, getAllTimeSlots } from "../../utils/time";
 import Select from "react-select";
+import { Shift } from "../../../types/bookings";
 
 interface TimeInputProps {
   time: string;
-  onChange: (v: any) => void;
+  startOrEnd: string;
+  shift: Shift;
+  handleChange: (v: any) => void;
 }
 
 const slotOptions: Slot[] = getAllTimeSlots();
 
-export const TimeInput = ({ time, onChange }: TimeInputProps) => (
+
+export const TimeInput = ({ time, handleChange, shift, startOrEnd }: TimeInputProps) => {
+
+  const onInputChange = (newValue: any) => {
+    handleChange({ newValue: newValue, shift: shift, startOrEnd: startOrEnd })
+  }
+
+  return(
   <Select
     className="basic-single"
     classNamePrefix="select"
@@ -29,7 +39,7 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
         padding: 1,
         paddingRight: 7
       }),
-      valueContainer: (base, state) => ({
+      valueContainer: (base) => ({
         ...base,
         paddingLeft: 7,
         padding: 1
@@ -50,7 +60,7 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
     components={{
       IndicatorSeparator: () => null
     }}
-    onChange={onChange}
+    onChange={onInputChange}
     isDisabled={false}
     isLoading={false}
     isClearable={false}
@@ -58,4 +68,4 @@ export const TimeInput = ({ time, onChange }: TimeInputProps) => (
     isSearchable={false}
     options={slotOptions}
   />
-);
+)};

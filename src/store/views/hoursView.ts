@@ -20,12 +20,12 @@ export default class HoursView {
   teamShifts: any = [];
 
   // Edit shifts
-  editDayShifts: Shift[] = [];
+  shiftsToEdit: Shift[] = [];
   dayInEditMode: Moment | null = null;
 
   // Shift to be added
   dayInAddMode: Moment | null = null;
-  shiftToAdd: { start: string; end: string } | null = null;
+  shiftsToAdd: { start: string; end: string, day: number } | null = null;
 
   // Shift to be deleted
   shiftsToDelete: string[] = [];
@@ -50,7 +50,7 @@ export default class HoursView {
 
   handleAddShiftClick = (m: Moment) => {
     this.dayInAddMode = m;
-    this.shiftToAdd = { start: "09:00:00", end: "17:00:00" };
+    this.shiftsToAdd = { start: "09:00:00", end: "17:00:00", day: 0 };
   };
 
   setActiveWeekShifts = () => {
@@ -114,7 +114,13 @@ export default class HoursView {
 
   addShift = () => this._store.modalView.openModal(ADD_MODAL);
 
-  deleteShift = (shiftId: string/* , day: Moment */) => {
+  updateShiftsToEdit = (shifts: Shift[]) => {
+    runInAction(() => {
+      this.shiftsToEdit = shifts;
+    });
+  }
+
+  addShiftToDelete = (shiftId: string/* , day: Moment */) => {
     const newShiftsToDelete = [...this.shiftsToDelete];
 
     runInAction(() => {
@@ -147,12 +153,12 @@ export default class HoursView {
   };
 
   handleNewShiftSingle = async (userId: string) => {
-    if (!this.dayInAddMode || !this.shiftToAdd) return;
+    if (!this.dayInAddMode || !this.shiftsToAdd) return;
 
     await this._store.teamStore.addShiftSingle({
       isoWeekday: this.dayInAddMode.isoWeekday(),
-      start: this.shiftToAdd.start,
-      end: this.shiftToAdd.end,
+      start: this.shiftsToAdd.start,
+      end: this.shiftsToAdd.end,
       user_id: userId,
       date: this.dayInAddMode,
     });
@@ -161,7 +167,7 @@ export default class HoursView {
 
     runInAction(() => {
       this.dayInAddMode = null;
-      this.editDayShifts = [];
+      this.shiftsToEdit = [];
     });
 
     this._store.modalView.closeModal();
@@ -169,12 +175,12 @@ export default class HoursView {
 
   // Todo test add shift and update shift
   handleNewShiftRepeat = async (userId: string) => {
-    if (!this.dayInAddMode || !this.shiftToAdd) return;
+    if (!this.dayInAddMode || !this.shiftsToAdd) return;
 
     await this._store.teamStore.addShift({
       isoWeekday: this.dayInAddMode.isoWeekday(),
-      start: this.shiftToAdd.start,
-      end: this.shiftToAdd.end,
+      start: this.shiftsToAdd.start,
+      end: this.shiftsToAdd.end,
       user_id: userId,
     });
 
@@ -182,14 +188,14 @@ export default class HoursView {
 
     runInAction(() => {
       this.dayInAddMode = null;
-      this.editDayShifts = [];
+      this.shiftsToEdit = [];
     });
 
     this._store.modalView.closeModal();
   };
 
   handleUpdateShift = () => {
-    this._store.teamStore.updateShifts(this.editDayShifts);
+    this._store.teamStore.updateShifts(this.shiftsToEdit);
   };
 
   // Todo finish update shift
@@ -201,7 +207,7 @@ export default class HoursView {
     if (close) newShifts[index].end_time = slot.value;
 
     runInAction(() => {
-      this.editDayShifts = newShifts;
+      this.shiftsToEdit = newShifts;
       this.dayInEditMode = day;
     });
   };
