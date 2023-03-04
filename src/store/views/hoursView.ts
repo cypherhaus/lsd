@@ -118,20 +118,17 @@ export default class HoursView {
 
   addShift = () => this._store.modalView.openModal(ADD_MODAL);
 
-  updateShiftsToEdit = ({ newValue, startOrEnd, shift }: ShiftInputChangeProps) => {
+  handleEditShift = ({ newValue, startOrEnd, shift }: ShiftInputChangeProps) => {
     const newShiftsToEdit = [...this.shiftsToEdit];
 
-    if(newShiftsToEdit.length === 0) {
+    if (newShiftsToEdit.length === 0) {
+      console.log('bbbbb')
       newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
     } else {
-      let found = false;
-      newShiftsToEdit.find((existingShift, index) => {
-        if (existingShift.id === shift.id){
-          found = true;
-          newShiftsToEdit[index] = {...newShiftsToEdit[index], [startOrEnd]: newValue.value}
-        }
-      })
-      if(!found) newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
+      const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift.id);
+      index !== -1 
+        ? newShiftsToEdit[index] = {...newShiftsToEdit[index], [startOrEnd]: newValue.value}
+        : newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
     }
 
     runInAction(() => {
@@ -149,7 +146,6 @@ export default class HoursView {
   };
 
   resetEverythingPendingInStore = () => {
-    console.log('aaaa')
     runInAction(() => {
       this.shiftsToDelete = [];
       this.shiftsToAdd = [];
@@ -235,7 +231,7 @@ export default class HoursView {
   };
 
   // Todo finish update shift
-  handleEditShift = ({ slot, shifts, day, shiftId, close }: EditShift) => {
+  /* handleEditShift = ({ slot, shifts, day, shiftId, close }: EditShift) => {
     const index = shifts.map((s: Shift) => s.id).indexOf(shiftId);
     const newShifts = [...shifts];
 
@@ -246,7 +242,7 @@ export default class HoursView {
       this.shiftsToEdit = newShifts;
       this.dayInEditMode = day;
     });
-  };
+  }; */
 
   fetchTeamShifts = () => {};
 }

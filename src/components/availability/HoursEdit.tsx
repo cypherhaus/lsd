@@ -29,7 +29,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
     const initialShifts: Shift[] = [];
     const { hoursView, teamStore, modalView } = useStore();
-    const { shiftsToDelete, shiftsToEdit, addShiftToDelete, updateShiftsToEdit } = hoursView;
+    const { shiftsToDelete, shiftsToEdit, addShiftToDelete, handleEditShift } = hoursView;
     const { openModal, modalOpen } = modalView;
     const { firstName, lastName } = user;
 
@@ -44,8 +44,6 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
       openModal(UNSAVED_CHANGES);
     }
   };
-
-  console.log(shiftsToEdit)
 
   return (
     <>
@@ -81,13 +79,13 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                 >
                                     <div className="flex flex-row items-center gap-1 rounded-md font-button text-center bg-white px-3">
                                         <TimeInput 
-                                          handleChange={updateShiftsToEdit} 
+                                          handleChange={handleEditShift} 
                                           startOrEnd="start_time"
                                           shift={shift}
                                           time={shift.start_time} />
                                         <span className="text-xl">-</span>
                                         <TimeInput 
-                                          handleChange={updateShiftsToEdit} 
+                                          handleChange={handleEditShift} 
                                           startOrEnd="end_time"
                                           shift={shift}
                                           time={shift.end_time} />
