@@ -1,15 +1,15 @@
 import React from "react";
 import { Field, Form, Formik } from "formik";
 import { observer } from "mobx-react-lite";
+import { useStore } from "../../store";
 
 // Components
 import { Input } from "../common/Input";
+import { Button } from "../common/Button";
+import { ErrorLabel } from "../common/ErrorLabel";
 
 // Constants
 import { SignupSchema } from "../../constants/validationSchema";
-import { Button } from "../common/Button";
-import { ErrorLabel } from "../common/ErrorLabel";
-import { useStore } from "../../store";
 
 export const SignUpForm = observer(() => {
   const { authView } = useStore();
@@ -25,7 +25,7 @@ export const SignUpForm = observer(() => {
       onSubmit={(values) => authView.handleSignUpClick(values)}
     >
       {({ errors, touched }) => (
-        <Form>
+        <Form className="flex flex-col gap-4">
           <div className="flex flex-col">
             <Field name="firstName">
               {({ field, meta }: any) => (

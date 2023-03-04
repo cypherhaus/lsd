@@ -56,6 +56,12 @@ export interface EditShift {
   close: boolean;
 }
 
+export interface ShiftInputChangeProps {
+  newValue: any
+  startOrEnd: string
+  shift: Shift
+}
+
 export interface Slot {
   value: string;
   label: string;

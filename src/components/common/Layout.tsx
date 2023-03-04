@@ -6,7 +6,7 @@ import { useStore } from "../../store";
 export const Layout = observer(({ children }: any) => {
 
   const { modalView } = useStore();
-  const overlay = 'fixed z-10 flex justify-center items-center bg-black duration-700 w-screen h-screen opacity-50'
+  const overlay = 'fixed z-10 flex justify-center items-center bg-black w-screen h-screen opacity-50'
 
   return (
     <>

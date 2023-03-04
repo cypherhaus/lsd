@@ -8,7 +8,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import moment, { Moment } from "moment";
-import { EditShift, Shift } from "../../../types/bookings";
+import { EditShift, Shift, ShiftInputChangeProps, AddShift } from "../../../types/bookings";
 import { ADD_MODAL, DELETE_MODAL } from "../../constants/modals";
 
 export default class HoursView {
@@ -21,11 +21,12 @@ export default class HoursView {
 
   // Edit shifts
   shiftsToEdit: Shift[] = [];
+  shiftsEditOpen: boolean = false;
   dayInEditMode: Moment | null = null;
 
   // Shift to be added
   dayInAddMode: Moment | null = null;
-  shiftsToAdd: { start: string; end: string, day: number } | null = null;
+  shiftsToAdd: AddShift[] = [];
 
   // Shift to be deleted
   shiftsToDelete: string[] = [];
@@ -49,8 +50,11 @@ export default class HoursView {
   };
 
   handleAddShiftClick = (m: Moment) => {
-    this.dayInAddMode = m;
-    this.shiftsToAdd = { start: "09:00:00", end: "17:00:00", day: 0 };
+    const newShifts = [...this.shiftsToAdd]
+    runInAction(() => {
+      this.shiftsToAdd = [...newShifts, { start: "09:00:00", end: "17:00:00", isoWeekday: 0, user_id: 'abc' }];
+    });
+    /* this.dayInAddMode = m; */
   };
 
   setActiveWeekShifts = () => {
@@ -114,9 +118,24 @@ export default class HoursView {
 
   addShift = () => this._store.modalView.openModal(ADD_MODAL);
 
-  updateShiftsToEdit = (shifts: Shift[]) => {
+  updateShiftsToEdit = ({ newValue, startOrEnd, shift }: ShiftInputChangeProps) => {
+    const newShiftsToEdit = [...this.shiftsToEdit];
+
+    if(newShiftsToEdit.length === 0) {
+      newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
+    } else {
+      let found = false;
+      newShiftsToEdit.find((existingShift, index) => {
+        if (existingShift.id === shift.id){
+          found = true;
+          newShiftsToEdit[index] = {...newShiftsToEdit[index], [startOrEnd]: newValue.value}
+        }
+      })
+      if(!found) newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
+    }
+
     runInAction(() => {
-      this.shiftsToEdit = shifts;
+      this.shiftsToEdit = newShiftsToEdit;
     });
   }
 
@@ -128,6 +147,23 @@ export default class HoursView {
       /* this.shiftToDeleteDate = day; */
     });
   };
+
+  resetEverythingPendingInStore = () => {
+    console.log('aaaa')
+    runInAction(() => {
+      this.shiftsToDelete = [];
+      this.shiftsToAdd = [];
+      this.shiftsToEdit = [];
+      this._store.modalView.closeModal();
+      this.shiftsEditOpen = false;
+    });
+  }
+
+  setShiftsEdit = (v: boolean) => {
+    runInAction(() => {
+      this.shiftsEditOpen = v;
+    });
+  }
 
   deleteOneTimeShift = async (id: string, userId: string) => {
     await this._store.teamStore.deleteOneTimeShift(id);

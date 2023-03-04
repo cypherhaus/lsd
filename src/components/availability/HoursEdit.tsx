@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
-import { RiCloseFill, RiDeleteBinLine } from 'react-icons/ri';
+
+// Components
+import { ConfirmationModal } from '../common/ConfirmationModal';
 import { Button } from '../common/Button';
 import { TimeInput } from '../common/TimeInput';
-import { Shift } from '../../../types/bookings';
-import { ConfirmationModal } from '../common/ConfirmationModal';
-import { Slot } from '../../../types/bookings';
 
 // Constants
 import { DAYS_IN_WEEK } from '../../constants/other';
 import { UNSAVED_CHANGES } from '../../constants/modals';
+
+// Icons
+import { RiCloseFill, RiDeleteBinLine } from 'react-icons/ri';
+
+// Types
+import { Shift } from '../../../types/bookings';
 
 interface Props {
   user: {
     firstName: string
     lastName: string
   },
-  setEditOpen: (value: boolean | ((prevVar: boolean) => boolean)) => void
-}
-
-interface InputChangeProps {
-  newValue: any
-  startOrEnd: string
-  shift: Shift
+  setEditOpen: (v: any) => void
 }
 
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
@@ -37,24 +36,12 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   /* const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]); */
+
   const handleClose = () => {
     if(shiftsToDelete.length === 0 && shiftsToEdit.length === 0){
       setEditOpen(false);
     } else {
       openModal(UNSAVED_CHANGES);
-    }
-  };
-
-  const handleShiftInputChange = ({ newValue, startOrEnd, shift }: InputChangeProps) => {
-    const newShiftsToEdit = [...shiftsToEdit];
-    
-    if(shiftsToEdit.length === 0) {
-      if(startOrEnd === "start"){
-        newShiftsToEdit.push({...shift, start_time: newValue.value})
-      } else {
-        newShiftsToEdit.push({...shift, end_time: newValue.value})
-      }
-      updateShiftsToEdit(newShiftsToEdit);
     }
   };
 
@@ -94,14 +81,14 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                 >
                                     <div className="flex flex-row items-center gap-1 rounded-md font-button text-center bg-white px-3">
                                         <TimeInput 
-                                          handleChange={handleShiftInputChange} 
-                                          startOrEnd="start"
+                                          handleChange={updateShiftsToEdit} 
+                                          startOrEnd="start_time"
                                           shift={shift}
                                           time={shift.start_time} />
                                         <span className="text-xl">-</span>
                                         <TimeInput 
-                                          handleChange={handleShiftInputChange} 
-                                          startOrEnd="end"
+                                          handleChange={updateShiftsToEdit} 
+                                          startOrEnd="end_time"
                                           shift={shift}
                                           time={shift.end_time} />
                                     </div>
