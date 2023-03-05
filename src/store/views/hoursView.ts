@@ -49,14 +49,6 @@ export default class HoursView {
     this.setActiveWeekShifts();
   };
 
-  handleAddShiftClick = (m: Moment) => {
-    const newShifts = [...this.shiftsToAdd]
-    runInAction(() => {
-      this.shiftsToAdd = [...newShifts, { start: "09:00:00", end: "17:00:00", isoWeekday: 0, user_id: 'abc' }];
-    });
-    /* this.dayInAddMode = m; */
-  };
-
   setActiveWeekShifts = () => {
     if (!this.weekStart || !this.weekEnd) return;
 
@@ -118,22 +110,49 @@ export default class HoursView {
 
   addShift = () => this._store.modalView.openModal(ADD_MODAL);
 
-  handleEditShift = ({ newValue, startOrEnd, shift }: ShiftInputChangeProps) => {
-    const newShiftsToEdit = [...this.shiftsToEdit];
-
-    if (newShiftsToEdit.length === 0) {
-      console.log('bbbbb')
-      newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
-    } else {
-      const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift.id);
-      index !== -1 
-        ? newShiftsToEdit[index] = {...newShiftsToEdit[index], [startOrEnd]: newValue.value}
-        : newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
-    }
-
+  handleAddShiftClick = (n: number) => {
+    const newShifts = [...this.shiftsToAdd]
     runInAction(() => {
-      this.shiftsToEdit = newShiftsToEdit;
+      this.shiftsToAdd = [...newShifts, { start_time: "", end_time: "", iso_weekday: n, user_id: this._store.authStore.currentUser.id }];
     });
+  };
+
+  handleRemoveNewShift = (i: number) => {
+    const shifts = [...this.shiftsToAdd];
+    const newShifts = shifts.slice(i, 1);
+    runInAction(() => {
+      this.shiftsToAdd = newShifts;
+    });
+  }
+
+  handleEditShift = ({ newValue, startOrEnd, shift, addShift, indexOfShift }: ShiftInputChangeProps) => {
+    if(shift) {
+      const newShiftsToEdit = [...this.shiftsToEdit];
+      if (newShiftsToEdit.length === 0) {
+        newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
+      } else {
+        const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift.id);
+        index !== -1 
+          ? newShiftsToEdit[index] = {...newShiftsToEdit[index], [startOrEnd]: newValue.value}
+          : newShiftsToEdit.push({...shift, [startOrEnd]: newValue.value})
+      }
+      runInAction(() => {
+        this.shiftsToEdit = newShiftsToEdit;
+      });
+    } else if(indexOfShift && addShift){
+      const newShiftsToAdd = [...this.shiftsToAdd];
+      if (newShiftsToAdd.length === 0) {
+        newShiftsToAdd.push({...addShift, [startOrEnd]: newValue.value})
+      } else {
+        const index = newShiftsToAdd.map((s: AddShift, index) => index === indexOfShift);
+        index 
+          ? newShiftsToAdd[indexOfShift] = {...newShiftsToAdd[indexOfShift], [startOrEnd]: newValue.value}
+          : newShiftsToAdd.push({...addShift, [startOrEnd]: newValue.value})
+      }
+      runInAction(() => {
+        this.shiftsToAdd = newShiftsToAdd;
+      });
+    }
   }
 
   addShiftToDelete = (shiftId: string/* , day: Moment */) => {
@@ -145,7 +164,7 @@ export default class HoursView {
     });
   };
 
-  resetEverythingPendingInStore = () => {
+  resetAllPendingShifts = () => {
     runInAction(() => {
       this.shiftsToDelete = [];
       this.shiftsToAdd = [];

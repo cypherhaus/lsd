@@ -41,9 +41,9 @@ export interface ShiftSingle {
 }
 
 export interface AddShift {
-  end: string;
-  isoWeekday: number;
-  start: string;
+  end_time: string;
+  iso_weekday: number;
+  start_time: string;
   user_id: string;
   date?: Moment;
 }
@@ -59,7 +59,9 @@ export interface EditShift {
 export interface ShiftInputChangeProps {
   newValue: any
   startOrEnd: string
-  shift: Shift
+  shift?: Shift
+  addShift?: AddShift
+  indexOfShift?: number
 }
 
 export interface Slot {

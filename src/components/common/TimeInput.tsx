@@ -2,22 +2,24 @@ import React from "react";
 import { Slot } from "../../../types/bookings";
 import { formatHours, getAllTimeSlots } from "../../utils/time";
 import Select from "react-select";
-import { Shift } from "../../../types/bookings";
+import { Shift, AddShift } from "../../../types/bookings";
 
 interface TimeInputProps {
   time: string;
   startOrEnd: string;
-  shift: Shift;
+  shift?: Shift;
+  addShift?: AddShift;
+  indexOfShift?: number;
   handleChange: (v: any) => void;
 }
 
 const slotOptions: Slot[] = getAllTimeSlots();
 
 
-export const TimeInput = ({ time, handleChange, shift, startOrEnd }: TimeInputProps) => {
+export const TimeInput = ({ time, handleChange, shift, startOrEnd, addShift, indexOfShift }: TimeInputProps) => {
 
   const onInputChange = (newValue: any) => {
-    handleChange({ newValue: newValue, shift: shift, startOrEnd: startOrEnd })
+    handleChange({ newValue: newValue, shift: shift, addShift: addShift, startOrEnd: startOrEnd, indexOfShift: indexOfShift })
   }
 
   return(
@@ -55,7 +57,7 @@ export const TimeInput = ({ time, handleChange, shift, startOrEnd }: TimeInputPr
     }}
     defaultValue={{
       value: formatHours(time),
-      label: formatHours(time),
+      label: time === "" ? startOrEnd === 'start_time' ? 'Start...' : 'End...' : formatHours(time),
     }}
     components={{
       IndicatorSeparator: () => null

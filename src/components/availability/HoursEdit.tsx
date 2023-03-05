@@ -29,7 +29,18 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
     const initialShifts: Shift[] = [];
     const { hoursView, teamStore, modalView } = useStore();
-    const { shiftsToDelete, shiftsToEdit, addShiftToDelete, handleEditShift } = hoursView;
+    const { shifts } = teamStore;
+
+    const { 
+      shiftsToDelete, 
+      shiftsToEdit, 
+      shiftsToAdd, 
+      addShiftToDelete, 
+      handleEditShift, 
+      handleAddShiftClick ,
+      handleRemoveNewShift
+    } = hoursView;
+
     const { openModal, modalOpen } = modalView;
     const { firstName, lastName } = user;
 
@@ -38,12 +49,15 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   /* const handleShiftInputChange = (props: Shift) => setShiftEdits([...shiftEdits, props]); */
 
   const handleClose = () => {
-    if(shiftsToDelete.length === 0 && shiftsToEdit.length === 0){
+    if(shiftsToDelete.length === 0 && shiftsToEdit.length === 0 && shiftsToAdd.length === 0){
       setEditOpen(false);
     } else {
       openModal(UNSAVED_CHANGES);
     }
   };
+
+  console.log(shiftsToEdit);
+  console.log(shiftsToAdd)
 
   return (
     <>
@@ -62,8 +76,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
       <div className="flex flex-col basis-auto items-center gap-5">
         {DAYS_IN_WEEK.map((day) => {
         
-        const filteredShift = teamStore?.shifts.filter((shift) => 
-            shift.iso_weekday === day.number && !hoursView.shiftsToDelete?.find(shiftToDelete => shift.id === shiftToDelete))
+        const filteredShift = shifts?.filter((shift) => 
+            shift.iso_weekday === day.number && !hoursView.shiftsToDelete?.find(shiftToDelete => shift.id === shiftToDelete));
+
+        const filteredShiftsToAdd = shiftsToAdd?.filter((shift) => shift.iso_weekday === day.number);
 
         return (
             <div key={day.number} className="w-full lg:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6">
@@ -98,8 +114,38 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                 </div>)
                             }
                         })}
+                        {filteredShiftsToAdd.map((shift, index) => {
+                            if(shift.start_time !== null){
+                            return(
+                                <div 
+                                    className="w-full flex flex-row justify-between" 
+                                    key={index+'-'+shift.iso_weekday+'-'+shift.start_time}
+                                >
+                                    <div className="flex flex-row items-center gap-1 rounded-md font-button text-center bg-white px-3">
+                                        <TimeInput 
+                                          handleChange={handleEditShift} 
+                                          startOrEnd="start_time"
+                                          addShift={shift}
+                                          indexOfShift = {index}
+                                          time={shift.start_time} />
+                                        <span className="text-xl">-</span>
+                                        <TimeInput 
+                                          handleChange={handleEditShift} 
+                                          startOrEnd="end_time"
+                                          addShift={shift}
+                                          indexOfShift = {index}
+                                          time={shift.end_time} />
+                                    </div>
+                                    <div 
+                                        onClick={() => handleRemoveNewShift(index)}
+                                        className="flex flex-col items-end cursor-pointer">
+                                            <RiDeleteBinLine className="text-3xl text-brandOrange" />
+                                    </div>
+                                </div>)
+                            }
+                        })}
                         <div
-                            /* onClick={} */
+                            onClick={() => handleAddShiftClick(day.number)}
                             className="font-button font-bold text-center cursor-pointer">
                                 Add Shift
                         </div>

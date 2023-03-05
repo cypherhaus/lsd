@@ -14,7 +14,7 @@ interface ModalProps {
 export const ConfirmationModal = observer(({ type }: ModalProps) => {
 
     const { modalView, hoursView } = useStore();
-    const { resetEverythingPendingInStore } = hoursView;
+    const { resetAllPendingShifts } = hoursView;
     const { closeModal } = modalView;
   
     return (
@@ -35,7 +35,7 @@ export const ConfirmationModal = observer(({ type }: ModalProps) => {
                     </div>
                     <div className="w-1/2 flex flex-col">
                         <Button 
-                            onClick={resetEverythingPendingInStore}
+                            onClick={resetAllPendingShifts}
                             variant="white">
                                 YES
                         </Button>
