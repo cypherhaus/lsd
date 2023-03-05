@@ -79,8 +79,6 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         const filteredShift = shifts?.filter((shift) => 
             shift.iso_weekday === day.number && !hoursView.shiftsToDelete?.find(shiftToDelete => shift.id === shiftToDelete));
 
-        const filteredShiftsToAdd = shiftsToAdd?.filter((shift) => shift.iso_weekday === day.number);
-
         return (
             <div key={day.number} className="w-full lg:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6">
                 <span className="w-1/3 font-bold font-button text-2xl">{day.fullLabel}</span>
@@ -114,9 +112,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                 </div>)
                             }
                         })}
-                        {filteredShiftsToAdd.map((shift, index) => {
-                            if(shift.start_time !== null){
-                            return(
+                        {shiftsToAdd.map((shift, index) => {
+                            if(shift.start_time !== null && shift.iso_weekday === day.number){
+                          
+                              return(
                                 <div 
                                     className="w-full flex flex-row justify-between" 
                                     key={index+'-'+shift.iso_weekday+'-'+shift.start_time}
@@ -142,7 +141,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                             <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                     </div>
                                 </div>)
-                            }
+                              }
                         })}
                         <div
                             onClick={() => handleAddShiftClick(day.number)}

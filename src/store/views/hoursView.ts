@@ -119,7 +119,7 @@ export default class HoursView {
 
   handleRemoveNewShift = (i: number) => {
     const shifts = [...this.shiftsToAdd];
-    const newShifts = shifts.slice(i, 1);
+    const newShifts = shifts.filter((shift, index) => index !== i)
     runInAction(() => {
       this.shiftsToAdd = newShifts;
     });
@@ -139,7 +139,7 @@ export default class HoursView {
       runInAction(() => {
         this.shiftsToEdit = newShiftsToEdit;
       });
-    } else if(indexOfShift && addShift){
+    } else if(addShift && (indexOfShift || indexOfShift === 0)){
       const newShiftsToAdd = [...this.shiftsToAdd];
       if (newShiftsToAdd.length === 0) {
         newShiftsToAdd.push({...addShift, [startOrEnd]: newValue.value})
