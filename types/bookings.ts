@@ -64,6 +64,12 @@ export interface ShiftInputChangeProps {
   indexOfShift?: number
 }
 
+export interface ShiftValidationError {
+  shiftId?: string
+  shiftIndex?: number
+  message: string
+}
+
 export interface Slot {
   value: string;
   label: string;

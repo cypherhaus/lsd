@@ -8,7 +8,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import moment, { Moment } from "moment";
-import { EditShift, Shift, ShiftInputChangeProps, AddShift } from "../../../types/bookings";
+import { EditShift, Shift, ShiftInputChangeProps, AddShift, ShiftValidationError } from "../../../types/bookings";
 import { ADD_MODAL, DELETE_MODAL } from "../../constants/modals";
 
 export default class HoursView {
@@ -19,16 +19,18 @@ export default class HoursView {
   activeWeekShifts: Shift[][] | null = null;
   teamShifts: any = [];
 
-  // Edit shifts
+  shiftValidationErrors: ShiftValidationError[] = []; 
+
+  // Edited shifts
   shiftsToEdit: Shift[] = [];
   shiftsEditOpen: boolean = false;
   dayInEditMode: Moment | null = null;
 
-  // Shift to be added
+  // Shifts to be added
   dayInAddMode: Moment | null = null;
   shiftsToAdd: AddShift[] = [];
 
-  // Shift to be deleted
+  // Shifts to be deleted
   shiftsToDelete: string[] = [];
   shiftToDeleteDate: Moment | null = null;
 
@@ -108,7 +110,52 @@ export default class HoursView {
     });
   };
 
-  addShift = () => this._store.modalView.openModal(ADD_MODAL);
+  validateAndSaveChanges = () => {
+
+    runInAction(() => {
+      this.shiftValidationErrors = [];
+    });
+
+    const newShifts = [...this._store.teamStore?.shifts]
+    let newShiftsToDelete = [...this.shiftsToDelete]
+    let newShiftsToEdit = [...this.shiftsToEdit]
+    let newShiftsToAdd = [...this.shiftsToAdd]
+
+    if(newShiftsToDelete.length !== 0){
+      if(newShiftsToEdit.length !== 0){
+        newShiftsToEdit = newShiftsToEdit.filter(s => !newShiftsToDelete.includes(s.id) )
+      }
+    }
+
+    if(newShiftsToEdit.length !== 0){
+      newShiftsToEdit.map(s => {
+        const startTime = moment(s.start_time, 'hh:mm:ss');
+        const endTime = moment(s.end_time, 'hh:mm:ss');
+        if(!startTime.isBefore(endTime)){
+          runInAction(() => {
+            this.shiftValidationErrors = [
+              ...this.shiftValidationErrors, 
+              {shiftId: s.id, message: "End time is not after start time."}];
+          });
+        }
+      });
+    }
+
+    if(newShiftsToAdd.length !== 0){
+      newShiftsToAdd.map((s, index) => {
+        const startTime = moment(s.start_time, 'hh:mm:ss');
+        const endTime = moment(s.end_time, 'hh:mm:ss');
+        if(!startTime.isBefore(endTime)){
+          runInAction(() => {
+            this.shiftValidationErrors = [
+              ...this.shiftValidationErrors, 
+              {shiftIndex: index, message: "End time is not after start time."}];
+          });
+        }
+      });
+    }
+
+  };
 
   handleAddShiftClick = (n: number) => {
     const newShifts = [...this.shiftsToAdd]
