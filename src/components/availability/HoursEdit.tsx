@@ -59,8 +59,6 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
     }
   };
 
-  console.log(shiftValidationErrors)
-
   return (
     <>
     <div className="flex flex-col m-4 mx-12 gap-10">
@@ -105,13 +103,15 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                       time={shift.end_time} />
                                   </div>
                                   <div 
-                                    onClick={() => addShiftToDelete(shift.id)} 
+                                    onClick={() => addShiftToDelete(shift.id as string)} 
                                     className="flex flex-col items-end cursor-pointer">
                                       <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                   </div>
                                 </div>
-                                {shiftValidationErrors?.map(s => s.shiftId === shift.id 
-                                  && <ErrorLabel key={s.shiftId}>{s.message}</ErrorLabel>)}
+                                {shiftValidationErrors?.map((s, i2) => s.shiftId === shift.id 
+                                  && <ErrorLabel key={ 'error-' + shift.iso_weekday+'-' + i2 }>
+                                      {s.message}
+                                    </ErrorLabel>)}
                               </div>)
                             }
                         })}
@@ -141,8 +141,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                         <RiDeleteBinLine className="text-3xl text-brandOrange" />
                                     </div>
                                   </div>
-                                {shiftValidationErrors?.map(s => s.shiftIndex === index 
-                                  && <ErrorLabel key={s.shiftIndex}>{s.message}</ErrorLabel>)}
+                                {shiftValidationErrors?.map((s, i2) => s.shiftIndex === index 
+                                  && <ErrorLabel key={ 'error-' + shift.iso_weekday + '-' + i2 }>
+                                      {s.message}
+                                    </ErrorLabel>)}
                                 </div>)
                               }
                         })}

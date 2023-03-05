@@ -20,13 +20,23 @@ export interface Hours {
 }
 
 export interface Shift {
-  created_at: string;
+  created_at?: string;
   end_time: string;
-  id: string;
+  id?: string;
   iso_weekday: number;
-  repeat: boolean;
+  repeat?: boolean;
   start_time: string;
   user_id: string;
+  oldIndex?: number;
+  date?: Moment;
+}
+
+export interface EditShift {
+  slot: Slot;
+  shifts: Shift[];
+  day: Moment;
+  shiftId: string;
+  close: boolean;
 }
 
 export interface ShiftSingle {
@@ -40,27 +50,11 @@ export interface ShiftSingle {
   date: string;
 }
 
-export interface AddShift {
-  end_time: string;
-  iso_weekday: number;
-  start_time: string;
-  user_id: string;
-  date?: Moment;
-}
-
-export interface EditShift {
-  slot: Slot;
-  shifts: Shift[];
-  day: Moment;
-  shiftId: string;
-  close: boolean;
-}
-
 export interface ShiftInputChangeProps {
   newValue: any
   startOrEnd: string
   shift?: Shift
-  addShift?: AddShift
+  addShift?: Shift
   indexOfShift?: number
 }
 

@@ -8,8 +8,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import moment, { Moment } from "moment";
-import { EditShift, Shift, ShiftInputChangeProps, AddShift, ShiftValidationError } from "../../../types/bookings";
+import { EditShift, Shift, ShiftInputChangeProps, ShiftValidationError } from "../../../types/bookings";
 import { ADD_MODAL, DELETE_MODAL } from "../../constants/modals";
+import { checkOverlap } from "../../utils/time";
+import { RiSave3Fill } from "react-icons/ri";
 
 export default class HoursView {
   private _store: Store;
@@ -28,7 +30,7 @@ export default class HoursView {
 
   // Shifts to be added
   dayInAddMode: Moment | null = null;
-  shiftsToAdd: AddShift[] = [];
+  shiftsToAdd: Shift[] = [];
 
   // Shifts to be deleted
   shiftsToDelete: string[] = [];
@@ -116,22 +118,20 @@ export default class HoursView {
       this.shiftValidationErrors = [];
     });
 
-    const newShifts = [...this._store.teamStore?.shifts]
+    let newShifts = [...this._store.teamStore?.shifts]
     let newShiftsToDelete = [...this.shiftsToDelete]
     let newShiftsToEdit = [...this.shiftsToEdit]
     let newShiftsToAdd = [...this.shiftsToAdd]
 
-    if(newShiftsToDelete.length !== 0){
-      if(newShiftsToEdit.length !== 0){
-        newShiftsToEdit = newShiftsToEdit.filter(s => !newShiftsToDelete.includes(s.id) )
-      }
+    if(newShiftsToDelete.length !== 0 && newShiftsToEdit.length !== 0){
+      newShiftsToEdit = newShiftsToEdit.filter(s => !newShiftsToDelete.includes(s.id as string) )
     }
 
     if(newShiftsToEdit.length !== 0){
       newShiftsToEdit.map(s => {
         const startTime = moment(s.start_time, 'hh:mm:ss');
         const endTime = moment(s.end_time, 'hh:mm:ss');
-        if(!startTime.isBefore(endTime)){
+        if(endTime.isBefore(startTime)){
           runInAction(() => {
             this.shiftValidationErrors = [
               ...this.shiftValidationErrors, 
@@ -145,7 +145,7 @@ export default class HoursView {
       newShiftsToAdd.map((s, index) => {
         const startTime = moment(s.start_time, 'hh:mm:ss');
         const endTime = moment(s.end_time, 'hh:mm:ss');
-        if(!startTime.isBefore(endTime)){
+        if(endTime.isBefore(startTime)){
           runInAction(() => {
             this.shiftValidationErrors = [
               ...this.shiftValidationErrors, 
@@ -155,6 +155,49 @@ export default class HoursView {
       });
     }
 
+    if(newShiftsToDelete.length !== 0){
+      newShifts = newShifts.filter(s => !newShiftsToDelete.includes(s.id as string));}
+      let mergedShifts = newShifts.concat(newShiftsToEdit).reverse();
+      const findDuplicatedShiftsAndRemoveOldOnes = mergedShifts.filter((obj, index) =>
+          mergedShifts.findIndex((item) => item.id === obj.id) === index);
+      
+      newShiftsToAdd = newShiftsToAdd.map((s, i) => {
+        s.oldIndex = i; 
+        return s;
+      });
+
+      const allShiftsMerged = findDuplicatedShiftsAndRemoveOldOnes.concat(newShiftsToAdd)
+      const initialShiftArray = [] as Shift[] | string[][];
+      const days = [
+        {number: 1, shifts: initialShiftArray}, 
+        {number: 2, shifts: initialShiftArray}, 
+        {number: 3, shifts: initialShiftArray}, 
+        {number: 4, shifts: initialShiftArray}, 
+        {number: 5, shifts: initialShiftArray}, 
+        {number: 6, shifts: initialShiftArray}, 
+        {number: 7, shifts: initialShiftArray}];
+        
+      days.map(d => {
+        const dayShifts = allShiftsMerged.filter(s => s.iso_weekday === d.number);
+        if(dayShifts.length > 1){
+          d.shifts = dayShifts.map((ds => [ds.start_time, ds.end_time]))
+          dayShifts.map(ds => {
+            if(checkOverlap(d.shifts as string[][])){
+              if(!ds.oldIndex){
+                runInAction(() => {
+                  this.shiftValidationErrors = [
+                    ...this.shiftValidationErrors, 
+                    {shiftId: ds.id, message: "There is time overlap in shifts."}];});
+              } else {
+                runInAction(() => {
+                  this.shiftValidationErrors = [
+                    ...this.shiftValidationErrors, 
+                    {shiftIndex: ds.oldIndex, message: "There is time overlap in shifts."}];});
+              }
+             }
+          })
+        }
+      })
   };
 
   handleAddShiftClick = (n: number) => {
@@ -191,7 +234,7 @@ export default class HoursView {
       if (newShiftsToAdd.length === 0) {
         newShiftsToAdd.push({...addShift, [startOrEnd]: newValue.value})
       } else {
-        const index = newShiftsToAdd.map((s: AddShift, index) => index === indexOfShift);
+        const index = newShiftsToAdd.map((s: Shift, index) => index === indexOfShift);
         index 
           ? newShiftsToAdd[indexOfShift] = {...newShiftsToAdd[indexOfShift], [startOrEnd]: newValue.value}
           : newShiftsToAdd.push({...addShift, [startOrEnd]: newValue.value})

@@ -6,7 +6,7 @@
  */
 
 import { Moment } from "moment";
-import { AddBlockedTime, AddShift } from "../../types/bookings";
+import { AddBlockedTime, Shift } from "../../types/bookings";
 import { supabase } from "../config/supabase";
 
 export default class DashAPI {
@@ -33,20 +33,19 @@ export default class DashAPI {
     return data;
   };
 
-  addShift = async ({ start, end, isoWeekday, user_id }: AddShift) => {
+  addShift = async ({ start_time, end_time, iso_weekday, user_id }: Shift) => {
     const res = await supabase.from("shifts").upsert({
-      start,
-      end,
-      isoWeekday,
+      start_time,
+      end_time,
+      iso_weekday,
       user_id,
     });
 
     console.log({ res });
   };
 
-  updateShifts = async (newShifts: any) => {
+  updateShifts = async (newShifts: Shift[]) => {
     const res = await supabase.from("shifts").upsert(newShifts);
-
     console.log({ res });
   };
 

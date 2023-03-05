@@ -7,7 +7,7 @@
 
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
-import { AddShift, Hours, Shift, ShiftSingle } from "../../../types/bookings";
+import { Hours, Shift, ShiftSingle } from "../../../types/bookings";
 import { Moment } from "moment";
 import { Profile } from "../../../types/members";
 
@@ -33,7 +33,7 @@ export default class TeamStore {
    })
   }
 
-  async addShift(shift: AddShift) {
+  async addShift(shift: Shift) {
     await this._store.api.dashAPI.addShift(shift);
   }
 
