@@ -196,9 +196,10 @@ export default class HoursView {
     To make long story short - we are finding shifts with same id and removing ones with old
     content (old start_time, old end_time). */
 
-    const findDuplicatedShiftsAndRemoveOldOnes = mergedShifts.filter((obj, index) =>
+    const toRevert = mergedShifts.filter((obj, index) =>
         mergedShifts.findIndex((item) => item.id === obj.id) === index);
-    const finalEditedShifts = findDuplicatedShiftsAndRemoveOldOnes.reverse();
+
+    const finalEditedShifts = toRevert.reverse();
 
     /* 7. Because shifts in newShiftsToAdd don't have IDs, before merging to new array we have to 
     remember their current indexes in newShiftsToAdd array. We are doing this because we must be
@@ -216,7 +217,7 @@ export default class HoursView {
     /* 9. We are creating new array called days. In that array we will sort shifts by day and then
     we will check for every day if there is shifts' times overlap. */
 
-    const initialShiftArray = [] as Shift[] | string[][];
+    const initialShiftArray: string[][] = [];
     const days = [
       {number: 1, shifts: initialShiftArray}, 
       {number: 2, shifts: initialShiftArray}, 
@@ -231,20 +232,16 @@ export default class HoursView {
       if(dayShifts.length > 1){
         d.shifts = dayShifts.map((ds => [ds.start_time, ds.end_time]))
         dayShifts.map(ds => {
-          if(checkOverlap(d.shifts as string[][])){
-            if(!ds.oldIndex){
+          if(checkOverlap(d.shifts)){
+              let shiftData: { shiftId: string, value: string | number} = 
+                { shiftId: 'shiftIndex', value: ds.oldIndex as number}
+
+              if(!ds.oldIndex) shiftData = { shiftId: 'shiftId', value: ds.id as string }
               runInAction(() => {
                 this.shiftValidationErrors = [
                   ...this.shiftValidationErrors, 
-                  {shiftId: ds.id, message: "There is time overlap in shifts."}];
+                  {[shiftData.shiftId]: shiftData.value, message: "There is time overlap in shifts."}];
               });
-            } else {
-              runInAction(() => {
-                this.shiftValidationErrors = [
-                  ...this.shiftValidationErrors, 
-                  {shiftIndex: ds.oldIndex, message: "There is time overlap in shifts."}];
-              });
-            };
           };
         });
       };
@@ -257,7 +254,6 @@ export default class HoursView {
       if(newShiftsToDelete.length > 0) newShiftsToDelete.map(async s => await this._store.teamStore.deleteShiftById(s));
       if(allShiftsMerged.length > 0) await this._store.teamStore.updateShifts(finalEditedShifts);
       if(newShiftsToAdd.length > 0) newShiftsToAdd.map(async s => await this._store.teamStore.addShift(s));
-      this.fetchShifts(this._store.authStore.currentUser.id);
       this.resetAllPendingShifts();
     }
   };
@@ -307,12 +303,11 @@ export default class HoursView {
     }
   }
 
-  addShiftToDelete = (shiftId: string/* , day: Moment */) => {
+  addShiftToDelete = (shiftId: string) => {
     const newShiftsToDelete = [...this.shiftsToDelete];
 
     runInAction(() => {
       this.shiftsToDelete = [...newShiftsToDelete, shiftId];
-      /* this.shiftToDeleteDate = day; */
     });
   };
 

@@ -20,18 +20,18 @@ const Availability = observer(() => {
   const { shiftsEditOpen, setShiftsEdit } = hoursView;
   const [currentUserData, setCurrentUserData] = useState({firstName: '', lastName: ''})
 
-  const rerieveSession = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session) authView.init(data.session?.user?.id);
-  };
-
   useEffect(() => {
-    rerieveSession();
+    const retrieveSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) authView.init(data.session?.user?.id);
+    };
+    retrieveSession();
+    
     if(authStore.currentUser) {
       hoursView.fetchShifts(authStore.currentUser.id);
       setCurrentUserData({firstName: authStore.currentUser.first_name, lastName: authStore.currentUser.last_name})
     }
-  }, [authStore.currentUser]);
+  }, [authStore.currentUser, shiftsEditOpen, hoursView, authView]);
 
   return (
     <Layout>
