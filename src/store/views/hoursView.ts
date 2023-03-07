@@ -183,9 +183,7 @@ export default class HoursView {
 
     /* 4. We are deleting shifts that are meant to be deleted from oldShifts. */
 
-    if(newShiftsToDelete.length !== 0){
-      oldShifts = oldShifts.filter(s => !newShiftsToDelete.includes(s.id as string));
-    };
+    if(newShiftsToDelete.length !== 0) oldShifts = oldShifts.filter(s => !newShiftsToDelete.includes(s.id as string));
 
     /* 5. We are merging newShiftsToEdit with oldShifts. */
 
@@ -195,7 +193,7 @@ export default class HoursView {
     On previous step new edited shifts are pushed to the end of the mergedShifts array.
     Filter function below is deleting duplicated shifts from end of an array. Because of that, 
     on previous step we reversed array in order to remove old duplicated shifts. 
-    To make long story short - we are finding shifts with same id are removing ones with old
+    To make long story short - we are finding shifts with same id and removing ones with old
     content (old start_time, old end_time). */
 
     const findDuplicatedShiftsAndRemoveOldOnes = mergedShifts.filter((obj, index) =>
@@ -252,24 +250,13 @@ export default class HoursView {
       };
     });
 
-    /* 10. If everything went smooth and without validation errors, we are separating 
-    shifts to add from allShiftsMerged array. Shifts that have IDs are going to be updated to
-    Supabase and shifts without IDs are going to be added to Supabase. */
+    /* 10. If everything went smooth and without validation errors, we are creating/deleting/updating
+    everything to Supabase. */
 
     if (this.shiftValidationErrors.length === 0){
-
-      if(newShiftsToDelete.length > 0) {
-        newShiftsToDelete.map(async s => await this._store.teamStore.deleteShiftById(s));
-      }
-
-      if(allShiftsMerged.length > 0){
-        await this._store.teamStore.updateShifts(finalEditedShifts);
-      }
-
-      if(newShiftsToAdd.length > 0){
-        newShiftsToAdd.map(async s => await this._store.teamStore.addShift(s));
-      }
-
+      if(newShiftsToDelete.length > 0) newShiftsToDelete.map(async s => await this._store.teamStore.deleteShiftById(s));
+      if(allShiftsMerged.length > 0) await this._store.teamStore.updateShifts(finalEditedShifts);
+      if(newShiftsToAdd.length > 0) newShiftsToAdd.map(async s => await this._store.teamStore.addShift(s));
       this.fetchShifts(this._store.authStore.currentUser.id);
       this.resetAllPendingShifts();
     }
