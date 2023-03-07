@@ -60,13 +60,8 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
                         <span key={shift.iso_weekday+''+shift.start_time} className="rounded-md text-center bg-white px-1 py-1 lg:px-3 lg:py-2">
                           {formatHours(shift.start_time) + ' - ' + formatHours(shift.end_time)}
                         </span>)
-                    }
-
-                    return (
-                      <span key={shift.iso_weekday+'none'} className="rounded-md text-center bg-white px-3 py-2">
-                        NONE
-                      </span>)
-                  })}</div>
+                    }})}
+                  </div>
                 </td>)
             })}
 					  <td className="p-2 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">

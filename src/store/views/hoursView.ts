@@ -12,6 +12,11 @@ import { EditShift, Shift, ShiftInputChangeProps, ShiftValidationError } from ".
 import { ADD_MODAL, DELETE_MODAL } from "../../constants/modals";
 import { checkOverlap } from "../../utils/time";
 import { RiSave3Fill } from "react-icons/ri";
+import { toEditorSettings, updateDecorator, updateSourceFile } from "typescript";
+import { shallowEnhancer } from "mobx/dist/internal";
+import { errorToast } from "../../utils/toast";
+import { array } from "yup";
+import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 
 export default class HoursView {
   private _store: Store;
@@ -112,23 +117,35 @@ export default class HoursView {
     });
   };
 
-  validateAndSaveChanges = () => {
-
+  validateAndSaveChanges = async () => {
     runInAction(() => {
       this.shiftValidationErrors = [];
     });
 
-    let newShifts = [...this._store.teamStore?.shifts]
-    let newShiftsToDelete = [...this.shiftsToDelete]
-    let newShiftsToEdit = [...this.shiftsToEdit]
-    let newShiftsToAdd = [...this.shiftsToAdd]
+    let oldShifts = [...this._store.teamStore?.shifts];
+    let newShiftsToDelete = [...this.shiftsToDelete];
+    let newShiftsToEdit = [...this.shiftsToEdit];
+    let newShiftsToAdd = [...this.shiftsToAdd];
+
+    /* 1. We are checking if there are same shifts in both deleted list and edited list. 
+    If some shift is edited during editing and deleted after that, 
+    we are removing it from newShiftsToEdit. */
 
     if(newShiftsToDelete.length !== 0 && newShiftsToEdit.length !== 0){
       newShiftsToEdit = newShiftsToEdit.filter(s => !newShiftsToDelete.includes(s.id as string) )
-    }
+    };
+
+    /* 2. We are checking if start time is after end time for every shift in newShiftsToEdit. */
 
     if(newShiftsToEdit.length !== 0){
       newShiftsToEdit.map(s => {
+        if((s.start_time || s.end_time) === '') {
+          runInAction(() => {
+            this.shiftValidationErrors = [
+              ...this.shiftValidationErrors, 
+              {shiftId: s.id, message: "Please enter both start time and end time."}];
+          });
+        }
         const startTime = moment(s.start_time, 'hh:mm:ss');
         const endTime = moment(s.end_time, 'hh:mm:ss');
         if(endTime.isBefore(startTime)){
@@ -137,12 +154,21 @@ export default class HoursView {
               ...this.shiftValidationErrors, 
               {shiftId: s.id, message: "End time is not after start time."}];
           });
-        }
+        };
       });
-    }
+    };
+
+    /* 3. We are checking if start time is after end time for every shift in newShiftsToAdd. */
 
     if(newShiftsToAdd.length !== 0){
       newShiftsToAdd.map((s, index) => {
+        if((s.start_time || s.end_time) === '') {
+          runInAction(() => {
+            this.shiftValidationErrors = [
+              ...this.shiftValidationErrors, 
+              {shiftIndex: index, message: "Please enter both start time and end time."}];
+          });
+        }
         const startTime = moment(s.start_time, 'hh:mm:ss');
         const endTime = moment(s.end_time, 'hh:mm:ss');
         if(endTime.isBefore(startTime)){
@@ -151,53 +177,102 @@ export default class HoursView {
               ...this.shiftValidationErrors, 
               {shiftIndex: index, message: "End time is not after start time."}];
           });
-        }
+        };
       });
-    }
+    };
+
+    /* 4. We are deleting shifts that are meant to be deleted from oldShifts. */
 
     if(newShiftsToDelete.length !== 0){
-      newShifts = newShifts.filter(s => !newShiftsToDelete.includes(s.id as string));}
-      let mergedShifts = newShifts.concat(newShiftsToEdit).reverse();
-      const findDuplicatedShiftsAndRemoveOldOnes = mergedShifts.filter((obj, index) =>
-          mergedShifts.findIndex((item) => item.id === obj.id) === index);
-      
-      newShiftsToAdd = newShiftsToAdd.map((s, i) => {
-        s.oldIndex = i; 
-        return s;
-      });
+      oldShifts = oldShifts.filter(s => !newShiftsToDelete.includes(s.id as string));
+    };
 
-      const allShiftsMerged = findDuplicatedShiftsAndRemoveOldOnes.concat(newShiftsToAdd)
-      const initialShiftArray = [] as Shift[] | string[][];
-      const days = [
-        {number: 1, shifts: initialShiftArray}, 
-        {number: 2, shifts: initialShiftArray}, 
-        {number: 3, shifts: initialShiftArray}, 
-        {number: 4, shifts: initialShiftArray}, 
-        {number: 5, shifts: initialShiftArray}, 
-        {number: 6, shifts: initialShiftArray}, 
-        {number: 7, shifts: initialShiftArray}];
+    /* 5. We are merging newShiftsToEdit with oldShifts. */
+
+    let mergedShifts = oldShifts.concat(newShiftsToEdit).reverse();
+
+    /* 6. We are finding and removing duplicates (shifts with same id).
+    On previous step new edited shifts are pushed to the end of the mergedShifts array.
+    Filter function below is deleting duplicated shifts from end of an array. Because of that, 
+    on previous step we reversed array in order to remove old duplicated shifts. 
+    To make long story short - we are finding shifts with same id are removing ones with old
+    content (old start_time, old end_time). */
+
+    const findDuplicatedShiftsAndRemoveOldOnes = mergedShifts.filter((obj, index) =>
+        mergedShifts.findIndex((item) => item.id === obj.id) === index);
+    const finalEditedShifts = findDuplicatedShiftsAndRemoveOldOnes.reverse();
+
+    /* 7. Because shifts in newShiftsToAdd don't have IDs, before merging to new array we have to 
+    remember their current indexes in newShiftsToAdd array. We are doing this because we must be
+    able to show validation error properly for every shift in newShiftsToAdd array if an error occurs. */
+      
+    newShiftsToAdd = newShiftsToAdd.map((s, i) => {
+      s.oldIndex = i; 
+      return s;
+    });
+
+    /* 8. We are merging shifts from newShiftsToAdd array into new array with all old and edited shifts. */
+
+    const allShiftsMerged = finalEditedShifts.concat(newShiftsToAdd);
+
+    /* 9. We are creating new array called days. In that array we will sort shifts by day and then
+    we will check for every day if there is shifts' times overlap. */
+
+    const initialShiftArray = [] as Shift[] | string[][];
+    const days = [
+      {number: 1, shifts: initialShiftArray}, 
+      {number: 2, shifts: initialShiftArray}, 
+      {number: 3, shifts: initialShiftArray}, 
+      {number: 4, shifts: initialShiftArray}, 
+      {number: 5, shifts: initialShiftArray}, 
+      {number: 6, shifts: initialShiftArray}, 
+      {number: 7, shifts: initialShiftArray}];
         
-      days.map(d => {
-        const dayShifts = allShiftsMerged.filter(s => s.iso_weekday === d.number);
-        if(dayShifts.length > 1){
-          d.shifts = dayShifts.map((ds => [ds.start_time, ds.end_time]))
-          dayShifts.map(ds => {
-            if(checkOverlap(d.shifts as string[][])){
-              if(!ds.oldIndex){
-                runInAction(() => {
-                  this.shiftValidationErrors = [
-                    ...this.shiftValidationErrors, 
-                    {shiftId: ds.id, message: "There is time overlap in shifts."}];});
-              } else {
-                runInAction(() => {
-                  this.shiftValidationErrors = [
-                    ...this.shiftValidationErrors, 
-                    {shiftIndex: ds.oldIndex, message: "There is time overlap in shifts."}];});
-              }
-             }
-          })
-        }
-      })
+    days.map(d => {
+      const dayShifts = allShiftsMerged.filter(s => s.iso_weekday === d.number);
+      if(dayShifts.length > 1){
+        d.shifts = dayShifts.map((ds => [ds.start_time, ds.end_time]))
+        dayShifts.map(ds => {
+          if(checkOverlap(d.shifts as string[][])){
+            if(!ds.oldIndex){
+              runInAction(() => {
+                this.shiftValidationErrors = [
+                  ...this.shiftValidationErrors, 
+                  {shiftId: ds.id, message: "There is time overlap in shifts."}];
+              });
+            } else {
+              runInAction(() => {
+                this.shiftValidationErrors = [
+                  ...this.shiftValidationErrors, 
+                  {shiftIndex: ds.oldIndex, message: "There is time overlap in shifts."}];
+              });
+            };
+          };
+        });
+      };
+    });
+
+    /* 10. If everything went smooth and without validation errors, we are separating 
+    shifts to add from allShiftsMerged array. Shifts that have IDs are going to be updated to
+    Supabase and shifts without IDs are going to be added to Supabase. */
+
+    if (this.shiftValidationErrors.length === 0){
+
+      if(newShiftsToDelete.length > 0) {
+        newShiftsToDelete.map(async s => await this._store.teamStore.deleteShiftById(s));
+      }
+
+      if(allShiftsMerged.length > 0){
+        await this._store.teamStore.updateShifts(finalEditedShifts);
+      }
+
+      if(newShiftsToAdd.length > 0){
+        newShiftsToAdd.map(async s => await this._store.teamStore.addShift(s));
+      }
+
+      this.fetchShifts(this._store.authStore.currentUser.id);
+      this.resetAllPendingShifts();
+    }
   };
 
   handleAddShiftClick = (n: number) => {

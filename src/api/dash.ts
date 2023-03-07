@@ -41,16 +41,20 @@ export default class DashAPI {
       user_id,
     });
 
-    console.log({ res });
+    if (res?.status === 201) return true;
+    return false;
   };
 
   updateShifts = async (newShifts: Shift[]) => {
     const res = await supabase.from("shifts").upsert(newShifts);
-    console.log({ res });
+    if (res?.status === 201) return true;
+    return false;
   };
 
   deleteShift = async (id: string) => {
     const res = await supabase.from("shifts").delete().eq("id", id);
+    if (res?.status === 201) return true;
+    return false;
   };
 
   addBlockedTime = async (blockedTime: AddBlockedTime) => {

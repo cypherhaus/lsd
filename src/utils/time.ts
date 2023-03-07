@@ -6,15 +6,16 @@ export const formatHours = (time: string) => {
 };
 
 export const checkOverlap = (timeSegments: string[][]) => {
-  if (timeSegments.length < 2) return false;
   timeSegments.sort((timeSegment1, timeSegment2) => timeSegment1[0].localeCompare(timeSegment2[0]));
-
-  for (let i = 0; i < timeSegments.length - 1; i++) {
-    const currentEndTime = timeSegments[i][1];
-    const nextStartTime = timeSegments[i + 1][0];
-    if (currentEndTime > nextStartTime) return true;
-  }
-  return false;
+  let overlap = false;
+  timeSegments.map((t, i) => {
+    if(!((i + 1) === timeSegments.length)){
+      const currentEndTime = timeSegments[i][1];
+      const nextStartTime = timeSegments[i + 1][0];
+      if (currentEndTime > nextStartTime) overlap = true;
+    }
+  })
+  return overlap;
 };
 
 export const getAllTimeSlots = () => {

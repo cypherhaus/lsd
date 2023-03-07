@@ -10,6 +10,7 @@ import { Store } from "../store";
 import { Hours, Shift, ShiftSingle } from "../../../types/bookings";
 import { Moment } from "moment";
 import { Profile } from "../../../types/members";
+import { successToast, errorToast } from "../../utils/toast";
 
 export default class TeamStore {
   private _store: Store;
@@ -34,20 +35,44 @@ export default class TeamStore {
   }
 
   async addShift(shift: Shift) {
-    await this._store.api.dashAPI.addShift(shift);
+    try {
+      const response = await this._store.api.dashAPI.addShift(shift);
+      if (response) {
+        return true;
+      } else {
+        errorToast('Cannot save changes.');
+      }
+    } catch (err) {
+      errorToast('Cannot save changes.');
+    }
+    return false;
   }
 
-  async updateShifts(newShifts: any) {
-    await this._store.api.dashAPI.updateShifts(newShifts);
+  async updateShifts(newShifts: Shift[]) {
+    try {
+      const response = await this._store.api.dashAPI.updateShifts(newShifts);
+      if (response) {
+        successToast('Saved changes sucessfully.')
+        return true;
+      } else {
+        errorToast('Cannot save changes.');
+      }
+    } catch (err) {
+      errorToast('Cannot save changes.');
+    }
+    return false;
   }
 
-  async deleteShiftById(id: string, date?: Moment, userId?: string) {
-    if (date) await this._store.api.dashAPI.deleteShiftOnce(id, date, userId);
-    if (!date) await this._store.api.dashAPI.deleteShift(id);
-  }
-
-  async deleteOneTimeShift(id: string) {
-    await this._store.api.dashAPI.deleteShift(id);
+  async deleteShiftById(id: string) {
+    try {
+      const response = await this._store.api.dashAPI.deleteShift(id);
+      if (response) {
+        return true;
+      }
+    } catch (err) {
+      errorToast('Cannot delete shift.');
+    }
+    return false;
   }
 
   async fetchTeamMembers(businessId: string) {
