@@ -2,19 +2,23 @@ import moment from "moment";
 
 export const formatHours = (time: string) => {
   const string = moment().format("DD/MM/YYYY") + " " + time;
-  return moment(string, "DD/MM/YYYY HH:mm:ss").format("h:mma");
+  const splitted = time.split(":");
+  const format = splitted[1] === "00" ? "ha" : "h:mma";
+  return moment(string, "DD/MM/YYYY HH:mm:ss").format(format);
 };
 
 export const checkOverlap = (timeSegments: string[][]) => {
-  timeSegments.sort((timeSegment1, timeSegment2) => timeSegment1[0].localeCompare(timeSegment2[0]));
+  timeSegments.sort((timeSegment1, timeSegment2) =>
+    timeSegment1[0].localeCompare(timeSegment2[0])
+  );
   let overlap = false;
   timeSegments.map((t, i) => {
-    if(!((i + 1) === timeSegments.length)){
+    if (!(i + 1 === timeSegments.length)) {
       const currentEndTime = timeSegments[i][1];
       const nextStartTime = timeSegments[i + 1][0];
       if (currentEndTime > nextStartTime) overlap = true;
     }
-  })
+  });
   return overlap;
 };
 
@@ -23,7 +27,7 @@ export const getAllTimeSlots = () => {
   const end = moment()
     .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
     .add(1, "days");
-  let slots = [];
+  const slots = [];
   while (start.isBefore(end)) {
     slots.push({
       value: start.format("HH:mm:ss"),

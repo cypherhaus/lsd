@@ -29,7 +29,7 @@ export default class AuthStore {
         this.currentUser.id
       );
       if (response) {
-        successToast('Business added successfully')
+        successToast("Business added successfully");
         return true;
       }
     } catch (err) {
@@ -47,11 +47,13 @@ export default class AuthStore {
       }
 
       if (response.data) {
-        successToast('Account created successfully')
-        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user?.id);
+        successToast("Account created successfully");
+        const userProfile = await this._store.api.dashAPI.fetchProfile(
+          response.data.user?.id
+        );
         runInAction(() => {
           this.currentUser = userProfile;
-       })
+        });
       }
 
       return null;
@@ -71,11 +73,13 @@ export default class AuthStore {
       }
 
       if (response.data) {
-        successToast('Signed in successfully')
-        const userProfile = await this._store.api.dashAPI.fetchProfile(response.data.user?.id);
+        successToast("Signed in successfully");
+        const userProfile = await this._store.api.dashAPI.fetchProfile(
+          response.data.user?.id
+        );
         runInAction(() => {
           this.currentUser = userProfile;
-       })
+        });
       }
 
       return null;
@@ -91,7 +95,7 @@ export default class AuthStore {
       runInAction(() => {
         this.currentUser = null;
       });
-      successToast('Signed out')
+      successToast("Signed out");
       return success;
     } catch (err) {
       console.log({ err });

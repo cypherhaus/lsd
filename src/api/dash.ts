@@ -5,7 +5,6 @@
  * without the express permission of Daramac LTD. and its affiliates.
  */
 
-import { Moment } from "moment";
 import { AddBlockedTime, Shift } from "../../types/bookings";
 import { supabase } from "../config/supabase";
 
@@ -45,6 +44,12 @@ export default class DashAPI {
     return false;
   };
 
+  postMultipleShifts = async (shifts: Shift[]) => {
+    const res = await supabase.from("shifts").insert(shifts);
+    if (res?.status === 201) return true;
+    return false;
+  };
+
   updateShifts = async (newShifts: Shift[]) => {
     const res = await supabase.from("shifts").upsert(newShifts);
     if (res?.status === 201) return true;
@@ -57,6 +62,12 @@ export default class DashAPI {
     return false;
   };
 
+  deleteMultipleShifts = async (shifts: string[]) => {
+    const res = await supabase.from("shifts").delete().in("id", shifts);
+    if (res?.status === 201) return true;
+    return false;
+  };
+
   addBlockedTime = async (blockedTime: AddBlockedTime) => {
     const res = await supabase.from("blocked_times").insert(blockedTime);
 
@@ -65,7 +76,9 @@ export default class DashAPI {
   };
 
   postBusiness = async (name: string, id: string) => {
-    const res = await supabase.from("businesses").insert({ name, owner_id: id });
+    const res = await supabase
+      .from("businesses")
+      .insert({ name, owner_id: id });
     if (res?.status === 201) return true;
     return false;
   };

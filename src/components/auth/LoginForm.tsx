@@ -34,9 +34,7 @@ export const LoginForm = observer(() => {
                 />
               )}
             </Field>
-            {errors.email ? (
-              <ErrorLabel>{errors.email}</ErrorLabel>
-            ) : null}
+            {errors.email ? <ErrorLabel>{errors.email}</ErrorLabel> : null}
             <Field
               validate={(v: string) => {
                 if (v.length < 8)

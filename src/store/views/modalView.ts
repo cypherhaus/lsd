@@ -11,7 +11,7 @@ import { Store } from "../store";
 export default class ModalView {
   private _store: Store;
 
-  modalOpen: boolean = false;
+  modalOpen = false;
   modalType: string | null = null;
 
   constructor(store: Store) {

@@ -51,17 +51,16 @@ export interface ShiftSingle {
 }
 
 export interface ShiftInputChangeProps {
-  newValue: any
-  startOrEnd: string
-  shift?: Shift
-  addShift?: Shift
-  indexOfShift?: number
+  newValue: any;
+  isStartTime: string;
+  shift?: Shift;
+  indexOfShift?: number;
 }
 
 export interface ShiftValidationError {
-  shiftId?: string
-  shiftIndex?: number
-  message: string
+  shiftId?: string;
+  shiftIndex?: number;
+  message: string;
 }
 
 export interface Slot {

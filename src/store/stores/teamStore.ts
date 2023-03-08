@@ -8,7 +8,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import { Hours, Shift, ShiftSingle } from "../../../types/bookings";
-import { Moment } from "moment";
 import { Profile } from "../../../types/members";
 import { successToast, errorToast } from "../../utils/toast";
 
@@ -31,19 +30,25 @@ export default class TeamStore {
     const res = await this._store.api.dashAPI.fetchShifts(id);
     runInAction(() => {
       this.shifts = res;
-   })
+    });
   }
 
   async addShift(shift: Shift) {
     try {
       const response = await this._store.api.dashAPI.addShift(shift);
-      if (response) {
-        return true;
-      } else {
-        errorToast('Cannot save changes.');
-      }
+      if (response) return true;
     } catch (err) {
-      errorToast('Cannot save changes.');
+      errorToast("Cannot save changes.");
+    }
+    return false;
+  }
+
+  async addMultipleShifts(shifts: Shift[]) {
+    try {
+      const response = await this._store.api.dashAPI.postMultipleShifts(shifts);
+      if (response) return true;
+    } catch (err) {
+      errorToast("Cannot save changes.");
     }
     return false;
   }
@@ -52,13 +57,11 @@ export default class TeamStore {
     try {
       const response = await this._store.api.dashAPI.updateShifts(newShifts);
       if (response) {
-        successToast('Saved changes sucessfully.')
+        successToast("Saved changes sucessfully.");
         return true;
-      } else {
-        errorToast('Cannot save changes.');
       }
     } catch (err) {
-      errorToast('Cannot save changes.');
+      errorToast("Cannot save changes.");
     }
     return false;
   }
@@ -66,11 +69,21 @@ export default class TeamStore {
   async deleteShiftById(id: string) {
     try {
       const response = await this._store.api.dashAPI.deleteShift(id);
-      if (response) {
-        return true;
-      }
+      if (response) return true;
     } catch (err) {
-      errorToast('Cannot delete shift.');
+      errorToast("Cannot delete shift.");
+    }
+    return false;
+  }
+
+  async deleteMultipleShifts(shifts: string[]) {
+    try {
+      const response = await this._store.api.dashAPI.deleteMultipleShifts(
+        shifts
+      );
+      if (response) return true;
+    } catch (err) {
+      errorToast("Cannot delete shifts.");
     }
     return false;
   }
