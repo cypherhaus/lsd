@@ -277,6 +277,16 @@ export default class HoursView {
     /* 10. If everything went smooth and without validation errors, we are creating/deleting/updating
     everything to Supabase. */
 
+    newShiftsToAdd = newShiftsToAdd.map(
+      (s: Shift) =>
+        (s = {
+          start_time: s.start_time,
+          end_time: s.end_time,
+          user_id: s.user_id,
+          iso_weekday: s.iso_weekday,
+        })
+    );
+
     if (this.shiftValidationErrors.length === 0) {
       if (newShiftsToDelete.length > 0)
         await this._store.teamStore.deleteMultipleShifts(newShiftsToDelete);
