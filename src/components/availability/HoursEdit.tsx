@@ -9,20 +9,18 @@ import { TimeInput } from "../common/TimeInput";
 import { ErrorLabel } from "../common/ErrorLabel";
 
 // Constants
-import { DAYS_IN_WEEK } from "../../constants/other";
+import { DAYS_IN_WEEK } from "../../constants/common";
 import { UNSAVED_CHANGES } from "../../constants/modals";
 
 // Icons
 import { RiCloseFill, RiDeleteBinLine } from "react-icons/ri";
 
 // Types
+import { User } from "../../../types/bookings";
 
 interface Props {
-  user: {
-    firstName: string;
-    lastName: string;
-  };
-  setEditOpen: (v: any) => void;
+  user: User;
+  setEditOpen: (v: boolean) => void;
 }
 
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
@@ -71,11 +69,9 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
               {firstName} {lastName}
             </span>
           </span>
-          <div>
-            <Button onClick={validateAndSaveChanges} type="submit">
-              Save
-            </Button>
-          </div>
+          <Button onClick={validateAndSaveChanges} type="submit">
+            Save
+          </Button>
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {DAYS_IN_WEEK.map((day) => {

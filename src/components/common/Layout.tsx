@@ -3,7 +3,11 @@ import { Navbar } from "./Navbar";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 
-export const Layout = observer(({ children }: any) => {
+interface Props {
+  children: JSX.Element;
+}
+
+export const Layout = observer(({ children }: Props) => {
   const { modalView } = useStore();
   const overlay =
     "fixed z-10 flex justify-center items-center bg-black w-screen h-screen opacity-50";

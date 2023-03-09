@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 
 // Constants
-import { DAYS_IN_WEEK } from "../../constants/other";
+import { DAYS_IN_WEEK } from "../../constants/common";
 
 //Icons
 import { RiEditLine } from "react-icons/ri";
@@ -11,12 +11,12 @@ import { RiEditLine } from "react-icons/ri";
 // Utils
 import { formatHours } from "../../utils/time";
 
+// Types
+import { User } from "../../../types/bookings";
+
 interface Props {
-  user: {
-    firstName: string;
-    lastName: string;
-  };
-  setEditOpen: (v: any) => void;
+  user: User;
+  setEditOpen: (v: boolean) => void;
 }
 
 export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {

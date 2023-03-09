@@ -6,6 +6,7 @@ import { Button } from "./Button";
 
 // Constants
 import { UNSAVED_CHANGES } from "../../constants/modals";
+import { BUTTON_VARIANT } from "../../constants/common";
 
 interface ModalProps {
   type: string;
@@ -31,10 +32,13 @@ export const ConfirmationModal = observer(({ type }: ModalProps) => {
             <span>Are you sure you want to cancel editing shifts?</span>
             <div className="flex flex-row gap-4">
               <div className="w-1/2 flex flex-col">
-                <Button onClick={() => closeModal()}>No</Button>
+                <Button onClick={closeModal}>No</Button>
               </div>
               <div className="w-1/2 flex flex-col">
-                <Button onClick={resetAllPendingShifts} variant="white">
+                <Button
+                  onClick={resetAllPendingShifts}
+                  variant={BUTTON_VARIANT.WHITE}
+                >
                   YES
                 </Button>
               </div>

@@ -1,5 +1,10 @@
 import { Moment } from "moment";
 
+export interface User {
+  firstName: string;
+  lastName: string;
+}
+
 export interface Booking {
   start: Date;
   end: Date;

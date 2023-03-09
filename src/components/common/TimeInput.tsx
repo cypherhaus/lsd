@@ -21,7 +21,7 @@ export const TimeInput = ({
   isStartTime,
   indexOfShift,
 }: TimeInputProps) => {
-  const onInputChange = (newValue: any) => {
+  const onInputChange = (newValue: string) => {
     handleChange({
       newValue: newValue,
       shift: shift,

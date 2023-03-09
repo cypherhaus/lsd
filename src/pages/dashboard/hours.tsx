@@ -14,6 +14,9 @@ import { Button } from "../../components/common/Button";
 // Icons
 import { RiGroupLine } from "react-icons/ri";
 
+// Constants
+import { BUTTON_VARIANT } from "../../constants/common";
+
 const Availability = observer(() => {
   const { hoursView, authStore, authView } = useStore();
   const { shiftsEditOpen, setShiftsEdit } = hoursView;
@@ -47,7 +50,7 @@ const Availability = observer(() => {
             <Button
               icon={<RiGroupLine />}
               onClick={hoursView.handleAddMember}
-              variant="white"
+              variant={BUTTON_VARIANT.WHITE}
             >
               Add Team Member
             </Button>
