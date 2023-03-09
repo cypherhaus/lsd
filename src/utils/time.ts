@@ -7,6 +7,18 @@ export const formatHours = (time: string) => {
   return moment(string, "DD/MM/YYYY HH:mm:ss").format(format);
 };
 
+export const checkStartBeforeEnd = (
+  startTimeRaw: string,
+  endTimeRaw: string
+) => {
+  const startTime = moment(startTimeRaw, "hh:mm:ss");
+  const endTime = moment(endTimeRaw, "hh:mm:ss");
+  if (endTime.isBefore(startTime)) {
+    return false;
+  }
+  return true;
+};
+
 export const checkOverlap = (timeSegments: string[][]) => {
   timeSegments.sort((timeSegment1, timeSegment2) =>
     timeSegment1[0].localeCompare(timeSegment2[0])

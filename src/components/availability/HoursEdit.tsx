@@ -25,7 +25,7 @@ interface Props {
 
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   const { hoursView, teamStore, modalView } = useStore();
-  const { shifts } = teamStore;
+  const newShifts = [...teamStore.shifts];
 
   const {
     shiftValidationErrors,
@@ -35,9 +35,10 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
     addShiftToDelete,
     handleEditShift,
     handleAddShiftClick,
-    handleRemoveNewShift,
     validateAndSaveChanges,
   } = hoursView;
+
+  console.log(hoursView.shiftsToEdit);
 
   const { openModal, modalOpen } = modalView;
   const { firstName, lastName } = user;
@@ -75,7 +76,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {DAYS_IN_WEEK.map((day) => {
-            const filteredShift = shifts?.filter(
+            const filteredShift = newShifts?.filter(
               (shift) =>
                 shift.iso_weekday === day.number &&
                 !hoursView.shiftsToDelete?.find(
@@ -131,63 +132,6 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                             {shiftValidationErrors?.map(
                               (s, i2) =>
                                 s.shiftId === shift.id && (
-                                  <ErrorLabel
-                                    key={
-                                      "error-" + shift.iso_weekday + "-" + i2
-                                    }
-                                  >
-                                    {s.message}
-                                  </ErrorLabel>
-                                )
-                            )}
-                          </div>
-                        );
-                      }
-                    })}
-                    {shiftsToAdd.map((shift, index) => {
-                      if (
-                        shift.start_time !== null &&
-                        shift.iso_weekday === day.number
-                      ) {
-                        return (
-                          <div
-                            key={
-                              index +
-                              "-" +
-                              shift.iso_weekday +
-                              "-" +
-                              shift.start_time
-                            }
-                            className="flex flex-col w-full gap-2"
-                          >
-                            <div className="flex flex-row justify-between">
-                              <div className="flex flex-row gap-2">
-                                <TimeInput
-                                  handleChange={handleEditShift}
-                                  isStartTime={true}
-                                  shift={shift}
-                                  indexOfShift={index}
-                                  time={shift.start_time}
-                                />
-                                <span className="text-xl">-</span>
-                                <TimeInput
-                                  handleChange={handleEditShift}
-                                  isStartTime={false}
-                                  shift={shift}
-                                  indexOfShift={index}
-                                  time={shift.end_time}
-                                />
-                              </div>
-                              <div
-                                onClick={() => handleRemoveNewShift(index)}
-                                className="flex flex-col items-end cursor-pointer"
-                              >
-                                <RiDeleteBinLine className="text-3xl text-brandOrange" />
-                              </div>
-                            </div>
-                            {shiftValidationErrors?.map(
-                              (s, i2) =>
-                                s.shiftIndex === index && (
                                   <ErrorLabel
                                     key={
                                       "error-" + shift.iso_weekday + "-" + i2
