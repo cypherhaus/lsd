@@ -20,6 +20,9 @@ import {
 // Utils
 import { checkOverlap, checkStartBeforeEnd } from "../../utils/time";
 
+// Constants
+import { START_TIME, END_TIME } from "../../constants/common";
+
 export default class HoursView {
   private _store: Store;
 
@@ -184,7 +187,7 @@ export default class HoursView {
     To make long story short - we are finding shifts with same id and removing ones with old
     content (old start_time, old end_time). */
 
-    const finalEditedShifts = newShiftsToEdit.filter(
+    let finalEditedShifts = newShiftsToEdit.filter(
       (obj, index) =>
         newShiftsToEdit.findIndex((item) => item.id === obj.id) === index
     );
@@ -235,13 +238,25 @@ export default class HoursView {
     /* 6. If everything went smooth and without validation errors, we are creating/deleting/updating
     everything to Supabase. */
 
-    const finalShiftsToEdit = finalEditedShifts.filter();
+    const shiftsToAddIds = newShiftsToAdd.map((s) => {
+      return s.id;
+    });
+
+    newShiftsToAdd = finalEditedShifts.filter((s) =>
+      shiftsToAddIds.includes(s.id as string)
+    );
+
+    finalEditedShifts = finalEditedShifts.filter(
+      (s) => !shiftsToAddIds.includes(s.id as string)
+    );
 
     if (this.shiftValidationErrors.length === 0) {
       if (newShiftsToDelete.length > 0)
         await this._store.teamStore.deleteMultipleShifts(newShiftsToDelete);
       if (finalEditedShifts.length > 0)
         await this._store.teamStore.updateShifts(finalEditedShifts);
+      if (newShiftsToAdd.length > 0)
+        await this._store.teamStore.addMultipleShifts(newShiftsToAdd);
       this.resetAllPendingShifts();
     }
   };
@@ -249,11 +264,12 @@ export default class HoursView {
   handleAddShiftClick = (n: number) => {
     const newShiftsToEdit = [...this.shiftsToEdit];
     const newShiftsToAdd = [...this.shiftsToAdd];
+    const id = uuidv4();
     runInAction(() => {
       this.shiftsToEdit = [
         ...newShiftsToEdit,
         {
-          id: uuidv4(),
+          id: id,
           start_time: "",
           end_time: "",
           iso_weekday: n,
@@ -263,7 +279,7 @@ export default class HoursView {
       this.shiftsToAdd = [
         ...newShiftsToAdd,
         {
-          id: uuidv4(),
+          id: id,
           start_time: "",
           end_time: "",
           iso_weekday: n,
@@ -278,7 +294,7 @@ export default class HoursView {
     isStartTime,
     shift,
   }: ShiftInputChangeProps) => {
-    const startOrEnd = isStartTime ? "start_time" : "end_time";
+    const startOrEnd = isStartTime ? START_TIME : END_TIME;
     const newShiftsToEdit = [...this.shiftsToEdit];
     if (newShiftsToEdit.length === 0) {
       newShiftsToEdit.push({

@@ -1,4 +1,6 @@
 export const BUTTON_VARIANT = { WHITE: "white" };
+export const START_TIME = "start_time";
+export const END_TIME = "end_time";
 
 export const DAYS_IN_WEEK = [
   {
