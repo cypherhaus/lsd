@@ -74,11 +74,10 @@ export default class AuthView {
       runInAction(() => {
         this.onboardingError = "Please enter a business name";
       });
-    } else {
-      const success = await this._store.authStore.postBusiness(
-        this.businessName
-      );
-      if (success) Router.push("/dashboard/hours");
+      return;
     }
+
+    const success = await this._store.authStore.postBusiness(this.businessName);
+    if (success) Router.push("/dashboard/hours");
   }
 }

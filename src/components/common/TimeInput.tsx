@@ -11,11 +11,6 @@ interface TimeInputProps {
   handleChange: (v: any) => void;
 }
 
-interface NewValueProps {
-  value: string;
-  label: string;
-}
-
 const slotOptions: Slot[] = getAllTimeSlots();
 
 export const TimeInput = ({
@@ -26,7 +21,7 @@ export const TimeInput = ({
 }: TimeInputProps) => {
   const onInputChange = (newValue: any) => {
     handleChange({
-      newValue: newValue.value,
+      newValue: newValue,
       shift: shift,
       isStartTime: isStartTime,
     });

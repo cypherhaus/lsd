@@ -119,12 +119,17 @@ export default class HoursView {
     });
   };
 
+  setMultipleShiftsToEdit = () => {
+    runInAction(() => {
+      this.shiftsToEdit = [...this._store.teamStore?.shifts];
+    });
+  };
+
   validateAndSaveChanges = async () => {
     runInAction(() => {
       this.shiftValidationErrors = [];
     });
 
-    let oldShifts = [...this._store.teamStore?.shifts];
     const newShiftsToDelete = [...this.shiftsToDelete];
     let newShiftsToEdit = [...this.shiftsToEdit];
     let newShiftsToAdd = [...this.shiftsToAdd];
@@ -142,16 +147,14 @@ export default class HoursView {
     /* 2. We are deleting shifts that are meant to be deleted from oldShifts. */
 
     if (newShiftsToDelete.length !== 0)
-      oldShifts = oldShifts.filter(
+      newShiftsToEdit = newShiftsToEdit.filter(
         (s) => !newShiftsToDelete.includes(s.id as string)
       );
 
-    oldShifts = newShiftsToEdit.concat(oldShifts);
-
     /* 3. We are checking if start time is after end time for every shift. */
 
-    if (oldShifts.length !== 0) {
-      oldShifts.map((s) => {
+    if (newShiftsToEdit.length !== 0) {
+      newShiftsToEdit.map((s) => {
         if ((s.start_time || s.end_time) === "") {
           runInAction(() => {
             this.shiftValidationErrors = [
@@ -181,9 +184,9 @@ export default class HoursView {
     To make long story short - we are finding shifts with same id and removing ones with old
     content (old start_time, old end_time). */
 
-    const finalEditedShifts = oldShifts.filter(
+    const finalEditedShifts = newShiftsToEdit.filter(
       (obj, index) =>
-        oldShifts.findIndex((item) => item.id === obj.id) === index
+        newShiftsToEdit.findIndex((item) => item.id === obj.id) === index
     );
 
     /* 5. We are creating new array called days. In that array we will sort shifts by day and then
@@ -231,6 +234,8 @@ export default class HoursView {
 
     /* 6. If everything went smooth and without validation errors, we are creating/deleting/updating
     everything to Supabase. */
+
+    const finalShiftsToEdit = finalEditedShifts.filter();
 
     if (this.shiftValidationErrors.length === 0) {
       if (newShiftsToDelete.length > 0)
@@ -316,6 +321,7 @@ export default class HoursView {
       this.shiftsToEdit = [];
       this._store.modalView.closeModal();
       this.shiftsEditOpen = false;
+      this.shiftValidationErrors = [];
     });
   };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 
@@ -25,18 +25,22 @@ interface Props {
 
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   const { hoursView, teamStore, modalView } = useStore();
-  const newShifts = [...teamStore.shifts];
 
   const {
     shiftValidationErrors,
     shiftsToDelete,
     shiftsToEdit,
     shiftsToAdd,
+    setMultipleShiftsToEdit,
     addShiftToDelete,
     handleEditShift,
     handleAddShiftClick,
     validateAndSaveChanges,
   } = hoursView;
+
+  useEffect(() => {
+    setMultipleShiftsToEdit();
+  }, [setMultipleShiftsToEdit]);
 
   const { openModal, modalOpen } = modalView;
   const { firstName, lastName } = user;
@@ -74,7 +78,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {DAYS_IN_WEEK.map((day) => {
-            const filteredShift = newShifts?.filter(
+            const filteredShift = shiftsToEdit?.filter(
               (shift) =>
                 shift.iso_weekday === day.number &&
                 !hoursView.shiftsToDelete?.find(

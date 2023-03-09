@@ -27,7 +27,7 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
 
   return (
     <div className="px-10 py-12">
-      <table className="2xl:w-11/12 w-full flex flex-row flex-no-wrap rounded-lg overflow-hidden">
+      <table className="flex flex-row flex-no-wrap rounded-lg overflow-hidden">
         <thead className="text-3xl">
           <tr className="flex flex-col flex-no wrap lg:table-row rounded-l-lg lg:rounded-none mb-2 lg:mb-0">
             <th className="p-3"></th>
@@ -66,14 +66,14 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
                 (shift) => shift.iso_weekday === day.number
               );
               return (
-                <td className="lg:w-[12.5%] p-2 2xl:truncate" key={day.label}>
+                <td className="w-[12.5%] p-2" key={day.label}>
                   <div className="flex flex-col gap-2">
                     {filteredShift.map((shift) => {
                       if (shift.start_time !== null) {
                         return (
                           <span
                             key={shift.iso_weekday + "" + shift.start_time}
-                            className="rounded-md text-center bg-white lg:px-3 py-1 2xl:py-2"
+                            className="rounded-md text-center bg-white py-1 px-1"
                           >
                             {formatHours(shift.start_time) +
                               " - " +
@@ -83,7 +83,7 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
                       }
                     })}
                     {filteredShift.length === 0 && (
-                      <span className="text-2xl font-button text-center lg:px-3 py-1 lg:py-2">
+                      <span className="text-2xl font-button text-center">
                         —
                       </span>
                     )}
