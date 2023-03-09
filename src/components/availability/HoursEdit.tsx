@@ -38,8 +38,6 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
     validateAndSaveChanges,
   } = hoursView;
 
-  console.log(hoursView.shiftsToEdit);
-
   const { openModal, modalOpen } = modalView;
   const { firstName, lastName } = user;
 
@@ -52,9 +50,9 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
       shiftsToAdd.length === 0
     ) {
       setEditOpen(false);
-    } else {
-      openModal(UNSAVED_CHANGES);
+      return;
     }
+    openModal(UNSAVED_CHANGES);
   };
 
   return (
@@ -98,52 +96,48 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                     key={day.label}
                   >
                     {filteredShift.map((shift) => {
-                      if (shift.start_time !== null) {
-                        return (
-                          <div
-                            key={shift.iso_weekday + "" + shift.start_time}
-                            className="flex flex-col w-full gap-2"
-                          >
-                            <div className="flex flex-row justify-between">
-                              <div className="flex flex-row gap-2">
-                                <TimeInput
-                                  handleChange={handleEditShift}
-                                  isStartTime={true}
-                                  shift={shift}
-                                  time={shift.start_time}
-                                />
-                                <span className="text-xl">-</span>
-                                <TimeInput
-                                  handleChange={handleEditShift}
-                                  isStartTime={false}
-                                  shift={shift}
-                                  time={shift.end_time}
-                                />
-                              </div>
-                              <div
-                                onClick={() =>
-                                  addShiftToDelete(shift.id as string)
-                                }
-                                className="flex flex-col items-end cursor-pointer"
-                              >
-                                <RiDeleteBinLine className="text-3xl text-brandOrange" />
-                              </div>
+                      return (
+                        <div
+                          key={shift.iso_weekday + "" + shift.start_time}
+                          className="flex flex-col w-full gap-2"
+                        >
+                          <div className="flex flex-row justify-between">
+                            <div className="flex flex-row gap-2">
+                              <TimeInput
+                                handleChange={handleEditShift}
+                                isStartTime={true}
+                                shift={shift}
+                                time={shift.start_time}
+                              />
+                              <span className="text-xl">-</span>
+                              <TimeInput
+                                handleChange={handleEditShift}
+                                isStartTime={false}
+                                shift={shift}
+                                time={shift.end_time}
+                              />
                             </div>
-                            {shiftValidationErrors?.map(
-                              (s, i2) =>
-                                s.shiftId === shift.id && (
-                                  <ErrorLabel
-                                    key={
-                                      "error-" + shift.iso_weekday + "-" + i2
-                                    }
-                                  >
-                                    {s.message}
-                                  </ErrorLabel>
-                                )
-                            )}
+                            <div
+                              onClick={() =>
+                                addShiftToDelete(shift.id as string)
+                              }
+                              className="flex flex-col items-end cursor-pointer"
+                            >
+                              <RiDeleteBinLine className="text-3xl text-brandOrange" />
+                            </div>
                           </div>
-                        );
-                      }
+                          {shiftValidationErrors?.map(
+                            (s, i2) =>
+                              s.shiftId === shift.id && (
+                                <ErrorLabel
+                                  key={"error-" + shift.iso_weekday + "-" + i2}
+                                >
+                                  {s.message}
+                                </ErrorLabel>
+                              )
+                          )}
+                        </div>
+                      );
                     })}
                     <div
                       onClick={() => handleAddShiftClick(day.number)}

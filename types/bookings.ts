@@ -57,9 +57,8 @@ export interface ShiftSingle {
 
 export interface ShiftInputChangeProps {
   newValue: any;
-  isStartTime: string;
+  isStartTime: boolean;
   shift?: Shift;
-  indexOfShift?: number;
 }
 
 export interface ShiftValidationError {

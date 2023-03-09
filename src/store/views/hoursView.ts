@@ -272,7 +272,6 @@ export default class HoursView {
     newValue,
     isStartTime,
     shift,
-    indexOfShift,
   }: ShiftInputChangeProps) => {
     const startOrEnd = isStartTime ? "start_time" : "end_time";
     const newShiftsToEdit = [...this.shiftsToEdit];
@@ -281,18 +280,20 @@ export default class HoursView {
         ...(shift as Shift),
         [startOrEnd]: newValue.value,
       });
-    } else {
-      const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift?.id);
-      index !== -1
-        ? (newShiftsToEdit[index] = {
-            ...newShiftsToEdit[index],
-            [startOrEnd]: newValue.value,
-          })
-        : newShiftsToEdit.push({
-            ...(shift as Shift),
-            [startOrEnd]: newValue.value,
-          });
+      return;
     }
+
+    const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift?.id);
+    index !== -1
+      ? (newShiftsToEdit[index] = {
+          ...newShiftsToEdit[index],
+          [startOrEnd]: newValue.value,
+        })
+      : newShiftsToEdit.push({
+          ...(shift as Shift),
+          [startOrEnd]: newValue.value,
+        });
+
     runInAction(() => {
       this.shiftsToEdit = newShiftsToEdit;
     });

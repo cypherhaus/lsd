@@ -8,8 +8,12 @@ interface TimeInputProps {
   time: string;
   isStartTime: boolean;
   shift?: Shift;
-  indexOfShift?: number;
   handleChange: (v: any) => void;
+}
+
+interface NewValueProps {
+  value: string;
+  label: string;
 }
 
 const slotOptions: Slot[] = getAllTimeSlots();
@@ -19,14 +23,12 @@ export const TimeInput = ({
   handleChange,
   shift,
   isStartTime,
-  indexOfShift,
 }: TimeInputProps) => {
-  const onInputChange = (newValue: string) => {
+  const onInputChange = (newValue: any) => {
     handleChange({
-      newValue: newValue,
+      newValue: newValue.value,
       shift: shift,
       isStartTime: isStartTime,
-      indexOfShift: indexOfShift,
     });
   };
 
