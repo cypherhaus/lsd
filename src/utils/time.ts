@@ -1,10 +1,5 @@
 import moment from "moment";
-
-interface Day {
-  label: string;
-  fullLabel: string;
-  number: number;
-}
+import { Day } from "../../types/common";
 
 export const formatHours = (time: string): string => {
   const string = moment().format("DD/MM/YYYY") + " " + time;

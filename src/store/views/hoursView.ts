@@ -18,7 +18,11 @@ import {
 } from "../../../types/bookings";
 
 // Utils
-import { checkOverlap, checkStartBeforeEnd } from "../../utils/time";
+import {
+  checkOverlap,
+  checkStartBeforeEnd,
+  daysInWeek,
+} from "../../utils/time";
 
 // Constants
 import { START_TIME, END_TIME } from "../../constants/common";
@@ -158,15 +162,9 @@ export default class HoursView {
     );
 
     const initialShiftArray: string[][] = [];
-    const days = [
-      { number: 1, shifts: initialShiftArray },
-      { number: 2, shifts: initialShiftArray },
-      { number: 3, shifts: initialShiftArray },
-      { number: 4, shifts: initialShiftArray },
-      { number: 5, shifts: initialShiftArray },
-      { number: 6, shifts: initialShiftArray },
-      { number: 7, shifts: initialShiftArray },
-    ];
+    const days = daysInWeek().map((d) => {
+      return { ...d, shifts: initialShiftArray };
+    });
 
     days.map((d) => {
       const dayShifts = finalShiftsToUpdate.filter(
