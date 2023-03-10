@@ -35,6 +35,7 @@ export default class HoursView {
 
   // Edited shifts
   shiftsToEdit: Shift[] = [];
+  editedSomething = false;
   shiftsEditOpen = false;
   dayInEditMode: Moment | null = null;
 
@@ -137,24 +138,16 @@ export default class HoursView {
     let newShiftsToEdit = [...this.shiftsToEdit];
     let newShiftsToAdd = [...this.shiftsToAdd];
 
-    /* 1. We are checking if there are same shifts in both deleted list and edited list. 
-    If some shift is edited during editing and deleted after that, 
-    we are removing it from newShiftsToEdit. */
-
     if (newShiftsToDelete.length !== 0 && newShiftsToEdit.length !== 0) {
       newShiftsToEdit = newShiftsToEdit.filter(
         (s) => !newShiftsToDelete.includes(s.id as string)
       );
     }
 
-    /* 2. We are deleting shifts that are meant to be deleted from oldShifts. */
-
     if (newShiftsToDelete.length !== 0)
       newShiftsToEdit = newShiftsToEdit.filter(
         (s) => !newShiftsToDelete.includes(s.id as string)
       );
-
-    /* 3. We are checking if start time is after end time for every shift. */
 
     if (newShiftsToEdit.length !== 0) {
       newShiftsToEdit.map((s) => {
@@ -180,20 +173,10 @@ export default class HoursView {
       });
     }
 
-    /* 4. We are finding and removing duplicates (shifts with same id).
-    On previous step new edited shifts are pushed to the end of the mergedShifts array.
-    Filter function below is deleting duplicated shifts from end of an array. Because of that, 
-    on previous step we reversed array in order to remove old duplicated shifts. 
-    To make long story short - we are finding shifts with same id and removing ones with old
-    content (old start_time, old end_time). */
-
     let finalEditedShifts = newShiftsToEdit.filter(
       (obj, index) =>
         newShiftsToEdit.findIndex((item) => item.id === obj.id) === index
     );
-
-    /* 5. We are creating new array called days. In that array we will sort shifts by day and then
-    we will check for every day if there is shifts' times overlap. */
 
     const initialShiftArray: string[][] = [];
     const days = [
@@ -214,18 +197,11 @@ export default class HoursView {
         d.shifts = dayShifts.map((ds) => [ds.start_time, ds.end_time]);
         dayShifts.map((ds) => {
           if (checkOverlap(d.shifts)) {
-            let shiftData: { shiftId: string; value: string | number } = {
-              shiftId: "shiftIndex",
-              value: ds.oldIndex as number,
-            };
-
-            if (!ds.oldIndex)
-              shiftData = { shiftId: "shiftId", value: ds.id as string };
             runInAction(() => {
               this.shiftValidationErrors = [
                 ...this.shiftValidationErrors,
                 {
-                  [shiftData.shiftId]: shiftData.value,
+                  shiftId: ds.id as string,
                   message: "There is time overlap in shifts.",
                 },
               ];
@@ -234,9 +210,6 @@ export default class HoursView {
         });
       }
     });
-
-    /* 6. If everything went smooth and without validation errors, we are creating/deleting/updating
-    everything to Supabase. */
 
     const shiftsToAddIds = newShiftsToAdd.map((s) => {
       return s.id;
@@ -257,7 +230,7 @@ export default class HoursView {
         await this._store.teamStore.updateShifts(finalEditedShifts);
       if (newShiftsToAdd.length > 0)
         await this._store.teamStore.addMultipleShifts(newShiftsToAdd);
-      this.resetAllPendingShifts();
+      this.closeEditAndResetEverything();
     }
   };
 
@@ -296,6 +269,13 @@ export default class HoursView {
   }: ShiftInputChangeProps) => {
     const startOrEnd = isStartTime ? START_TIME : END_TIME;
     const newShiftsToEdit = [...this.shiftsToEdit];
+
+    if (!this.editedSomething) {
+      runInAction(() => {
+        this.editedSomething = true;
+      });
+    }
+
     if (newShiftsToEdit.length === 0) {
       newShiftsToEdit.push({
         ...(shift as Shift),
@@ -330,7 +310,7 @@ export default class HoursView {
     });
   };
 
-  resetAllPendingShifts = () => {
+  closeEditAndResetEverything = () => {
     runInAction(() => {
       this.shiftsToDelete = [];
       this.shiftsToAdd = [];
@@ -338,6 +318,7 @@ export default class HoursView {
       this._store.modalView.closeModal();
       this.shiftsEditOpen = false;
       this.shiftValidationErrors = [];
+      this.editedSomething = false;
     });
   };
 

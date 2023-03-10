@@ -19,7 +19,7 @@ export const Layout = observer(({ children }: Props) => {
         <Navbar />
         <main className="flex h-full">
           <Sidebar />
-          <div className="w-full h-[92%] overflow-scroll flex flex-col">
+          <div className="w-full h-[92%] overflow-scroll overflow-x-hidden flex flex-col">
             {children}
           </div>
         </main>

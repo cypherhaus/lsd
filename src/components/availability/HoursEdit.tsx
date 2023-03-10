@@ -13,7 +13,11 @@ import { DAYS_IN_WEEK } from "../../constants/common";
 import { UNSAVED_CHANGES } from "../../constants/modals";
 
 // Icons
-import { RiCloseFill, RiDeleteBinLine } from "react-icons/ri";
+import {
+  RiCloseFill,
+  RiDeleteBinLine,
+  RiInformationFill,
+} from "react-icons/ri";
 
 // Types
 import { User } from "../../../types/bookings";
@@ -28,8 +32,9 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
   const {
     shiftValidationErrors,
-    shiftsToDelete,
+    editedSomething,
     shiftsToEdit,
+    shiftsToDelete,
     shiftsToAdd,
     setMultipleShiftsToEdit,
     addShiftToDelete,
@@ -49,8 +54,8 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
   const handleClose = () => {
     if (
+      !editedSomething &&
       shiftsToDelete.length === 0 &&
-      shiftsToEdit.length === 0 &&
       shiftsToAdd.length === 0
     ) {
       setEditOpen(false);
@@ -61,8 +66,8 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col mx-24 my-12 mb-28 gap-11">
-        <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11">
+        <div className="flex flex-row items-center justify-between gap-5">
           <div className="cursor-pointer" onClick={handleClose}>
             <RiCloseFill className="text-4xl" />
           </div>
@@ -89,7 +94,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
             return (
               <div
                 key={day.number}
-                className="w-full lg:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6"
+                className="w-full lg:w-3/4 xl:w-3/5 2xl:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6 gap-5"
               >
                 <span className="w-1/3 font-bold font-button text-2xl">
                   {day.fullLabel}
@@ -99,27 +104,60 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                     className="flex align-baseline font-button gap-4 justify-start items-center flex-col xl:basis-9-perc basis-11-perc"
                     key={day.label}
                   >
-                    {filteredShift.map((shift) => {
+                    {filteredShift.map((shift, index) => {
                       return (
                         <div
                           key={shift.iso_weekday + "" + shift.start_time}
                           className="flex flex-col w-full gap-2"
                         >
                           <div className="flex flex-row justify-between">
-                            <div className="flex flex-row gap-2">
-                              <TimeInput
-                                handleChange={handleEditShift}
-                                isStartTime={true}
-                                shift={shift}
-                                time={shift.start_time}
-                              />
-                              <span className="text-xl">-</span>
-                              <TimeInput
-                                handleChange={handleEditShift}
-                                isStartTime={false}
-                                shift={shift}
-                                time={shift.end_time}
-                              />
+                            <div className="w-[80%] flex flex-row gap-2">
+                              <div className="w-full flex flex-col gap-2">
+                                <div className="flex flex-row justify-between items-center">
+                                  <div className="w-[45%]">
+                                    <TimeInput
+                                      handleChange={handleEditShift}
+                                      isStartTime={true}
+                                      shift={shift}
+                                      time={shift.start_time}
+                                    />
+                                  </div>
+                                  <span className="text-xl">-</span>
+                                  <div className="w-[45%]">
+                                    <TimeInput
+                                      handleChange={handleEditShift}
+                                      isStartTime={false}
+                                      shift={shift}
+                                      time={shift.end_time}
+                                    />
+                                  </div>
+                                </div>
+                                {shiftValidationErrors?.map(
+                                  (s, i2) =>
+                                    s.shiftId === shift.id && (
+                                      <ErrorLabel
+                                        key={
+                                          "error-" +
+                                          shift.iso_weekday +
+                                          "-" +
+                                          i2
+                                        }
+                                      >
+                                        {s.message}
+                                      </ErrorLabel>
+                                    )
+                                )}
+                                {index === filteredShift.length - 1 && (
+                                  <div
+                                    onClick={() =>
+                                      handleAddShiftClick(day.number)
+                                    }
+                                    className="font-button font-bold text-center cursor-pointer mt-3"
+                                  >
+                                    Add Shift
+                                  </div>
+                                )}
+                              </div>
                             </div>
                             <div
                               onClick={() =>
@@ -130,25 +168,17 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                               <RiDeleteBinLine className="text-3xl text-brandOrange" />
                             </div>
                           </div>
-                          {shiftValidationErrors?.map(
-                            (s, i2) =>
-                              s.shiftId === shift.id && (
-                                <ErrorLabel
-                                  key={"error-" + shift.iso_weekday + "-" + i2}
-                                >
-                                  {s.message}
-                                </ErrorLabel>
-                              )
-                          )}
                         </div>
                       );
                     })}
-                    <div
-                      onClick={() => handleAddShiftClick(day.number)}
-                      className="font-button font-bold text-center cursor-pointer"
-                    >
-                      Add Shift
-                    </div>
+                    {filteredShift.length === 0 && (
+                      <div className="flex flex-row gap-2">
+                        <RiInformationFill className="text-3xl text-brandOrange" />
+                        <span className="font-button font-bold text-xl">
+                          No shifts on this day
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

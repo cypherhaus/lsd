@@ -28,19 +28,19 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
   return (
     <div className="px-10 py-12">
       <table className="flex flex-row flex-no-wrap rounded-lg overflow-hidden">
-        <thead className="text-3xl">
-          <tr className="flex flex-col flex-no wrap lg:table-row rounded-l-lg lg:rounded-none mb-2 lg:mb-0">
-            <th className="p-3"></th>
-            <th className="p-3"></th>
+        <thead className="text-3xl p-0 m-0">
+          <tr className="flex flex-col flex-no wrap lg:table-row">
+            <th></th>
+            <th></th>
             {DAYS_IN_WEEK.map((day) => (
-              <th className="p-3 text-center" key={day.label}>
+              <th className="px-3 pb-5 text-center" key={day.label}>
                 {day.label}
               </th>
             ))}
           </tr>
         </thead>
         <tbody className="flex-1 lg:flex-none">
-          <tr className="flex flex-col flex-no wrap lg:table-row mb-2 lg:mb-0">
+          <tr className="flex flex-col flex-no wrap lg:table-row">
             <td className="text-red-400 p-2 hover:text-red-600 hover:font-medium cursor-pointer">
               <div
                 className="cursor-pointer flex flex-col items-center"
@@ -66,14 +66,14 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
                 (shift) => shift.iso_weekday === day.number
               );
               return (
-                <td className="w-[12.5%] p-2" key={day.label}>
+                <td className="lg:w-[12.5%] p-2 align-top" key={day.label}>
                   <div className="flex flex-col gap-2">
                     {filteredShift.map((shift) => {
                       if (shift.start_time !== null) {
                         return (
                           <span
                             key={shift.iso_weekday + "" + shift.start_time}
-                            className="rounded-md text-center bg-white py-1 px-1"
+                            className="rounded-md text-center bg-white lg:px-1 py-1 px-2"
                           >
                             {formatHours(shift.start_time) +
                               " - " +
