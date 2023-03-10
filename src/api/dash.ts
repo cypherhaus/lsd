@@ -51,7 +51,10 @@ export default class DashAPI {
   };
 
   updateShifts = async (newShifts: Shift[]) => {
-    const res = await supabase.from("shifts").upsert(newShifts);
+    const res = await supabase
+      .from("shifts")
+      .upsert(newShifts, { onConflict: "id", ignoreDuplicates: false });
+    console.log(res);
     if (res?.status === 201) return true;
     return false;
   };

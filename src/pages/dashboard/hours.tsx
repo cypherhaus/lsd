@@ -19,7 +19,7 @@ import { BUTTON_VARIANT } from "../../constants/common";
 
 const Availability = observer(() => {
   const { hoursView, authStore, authView } = useStore();
-  const { shiftsEditOpen, setShiftsEdit } = hoursView;
+  const { shiftsEditOpen, handleSetShiftsEditOpen } = hoursView;
   const [currentUserData, setCurrentUserData] = useState({
     firstName: "",
     lastName: "",
@@ -45,7 +45,10 @@ const Availability = observer(() => {
     <Layout>
       {!shiftsEditOpen ? (
         <>
-          <HoursNavigation setEditOpen={setShiftsEdit} user={currentUserData} />
+          <HoursNavigation
+            setEditOpen={handleSetShiftsEditOpen}
+            user={currentUserData}
+          />
           <div className="flex flex-col items-center">
             <Button
               icon={<RiGroupLine />}
@@ -57,7 +60,10 @@ const Availability = observer(() => {
           </div>
         </>
       ) : (
-        <HoursEdit setEditOpen={setShiftsEdit} user={currentUserData} />
+        <HoursEdit
+          setEditOpen={handleSetShiftsEditOpen}
+          user={currentUserData}
+        />
       )}
     </Layout>
   );

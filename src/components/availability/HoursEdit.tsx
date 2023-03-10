@@ -27,25 +27,28 @@ interface Props {
   setEditOpen: (v: boolean) => void;
 }
 
+interface AddShiftProps {
+  number: number;
+}
+
 export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   const { hoursView, teamStore, modalView } = useStore();
 
   const {
     shiftValidationErrors,
     editedSomething,
-    shiftsToEdit,
+    newShifts,
     shiftsToDelete,
-    shiftsToAdd,
-    setMultipleShiftsToEdit,
-    addShiftToDelete,
+    setNewShifts,
+    handleAddShiftReadyToDelete,
     handleEditShift,
-    handleAddShiftClick,
-    validateAndSaveChanges,
+    handleAddShift,
+    handleValidateAndSaveChanges,
   } = hoursView;
 
   useEffect(() => {
-    setMultipleShiftsToEdit();
-  }, [setMultipleShiftsToEdit]);
+    setNewShifts();
+  }, [setNewShifts]);
 
   const { openModal, modalOpen } = modalView;
   const { firstName, lastName } = user;
@@ -53,16 +56,21 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   const handleClose = () => {
-    if (
-      !editedSomething &&
-      shiftsToDelete.length === 0 &&
-      shiftsToAdd.length === 0
-    ) {
+    if (!editedSomething && shiftsToDelete.length === 0) {
       setEditOpen(false);
       return;
     }
     openModal(UNSAVED_CHANGES);
   };
+
+  const AddShift = ({ number }: AddShiftProps) => (
+    <div
+      onClick={() => handleAddShift(number)}
+      className="font-button font-bold cursor-pointer mt-3"
+    >
+      Add Shift
+    </div>
+  );
 
   return (
     <>
@@ -77,13 +85,13 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
               {firstName} {lastName}
             </span>
           </span>
-          <Button onClick={validateAndSaveChanges} type="submit">
+          <Button onClick={handleValidateAndSaveChanges} type="submit">
             Save
           </Button>
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {DAYS_IN_WEEK.map((day) => {
-            const filteredShift = shiftsToEdit?.filter(
+            const filteredShift = newShifts?.filter(
               (shift) =>
                 shift.iso_weekday === day.number &&
                 !hoursView.shiftsToDelete?.find(
@@ -101,19 +109,25 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                 </span>
                 <div className="w-2/3">
                   <div
-                    className="flex align-baseline font-button gap-4 justify-start items-center flex-col xl:basis-9-perc basis-11-perc"
+                    className="flex align-baseline font-button gap-4 justify-start flex-col xl:basis-9-perc basis-11-perc"
                     key={day.label}
                   >
                     {filteredShift.map((shift, index) => {
                       return (
                         <div
-                          key={shift.iso_weekday + "" + shift.start_time}
+                          key={
+                            shift.iso_weekday +
+                            "-" +
+                            shift.start_time +
+                            "-" +
+                            index
+                          }
                           className="flex flex-col w-full gap-2"
                         >
                           <div className="flex flex-row justify-between">
                             <div className="w-[80%] flex flex-row gap-2">
-                              <div className="w-full flex flex-col gap-2">
-                                <div className="flex flex-row justify-between items-center">
+                              <div className="w-full flex flex-col gap-2 items-center">
+                                <div className="flex flex-row justify-between items-center self-start w-full">
                                   <div className="w-[45%]">
                                     <TimeInput
                                       handleChange={handleEditShift}
@@ -140,7 +154,9 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                           "error-" +
                                           shift.iso_weekday +
                                           "-" +
-                                          i2
+                                          i2 +
+                                          "-" +
+                                          shift.start_time
                                         }
                                       >
                                         {s.message}
@@ -148,20 +164,13 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                                     )
                                 )}
                                 {index === filteredShift.length - 1 && (
-                                  <div
-                                    onClick={() =>
-                                      handleAddShiftClick(day.number)
-                                    }
-                                    className="font-button font-bold text-center cursor-pointer mt-3"
-                                  >
-                                    Add Shift
-                                  </div>
+                                  <AddShift number={day.number} />
                                 )}
                               </div>
                             </div>
                             <div
                               onClick={() =>
-                                addShiftToDelete(shift.id as string)
+                                handleAddShiftReadyToDelete(shift.id as string)
                               }
                               className="flex flex-col items-end cursor-pointer"
                             >
@@ -172,11 +181,14 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
                       );
                     })}
                     {filteredShift.length === 0 && (
-                      <div className="flex flex-row gap-2">
-                        <RiInformationFill className="text-3xl text-brandOrange" />
-                        <span className="font-button font-bold text-xl">
-                          No shifts on this day
-                        </span>
+                      <div className="w-[80%] flex flex-col items-center">
+                        <div className="flex flex-row gap-2">
+                          <RiInformationFill className="text-3xl text-brandOrange" />
+                          <span className="font-button font-bold text-lg">
+                            No shifts on this day
+                          </span>
+                        </div>
+                        <AddShift number={day.number} />
                       </div>
                     )}
                   </div>

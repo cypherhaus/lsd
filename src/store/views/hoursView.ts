@@ -34,18 +34,12 @@ export default class HoursView {
   shiftValidationErrors: ShiftValidationError[] = [];
 
   // Edited shifts
-  shiftsToEdit: Shift[] = [];
+  newShifts: Shift[] = [];
   editedSomething = false;
   shiftsEditOpen = false;
-  dayInEditMode: Moment | null = null;
-
-  // Shifts to be added
-  dayInAddMode: Moment | null = null;
-  shiftsToAdd: Shift[] = [];
 
   // Shifts to be deleted
   shiftsToDelete: string[] = [];
-  shiftToDeleteDate: Moment | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -117,40 +111,27 @@ export default class HoursView {
     });
   };
 
-  handleEnterEditMode = (day: Moment) => {
+  setNewShifts = () => {
     runInAction(() => {
-      this.dayInAddMode = day;
+      this.newShifts = [...this._store.teamStore?.shifts];
     });
   };
 
-  setMultipleShiftsToEdit = () => {
-    runInAction(() => {
-      this.shiftsToEdit = [...this._store.teamStore?.shifts];
-    });
-  };
-
-  validateAndSaveChanges = async () => {
+  handleValidateAndSaveChanges = async () => {
     runInAction(() => {
       this.shiftValidationErrors = [];
     });
 
-    const newShiftsToDelete = [...this.shiftsToDelete];
-    let newShiftsToEdit = [...this.shiftsToEdit];
-    let newShiftsToAdd = [...this.shiftsToAdd];
+    const shiftsToDelete = [...this.shiftsToDelete];
+    let newShifts = [...this.newShifts];
 
-    if (newShiftsToDelete.length !== 0 && newShiftsToEdit.length !== 0) {
-      newShiftsToEdit = newShiftsToEdit.filter(
-        (s) => !newShiftsToDelete.includes(s.id as string)
-      );
-    }
-
-    if (newShiftsToDelete.length !== 0)
-      newShiftsToEdit = newShiftsToEdit.filter(
-        (s) => !newShiftsToDelete.includes(s.id as string)
+    if (shiftsToDelete.length !== 0)
+      newShifts = newShifts.filter(
+        (s) => !shiftsToDelete.includes(s.id as string)
       );
 
-    if (newShiftsToEdit.length !== 0) {
-      newShiftsToEdit.map((s) => {
+    if (newShifts.length !== 0) {
+      newShifts.map((s) => {
         if ((s.start_time || s.end_time) === "") {
           runInAction(() => {
             this.shiftValidationErrors = [
@@ -173,9 +154,9 @@ export default class HoursView {
       });
     }
 
-    let finalEditedShifts = newShiftsToEdit.filter(
+    let finalShiftsToUpdate = newShifts.filter(
       (obj, index) =>
-        newShiftsToEdit.findIndex((item) => item.id === obj.id) === index
+        newShifts.findIndex((item) => item.id === obj.id) === index
     );
 
     const initialShiftArray: string[][] = [];
@@ -190,7 +171,7 @@ export default class HoursView {
     ];
 
     days.map((d) => {
-      const dayShifts = finalEditedShifts.filter(
+      const dayShifts = finalShiftsToUpdate.filter(
         (s) => s.iso_weekday === d.number
       );
       if (dayShifts.length > 1) {
@@ -211,48 +192,26 @@ export default class HoursView {
       }
     });
 
-    const shiftsToAddIds = newShiftsToAdd.map((s) => {
-      return s.id;
-    });
-
-    newShiftsToAdd = finalEditedShifts.filter((s) =>
-      shiftsToAddIds.includes(s.id as string)
-    );
-
-    finalEditedShifts = finalEditedShifts.filter(
-      (s) => !shiftsToAddIds.includes(s.id as string)
-    );
-
     if (this.shiftValidationErrors.length === 0) {
-      if (newShiftsToDelete.length > 0)
-        await this._store.teamStore.deleteMultipleShifts(newShiftsToDelete);
-      if (finalEditedShifts.length > 0)
-        await this._store.teamStore.updateShifts(finalEditedShifts);
-      if (newShiftsToAdd.length > 0)
-        await this._store.teamStore.addMultipleShifts(newShiftsToAdd);
-      this.closeEditAndResetEverything();
+      if (shiftsToDelete.length > 0)
+        await this._store.teamStore.deleteMultipleShifts(shiftsToDelete);
+      if (this.editedSomething)
+        await this._store.teamStore.updateShifts(finalShiftsToUpdate);
+      this.handleCloseEditingAndResetEverything();
     }
   };
 
-  handleAddShiftClick = (n: number) => {
-    const newShiftsToEdit = [...this.shiftsToEdit];
-    const newShiftsToAdd = [...this.shiftsToAdd];
+  handleAddShift = (n: number) => {
+    const newShifts = [...this.newShifts];
     const id = uuidv4();
+    const currentTime = moment().format();
+
     runInAction(() => {
-      this.shiftsToEdit = [
-        ...newShiftsToEdit,
+      this.newShifts = [
+        ...newShifts,
         {
           id: id,
-          start_time: "",
-          end_time: "",
-          iso_weekday: n,
-          user_id: this._store.authStore.currentUser.id,
-        },
-      ];
-      this.shiftsToAdd = [
-        ...newShiftsToAdd,
-        {
-          id: id,
+          created_at: currentTime,
           start_time: "",
           end_time: "",
           iso_weekday: n,
@@ -268,7 +227,7 @@ export default class HoursView {
     shift,
   }: ShiftInputChangeProps) => {
     const startOrEnd = isStartTime ? START_TIME : END_TIME;
-    const newShiftsToEdit = [...this.shiftsToEdit];
+    const newShifts = [...this.newShifts];
 
     if (!this.editedSomething) {
       runInAction(() => {
@@ -276,45 +235,36 @@ export default class HoursView {
       });
     }
 
-    if (newShiftsToEdit.length === 0) {
-      newShiftsToEdit.push({
-        ...(shift as Shift),
-        [startOrEnd]: newValue.value,
-      });
-      return;
-    }
-
-    const index = newShiftsToEdit.map((s: Shift) => s.id).indexOf(shift?.id);
-    index !== -1
-      ? (newShiftsToEdit[index] = {
-          ...newShiftsToEdit[index],
+    const index = newShifts.map((s: Shift) => s.id).indexOf(shift?.id);
+    index !== -1 || newShifts.length !== 0
+      ? (newShifts[index] = {
+          ...newShifts[index],
           [startOrEnd]: newValue.value,
         })
-      : newShiftsToEdit.push({
+      : newShifts.push({
           ...(shift as Shift),
           [startOrEnd]: newValue.value,
         });
 
     runInAction(() => {
-      this.shiftsToEdit = newShiftsToEdit;
+      this.newShifts = newShifts;
     });
   };
 
-  addShiftToDelete = (shiftId: string) => {
-    const newShiftsToDelete = [...this.shiftsToDelete];
-    const shifts = [...this.shiftsToEdit];
-    const newShifts = shifts.filter((shift) => shift.id !== shiftId);
+  handleAddShiftReadyToDelete = (shiftId: string) => {
+    const shiftsToDelete = [...this.shiftsToDelete];
+    const newShifts = this.newShifts.filter((shift) => shift.id !== shiftId);
+
     runInAction(() => {
-      this.shiftsToDelete = [...newShiftsToDelete, shiftId];
-      this.shiftsToEdit = newShifts;
+      this.shiftsToDelete = [...shiftsToDelete, shiftId];
+      this.newShifts = newShifts;
     });
   };
 
-  closeEditAndResetEverything = () => {
+  handleCloseEditingAndResetEverything = () => {
     runInAction(() => {
       this.shiftsToDelete = [];
-      this.shiftsToAdd = [];
-      this.shiftsToEdit = [];
+      this.newShifts = [];
       this._store.modalView.closeModal();
       this.shiftsEditOpen = false;
       this.shiftValidationErrors = [];
@@ -322,94 +272,11 @@ export default class HoursView {
     });
   };
 
-  setShiftsEdit = (v: boolean) => {
+  handleSetShiftsEditOpen = (v: boolean) => {
     runInAction(() => {
       this.shiftsEditOpen = v;
     });
   };
-
-  deleteOneTimeShift = async (id: string, userId: string) => {
-    await this._store.teamStore.deleteOneTimeShift(id);
-    await this.fetchShifts(userId);
-    this._store.modalView.closeModal();
-  };
-
-  deleteShiftOnce = async (id: string, userId: string) => {
-    if (!this.shiftToDeleteDate) return;
-    await this._store.teamStore.deleteShiftById(
-      id,
-      this.shiftToDeleteDate,
-      userId
-    );
-    await this.fetchShifts(userId);
-    this._store.modalView.closeModal();
-  };
-
-  deleteShiftAll = async (id: string, userId: string) => {
-    await this._store.teamStore.deleteShiftById(id);
-    await this.fetchShifts(userId);
-    this._store.modalView.closeModal();
-  };
-
-  handleNewShiftSingle = async (userId: string) => {
-    if (!this.dayInAddMode || !this.shiftsToAdd) return;
-
-    await this._store.teamStore.addShiftSingle({
-      isoWeekday: this.dayInAddMode.isoWeekday(),
-      start: this.shiftsToAdd.start,
-      end: this.shiftsToAdd.end,
-      user_id: userId,
-      date: this.dayInAddMode,
-    });
-
-    this.fetchShifts(userId);
-
-    runInAction(() => {
-      this.dayInAddMode = null;
-      this.shiftsToEdit = [];
-    });
-
-    this._store.modalView.closeModal();
-  };
-
-  // Todo test add shift and update shift
-  handleNewShiftRepeat = async (userId: string) => {
-    if (!this.dayInAddMode || !this.shiftsToAdd) return;
-
-    await this._store.teamStore.addShift({
-      isoWeekday: this.dayInAddMode.isoWeekday(),
-      start: this.shiftsToAdd.start,
-      end: this.shiftsToAdd.end,
-      user_id: userId,
-    });
-
-    this.fetchShifts(userId);
-
-    runInAction(() => {
-      this.dayInAddMode = null;
-      this.shiftsToEdit = [];
-    });
-
-    this._store.modalView.closeModal();
-  };
-
-  handleUpdateShift = () => {
-    this._store.teamStore.updateShifts(this.shiftsToEdit);
-  };
-
-  // Todo finish update shift
-  /* handleEditShift = ({ slot, shifts, day, shiftId, close }: EditShift) => {
-    const index = shifts.map((s: Shift) => s.id).indexOf(shiftId);
-    const newShifts = [...shifts];
-
-    if (!close) newShifts[index].start_time = slot.value;
-    if (close) newShifts[index].end_time = slot.value;
-
-    runInAction(() => {
-      this.shiftsToEdit = newShifts;
-      this.dayInEditMode = day;
-    });
-  }; */
 
   fetchTeamShifts = () => {};
 }
