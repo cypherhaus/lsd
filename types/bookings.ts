@@ -1,10 +1,5 @@
 import { Moment } from "moment";
 
-export interface User {
-  firstName: string;
-  lastName: string;
-}
-
 export interface Booking {
   start: Date;
   end: Date;
@@ -25,45 +20,29 @@ export interface Hours {
 }
 
 export interface Shift {
-  created_at?: string;
+  created_at: string;
   end_time: string;
-  id?: string;
+  id: string;
   iso_weekday: number;
   repeat?: boolean;
   start_time: string;
   user_id: string;
-  oldIndex?: number;
   date?: Moment;
 }
 
-export interface EditShift {
-  slot: Slot;
-  shifts: Shift[];
-  day: Moment;
-  shiftId: string;
-  close: boolean;
+export interface ShiftSelectOption {
+  label: string;
+  value: string;
 }
 
-export interface ShiftSingle {
-  created_at: string;
-  end: string;
-  id: string;
-  isoWeekday: number;
-  repeat: boolean;
-  start: string;
-  user_id: string;
-  date: string;
-}
-
-export interface ShiftInputChangeProps {
-  newValue: any;
+export interface ShiftInputChange {
+  newValue: ShiftSelectOption;
   isStartTime: boolean;
-  shift?: Shift;
+  shift: Shift;
 }
 
 export interface ShiftValidationError {
   shiftId?: string;
-  shiftIndex?: number;
   message: string;
 }
 

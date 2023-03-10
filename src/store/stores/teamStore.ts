@@ -7,7 +7,7 @@
 
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
-import { Hours, Shift, ShiftSingle } from "../../../types/bookings";
+import { Hours, Shift } from "../../../types/bookings";
 import { Profile } from "../../../types/members";
 import { successToast, errorToast } from "../../utils/toast";
 
@@ -16,7 +16,6 @@ export default class TeamStore {
 
   bookings: Hours[] = [];
   shifts: Shift[] = [];
-  shiftSingles: ShiftSingle[] = [];
 
   members: Profile[] = [];
 
@@ -82,6 +81,7 @@ export default class TeamStore {
         shifts
       );
       if (response) return true;
+      successToast("Saved changes sucessfully.");
     } catch (err) {
       errorToast("Cannot delete shifts.");
     }

@@ -12,7 +12,6 @@ export default class ModalView {
   private _store: Store;
 
   modalOpen = false;
-  modalType: string | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -22,13 +21,11 @@ export default class ModalView {
   closeModal = () => {
     runInAction(() => {
       this.modalOpen = false;
-      this.modalType = null;
     });
   };
 
-  openModal = (type: string) => {
+  openModal = () => {
     runInAction(() => {
-      this.modalType = type;
       this.modalOpen = true;
     });
   };

@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 // Types
 import {
   Shift,
-  ShiftInputChangeProps,
   ShiftValidationError,
+  ShiftInputChange,
 } from "../../../types/bookings";
 
 // Utils
@@ -130,29 +130,27 @@ export default class HoursView {
         (s) => !shiftsToDelete.includes(s.id as string)
       );
 
-    if (newShifts.length !== 0) {
-      newShifts.map((s) => {
-        if ((s.start_time || s.end_time) === "") {
-          runInAction(() => {
-            this.shiftValidationErrors = [
-              ...this.shiftValidationErrors,
-              {
-                shiftId: s.id,
-                message: "Please enter both start time and end time.",
-              },
-            ];
-          });
-        }
-        if (!checkStartBeforeEnd(s.start_time, s.end_time)) {
-          runInAction(() => {
-            this.shiftValidationErrors = [
-              ...this.shiftValidationErrors,
-              { shiftId: s.id, message: "End time is not after start time." },
-            ];
-          });
-        }
-      });
-    }
+    newShifts.map((s) => {
+      if (s.start_time === "" || s.end_time === "") {
+        runInAction(() => {
+          this.shiftValidationErrors = [
+            ...this.shiftValidationErrors,
+            {
+              shiftId: s.id,
+              message: "Please enter both start time and end time.",
+            },
+          ];
+        });
+      }
+      if (!checkStartBeforeEnd(s.start_time, s.end_time)) {
+        runInAction(() => {
+          this.shiftValidationErrors = [
+            ...this.shiftValidationErrors,
+            { shiftId: s.id, message: "End time is not after start time." },
+          ];
+        });
+      }
+    });
 
     let finalShiftsToUpdate = newShifts.filter(
       (obj, index) =>
@@ -197,6 +195,7 @@ export default class HoursView {
         await this._store.teamStore.deleteMultipleShifts(shiftsToDelete);
       if (this.editedSomething)
         await this._store.teamStore.updateShifts(finalShiftsToUpdate);
+      this.fetchShifts(this._store.authStore.currentUser.id);
       this.handleCloseEditingAndResetEverything();
     }
   };
@@ -205,6 +204,11 @@ export default class HoursView {
     const newShifts = [...this.newShifts];
     const id = uuidv4();
     const currentTime = moment().format();
+
+    !this.editedSomething &&
+      runInAction(() => {
+        this.editedSomething = true;
+      });
 
     runInAction(() => {
       this.newShifts = [
@@ -221,22 +225,17 @@ export default class HoursView {
     });
   };
 
-  handleEditShift = ({
-    newValue,
-    isStartTime,
-    shift,
-  }: ShiftInputChangeProps) => {
+  handleEditShift = ({ newValue, isStartTime, shift }: ShiftInputChange) => {
     const startOrEnd = isStartTime ? START_TIME : END_TIME;
     const newShifts = [...this.newShifts];
 
-    if (!this.editedSomething) {
+    !this.editedSomething &&
       runInAction(() => {
         this.editedSomething = true;
       });
-    }
 
     const index = newShifts.map((s: Shift) => s.id).indexOf(shift?.id);
-    index !== -1 || newShifts.length !== 0
+    index !== -1
       ? (newShifts[index] = {
           ...newShifts[index],
           [startOrEnd]: newValue.value,

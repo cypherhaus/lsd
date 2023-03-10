@@ -4,7 +4,8 @@ interface Props {
   children: string;
 }
 
-const errorStyle = "text-brandOrange text-sm font-normal list-inside list-disc";
+const errorStyle =
+  "text-brandOrange text-sm font-normal list-inside list-disc self-start";
 
 export const ErrorLabel = ({ children }: Props) => {
   if (children === PASSWORD_CONTAINS) {

@@ -2,26 +2,25 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 
-// Constants
-import { DAYS_IN_WEEK } from "../../constants/common";
+// Types
+import { User } from "../../../types/auth";
 
 //Icons
 import { RiEditLine } from "react-icons/ri";
 
 // Utils
-import { formatHours } from "../../utils/time";
-
-// Types
-import { User } from "../../../types/bookings";
+import { formatHours, daysInWeek } from "../../utils/time";
 
 interface Props {
   user: User;
-  setEditOpen: (v: boolean) => void;
 }
 
-export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
+export const HoursNavigation = observer(({ user }: Props) => {
   const { hoursView, teamStore } = useStore();
+  const { shifts } = teamStore;
+  const { handleSetShiftsEditOpen } = hoursView;
   const { firstName, lastName } = user;
+  const days = daysInWeek();
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
@@ -32,7 +31,7 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
           <tr className="flex flex-col flex-no wrap lg:table-row">
             <th></th>
             <th></th>
-            {DAYS_IN_WEEK.map((day) => (
+            {days.map((day) => (
               <th className="px-3 pb-5 text-center" key={day.label}>
                 {day.label}
               </th>
@@ -44,7 +43,7 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
             <td className="text-red-400 p-2 hover:text-red-600 hover:font-medium cursor-pointer">
               <div
                 className="cursor-pointer flex flex-col items-center"
-                onClick={() => setEditOpen(true)}
+                onClick={() => handleSetShiftsEditOpen(true)}
               >
                 <RiEditLine className="text-4xl text-brandOrange" />
               </div>
@@ -61,8 +60,8 @@ export const HoursNavigation = observer(({ user, setEditOpen }: Props) => {
                 </div>
               </div>
             </td>
-            {DAYS_IN_WEEK.map((day) => {
-              const filteredShift = teamStore?.shifts.filter(
+            {days.map((day) => {
+              const filteredShift = shifts.filter(
                 (shift) => shift.iso_weekday === day.number
               );
               return (

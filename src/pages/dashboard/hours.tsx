@@ -7,63 +7,45 @@ import { useStore } from "../../store";
 import { supabase } from "../../config/supabase";
 
 // Components
-import { HoursNavigation } from "../../components/availability/HoursNavigation";
 import { HoursEdit } from "../../components/availability/HoursEdit";
-import { Button } from "../../components/common/Button";
+import { TeamHours } from "../../components/availability/TeamHours";
 
-// Icons
-import { RiGroupLine } from "react-icons/ri";
-
-// Constants
-import { BUTTON_VARIANT } from "../../constants/common";
+// Types
+import { User } from "../../../types/auth";
 
 const Availability = observer(() => {
+  const initialCurrentUserData: User = { firstName: "", lastName: "" };
   const { hoursView, authStore, authView } = useStore();
-  const { shiftsEditOpen, handleSetShiftsEditOpen } = hoursView;
-  const [currentUserData, setCurrentUserData] = useState({
-    firstName: "",
-    lastName: "",
-  });
+  const { fetchShifts, shiftsEditOpen } = hoursView;
+  const { init } = authView;
+  const [currentUserData, setCurrentUserData] = useState(
+    initialCurrentUserData
+  );
 
   useEffect(() => {
     const retrieveSession = async () => {
       const { data } = await supabase.auth.getSession();
-      if (data.session) authView.init(data.session?.user?.id);
+      if (data.session) init(data.session?.user?.id);
     };
     retrieveSession();
 
     if (authStore.currentUser) {
-      hoursView.fetchShifts(authStore.currentUser.id);
-      setCurrentUserData({
-        firstName: authStore.currentUser.first_name,
-        lastName: authStore.currentUser.last_name,
-      });
+      const {
+        first_name: firstName,
+        last_name: lastName,
+        id,
+      } = authStore.currentUser;
+      fetchShifts(id);
+      setCurrentUserData({ firstName: firstName, lastName: lastName });
     }
-  }, [authStore.currentUser, shiftsEditOpen, hoursView, authView]);
+  }, [authStore.currentUser, setCurrentUserData, fetchShifts, init]);
 
   return (
     <Layout>
       {!shiftsEditOpen ? (
-        <>
-          <HoursNavigation
-            setEditOpen={handleSetShiftsEditOpen}
-            user={currentUserData}
-          />
-          <div className="flex flex-col items-center">
-            <Button
-              icon={<RiGroupLine />}
-              onClick={hoursView.handleAddMember}
-              variant={BUTTON_VARIANT.WHITE}
-            >
-              Add Team Member
-            </Button>
-          </div>
-        </>
+        <TeamHours user={currentUserData} />
       ) : (
-        <HoursEdit
-          setEditOpen={handleSetShiftsEditOpen}
-          user={currentUserData}
-        />
+        <HoursEdit user={currentUserData} />
       )}
     </Layout>
   );

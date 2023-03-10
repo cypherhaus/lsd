@@ -1,51 +1,61 @@
 import { observer } from "mobx-react-lite";
-import { useStore } from "../../store";
 
 // Components
 import { Button } from "./Button";
 
 // Constants
-import { UNSAVED_CHANGES } from "../../constants/modals";
 import { BUTTON_VARIANT } from "../../constants/common";
 
 interface ModalProps {
-  type: string;
+  title: string;
+  message: string;
+  onCancel: () => void;
+  onSubmit: () => void;
+  cancelText: string;
+  submitText: string;
+  buttonReverse: boolean;
 }
 
-export const ConfirmationModal = observer(({ type }: ModalProps) => {
-  const { modalView, hoursView } = useStore();
-  const { handleCloseEditingAndResetEverything } = hoursView;
-  const { closeModal } = modalView;
-
-  return (
-    <div
-      className={
-        "z-20 absolute md:top-[30%] lg:right-[38%] lg:left-[38%] md:right-[25%] md:left-[25%] top-[20%] right-[5%] left-[5%] bg-white rounded-xl px-12 py-7"
-      }
-    >
-      {type === UNSAVED_CHANGES && (
+export const ConfirmationModal = observer(
+  ({
+    title,
+    message,
+    onCancel,
+    onSubmit,
+    cancelText,
+    submitText,
+    buttonReverse,
+  }: ModalProps) => {
+    return (
+      <div
+        className={
+          "z-20 absolute md:top-[30%] lg:right-[38%] lg:left-[38%] md:right-[25%] md:left-[25%] top-[20%] right-[5%] left-[5%] bg-white rounded-xl px-12 py-7"
+        }
+      >
         <div className="flex flex-col gap-3">
           <span className="text-2xl font-bold text-center text-brandOrange">
-            Unsaved Changes
+            {title}
           </span>
           <div className="flex flex-col text-center gap-5">
-            <span>Are you sure you want to cancel editing shifts?</span>
+            <span>{message}</span>
             <div className="flex flex-row gap-4">
               <div className="w-1/2 flex flex-col">
-                <Button onClick={closeModal}>No</Button>
+                <Button onClick={buttonReverse ? onCancel : onSubmit}>
+                  {buttonReverse ? cancelText : submitText}
+                </Button>
               </div>
               <div className="w-1/2 flex flex-col">
                 <Button
-                  onClick={handleCloseEditingAndResetEverything}
+                  onClick={buttonReverse ? onSubmit : onCancel}
                   variant={BUTTON_VARIANT.WHITE}
                 >
-                  YES
+                  {buttonReverse ? submitText : cancelText}
                 </Button>
               </div>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
-});
+      </div>
+    );
+  }
+);

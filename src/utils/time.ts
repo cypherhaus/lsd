@@ -1,6 +1,12 @@
 import moment from "moment";
 
-export const formatHours = (time: string) => {
+interface Day {
+  label: string;
+  fullLabel: string;
+  number: number;
+}
+
+export const formatHours = (time: string): string => {
   const string = moment().format("DD/MM/YYYY") + " " + time;
   const splitted = time.split(":");
   const format = splitted[1] === "00" ? "ha" : "h:mma";
@@ -10,7 +16,7 @@ export const formatHours = (time: string) => {
 export const checkStartBeforeEnd = (
   startTimeRaw: string,
   endTimeRaw: string
-) => {
+): boolean => {
   const startTime = moment(startTimeRaw, "hh:mm:ss");
   const endTime = moment(endTimeRaw, "hh:mm:ss");
   if (endTime.isBefore(startTime)) {
@@ -19,7 +25,7 @@ export const checkStartBeforeEnd = (
   return true;
 };
 
-export const checkOverlap = (timeSegments: string[][]) => {
+export const checkOverlap = (timeSegments: string[][]): boolean => {
   timeSegments.sort((timeSegment1, timeSegment2) =>
     timeSegment1[0].localeCompare(timeSegment2[0])
   );
@@ -52,4 +58,16 @@ export const getAllTimeSlots = () => {
   }
 
   return slots;
+};
+
+export const daysInWeek = (): Day[] => {
+  let days: number[] | Day[] = [1, 2, 3, 4, 5, 6, 7];
+  days = days.map((d) => {
+    return {
+      fullLabel: moment().isoWeekday(d).format("dddd"),
+      label: moment().isoWeekday(d).format("ddd"),
+      number: d,
+    };
+  });
+  return days;
 };

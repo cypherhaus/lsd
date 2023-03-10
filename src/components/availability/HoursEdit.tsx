@@ -8,9 +8,14 @@ import { Button } from "../common/Button";
 import { TimeInput } from "../common/TimeInput";
 import { ErrorLabel } from "../common/ErrorLabel";
 
+//Types
+import { User } from "../../../types/auth";
+
+// Utils
+import { daysInWeek } from "../../utils/time";
+
 // Constants
-import { DAYS_IN_WEEK } from "../../constants/common";
-import { UNSAVED_CHANGES } from "../../constants/modals";
+import { UNSAVED_CHANGES, YES, NO } from "../../constants/modals";
 
 // Icons
 import {
@@ -19,20 +24,17 @@ import {
   RiInformationFill,
 } from "react-icons/ri";
 
-// Types
-import { User } from "../../../types/bookings";
-
 interface Props {
   user: User;
-  setEditOpen: (v: boolean) => void;
 }
-
 interface AddShiftProps {
   number: number;
 }
 
-export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
-  const { hoursView, teamStore, modalView } = useStore();
+export const HoursEdit = observer(({ user }: Props) => {
+  const { hoursView, modalView } = useStore();
+  const { firstName, lastName } = user;
+  const days = daysInWeek();
 
   const {
     shiftValidationErrors,
@@ -44,23 +46,24 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
     handleEditShift,
     handleAddShift,
     handleValidateAndSaveChanges,
+    handleCloseEditingAndResetEverything,
+    handleSetShiftsEditOpen,
   } = hoursView;
 
   useEffect(() => {
     setNewShifts();
   }, [setNewShifts]);
 
-  const { openModal, modalOpen } = modalView;
-  const { firstName, lastName } = user;
+  const { modalOpen, openModal, closeModal } = modalView;
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   const handleClose = () => {
     if (!editedSomething && shiftsToDelete.length === 0) {
-      setEditOpen(false);
+      handleSetShiftsEditOpen(false);
       return;
     }
-    openModal(UNSAVED_CHANGES);
+    openModal();
   };
 
   const AddShift = ({ number }: AddShiftProps) => (
@@ -90,7 +93,7 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
           </Button>
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
-          {DAYS_IN_WEEK.map((day) => {
+          {days.map((day) => {
             const filteredShift = newShifts?.filter(
               (shift) =>
                 shift.iso_weekday === day.number &&
@@ -198,7 +201,17 @@ export const HoursEdit = observer(({ user, setEditOpen }: Props) => {
           })}
         </div>
       </div>
-      {modalOpen && <ConfirmationModal type={UNSAVED_CHANGES} />}
+      {modalOpen && (
+        <ConfirmationModal
+          title={UNSAVED_CHANGES}
+          message={"Are you sure you want to cancel editing shifts?"}
+          onCancel={closeModal}
+          onSubmit={handleCloseEditingAndResetEverything}
+          cancelText={NO}
+          submitText={YES}
+          buttonReverse={true}
+        />
+      )}
     </>
   );
 });
