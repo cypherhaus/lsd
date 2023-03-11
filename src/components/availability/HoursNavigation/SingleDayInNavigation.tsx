@@ -20,9 +20,9 @@ export const SingleDayInNavigation = observer(({ day }: Props) => {
   return (
     <td className="lg:w-[12.5%] p-2 align-top">
       <div className="flex flex-col gap-2">
-        {filteredShift.map((shift) => {
-          if (shift.start_time !== null) {
-            return (
+        <>
+          {filteredShift.map((shift) =>
+            shift.start_time !== null && shift.end_time !== null ? (
               <span
                 key={shift.iso_weekday + "" + shift.start_time}
                 className="rounded-md text-center bg-white lg:px-1 py-1 px-2"
@@ -31,12 +31,19 @@ export const SingleDayInNavigation = observer(({ day }: Props) => {
                   " - " +
                   formatHours(shift.end_time)}
               </span>
-            );
-          }
-        })}
-        {filteredShift.length === 0 && (
-          <span className="text-2xl font-button text-center">—</span>
-        )}
+            ) : (
+              <span
+                key={shift.iso_weekday + "" + shift.start_time}
+                className="rounded-md text-center bg-white lg:px-1 py-1 px-2"
+              >
+                NULL
+              </span>
+            )
+          )}
+          {filteredShift.length === 0 && (
+            <span className="text-2xl font-button text-center">—</span>
+          )}
+        </>
       </div>
     </td>
   );
