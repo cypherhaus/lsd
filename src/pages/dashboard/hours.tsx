@@ -14,6 +14,9 @@ import { TeamHours } from "../../components/availability/TeamHours";
 // Types
 import { User } from "../../../types/auth";
 
+// Constants
+import { START_ROUTE } from "../../constants/routes";
+
 const Availability = observer(() => {
   const router = useRouter();
   const initialCurrentUserData: User = { firstName: "", lastName: "" };
@@ -39,7 +42,7 @@ const Availability = observer(() => {
       } = authStore.currentUser;
 
       if (!authStore.currentUser.business_id) {
-        router.push("/");
+        router.push(START_ROUTE);
         return;
       }
 

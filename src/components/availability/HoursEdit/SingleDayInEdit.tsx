@@ -21,24 +21,12 @@ interface AddShiftProps {
 export const SingleDayInEdit = observer(({ day }: Props) => {
   const { hoursView } = useStore();
   const { label, fullLabel, number } = day;
-
-  const { newShifts, handleAddShift } = hoursView;
+  const { newShifts, shiftsToDelete, handleAddShift } = hoursView;
 
   const filteredShift = newShifts?.filter(
     (shift) =>
       shift.iso_weekday === number &&
-      !hoursView.shiftsToDelete?.find(
-        (shiftToDelete) => shift.id === shiftToDelete
-      )
-  );
-
-  const AddShift = ({ number }: AddShiftProps) => (
-    <div
-      onClick={() => handleAddShift(number)}
-      className="font-button font-bold cursor-pointer mt-3"
-    >
-      Add Shift
-    </div>
+      !shiftsToDelete?.find((shiftToDelete) => shift.id === shiftToDelete)
   );
 
   return (
@@ -52,11 +40,11 @@ export const SingleDayInEdit = observer(({ day }: Props) => {
           {filteredShift.map((shift, index) => {
             return (
               <SingleShiftInDay
-                key={shift.iso_weekday + "-" + shift.start_time + "-" + index}
+                key={shift.id}
                 index={index}
                 shift={shift}
                 arrayLength={filteredShift.length}
-                addShift={<AddShift number={number} />}
+                number={number}
               />
             );
           })}
@@ -68,7 +56,12 @@ export const SingleDayInEdit = observer(({ day }: Props) => {
                   No shifts on this day
                 </span>
               </div>
-              <AddShift number={number} />
+              <div
+                onClick={() => handleAddShift(number)}
+                className="font-button font-bold cursor-pointer mt-3"
+              >
+                Add Shift
+              </div>
             </div>
           )}
         </div>

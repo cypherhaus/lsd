@@ -8,7 +8,12 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import Router from "next/router";
+
+// Types
 import { SignInValues, SignUpValues } from "../../../types/auth";
+
+// Constants
+import { HOURS_ROUTE, START_ROUTE } from "../../constants/routes";
 
 export default class AuthView {
   private _store: Store;
@@ -52,7 +57,7 @@ export default class AuthView {
   // Logout user
   async handleLogoutClick() {
     const success = await this._store.authStore.logout();
-    success && Router.push("/");
+    success && Router.push(START_ROUTE);
   }
 
   // Login user
@@ -74,6 +79,6 @@ export default class AuthView {
     }
 
     const success = await this._store.authStore.postBusiness(this.businessName);
-    success && Router.push("/dashboard/hours");
+    success && Router.push(HOURS_ROUTE);
   }
 }

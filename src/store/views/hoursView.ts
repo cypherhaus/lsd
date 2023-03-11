@@ -15,8 +15,10 @@ import {
   Shift,
   ShiftValidationError,
   ShiftInputChange,
-  SaveChanges,
 } from "../../../types/bookings";
+
+// Utils
+import { daysShiftOverlapValidation, fieldsValidation } from "../../utils/time";
 
 // Constants
 import { START_TIME, END_TIME } from "../../constants/common";
@@ -133,14 +135,47 @@ export default class HoursView {
     });
   };
 
-  handleSaveChanges = async ({
-    shiftsToUpdate,
-    shiftsToDelete,
-  }: SaveChanges) => {
-    shiftsToDelete.length > 0 &&
-      (await this._store.teamStore.postShiftsToDelete(shiftsToDelete));
+  handleValidateChanges = () => {
+    this.handleResetValidationErrors();
+
+    const deletedDuplicates = this.newShifts.filter(
+      (obj, index) =>
+        this.newShifts.findIndex((item) => item.id === obj.id) === index
+    );
+
+    runInAction(() => {
+      this.newShifts = deletedDuplicates;
+    });
+
+    const newShiftsToUpdate = [...this.newShifts];
+
+    const fieldsErrors = fieldsValidation(newShiftsToUpdate);
+    fieldsErrors.length > 0 &&
+      fieldsErrors.map((e) =>
+        this.handleAddValidationError({
+          shiftId: e.shiftId,
+          message: e.message,
+        })
+      );
+
+    const daysShiftOverlapErrors =
+      daysShiftOverlapValidation(newShiftsToUpdate);
+    daysShiftOverlapErrors.length > 0 &&
+      daysShiftOverlapErrors.map((e) =>
+        this.handleAddValidationError({
+          shiftId: e.shiftId,
+          message: e.message,
+        })
+      );
+
+    this.shiftValidationErrors.length === 0 && this.handleSaveChanges();
+  };
+
+  handleSaveChanges = async () => {
+    this.shiftsToDelete.length > 0 &&
+      (await this._store.teamStore.postShiftsToDelete(this.shiftsToDelete));
     this.editedSomething &&
-      (await this._store.teamStore.postShiftsToUpdate(shiftsToUpdate));
+      (await this._store.teamStore.postShiftsToUpdate(this.newShifts));
     this.handleFetchShifts(this._store.authStore.currentUser.id);
     this.handleCloseEditingAndResetEverything();
   };
@@ -159,7 +194,7 @@ export default class HoursView {
       this.newShifts = [
         ...newShifts,
         {
-          id: id,
+          id,
           created_at: currentTime,
           start_time: "",
           end_time: "",
@@ -183,11 +218,11 @@ export default class HoursView {
     index !== -1
       ? (newShifts[index] = {
           ...newShifts[index],
-          [startOrEnd]: newValue.value,
+          [startOrEnd]: newValue?.value,
         })
       : newShifts.push({
           ...shift,
-          [startOrEnd]: newValue.value,
+          [startOrEnd]: newValue?.value,
         });
 
     runInAction(() => {
@@ -205,15 +240,23 @@ export default class HoursView {
     });
   };
 
+  handleCloseEditing = () => {
+    if (!this.editedSomething && this.shiftsToDelete.length === 0) {
+      this.handleSetShiftsEditOpen(false);
+      return;
+    }
+    this._store.modalView.handleOpenModal();
+  };
+
   handleCloseEditingAndResetEverything = () => {
     runInAction(() => {
       this.shiftsToDelete = [];
       this.newShifts = [];
-      this._store.modalView.handleCloseModal();
       this.shiftsEditOpen = false;
       this.shiftValidationErrors = [];
       this.editedSomething = false;
     });
+    this._store.modalView.handleCloseModal();
   };
 
   handleSetShiftsEditOpen = (v: boolean) => {

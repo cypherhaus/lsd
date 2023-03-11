@@ -15,18 +15,14 @@ interface Props {
   shift: Shift;
   index: number;
   arrayLength: number;
-  addShift: JSX.Element;
+  number: number;
 }
 
 export const SingleShiftInDay = observer(
-  ({ shift, index, arrayLength, addShift }: Props) => {
+  ({ shift, index, arrayLength, number }: Props) => {
     const { hoursView } = useStore();
-    const {
-      start_time: startTime,
-      end_time: endTime,
-      iso_weekday: isoWeekday,
-      id,
-    } = shift;
+    const { handleAddShift } = hoursView;
+    const { start_time: startTime, end_time: endTime, id } = shift;
 
     const {
       handleAddShiftReadyToDelete,
@@ -43,7 +39,7 @@ export const SingleShiftInDay = observer(
                 <div className="w-[45%]">
                   <TimeInput
                     handleChange={handleEditShift}
-                    isStartTime={true}
+                    isStartTime
                     shift={shift}
                     time={startTime}
                   />
@@ -61,14 +57,19 @@ export const SingleShiftInDay = observer(
               {shiftValidationErrors?.map(
                 (s, i2) =>
                   s.shiftId === id && (
-                    <ErrorLabel
-                      key={"error-" + isoWeekday + "-" + i2 + "-" + startTime}
-                    >
+                    <ErrorLabel key={i2 + "-" + shift.id}>
                       {s.message}
                     </ErrorLabel>
                   )
               )}
-              {index === arrayLength - 1 && addShift}
+              {index === arrayLength - 1 && (
+                <div
+                  onClick={() => handleAddShift(number)}
+                  className="font-button font-bold cursor-pointer mt-3"
+                >
+                  Add Shift
+                </div>
+              )}
             </div>
           </div>
           <div

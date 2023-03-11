@@ -18,7 +18,7 @@ export const ConfirmationModal = observer(
     onSubmit,
     cancelText,
     submitText,
-    buttonReverse,
+    buttonReverse = false,
   }: ModalProps) => {
     return (
       <div

@@ -12,14 +12,10 @@ import { User } from "../../../../types/auth";
 import { Day } from "../../../../types/common";
 
 // Utils
-import {
-  daysInWeek,
-  fieldsValidation,
-  daysShiftOverlapValidation,
-} from "../../../utils/time";
+import { daysInWeek } from "../../../utils/time";
 
 // Constants
-import { UNSAVED_CHANGES, YES, NO } from "../../../constants/modals";
+import { UNSAVED_CHANGES } from "../../../constants/modals";
 
 // Icons
 import { RiCloseFill } from "react-icons/ri";
@@ -30,20 +26,15 @@ interface Props {
 
 export const HoursEdit = observer(({ user }: Props) => {
   const { hoursView, modalView } = useStore();
-  const { modalOpen, handleOpenModal, handleCloseModal } = modalView;
+  const { modalOpen, handleCloseModal } = modalView;
   const { firstName, lastName } = user;
   const days = daysInWeek();
 
   const {
-    editedSomething,
-    shiftsToDelete,
-    newShifts,
     handleSetNewShifts,
-    handleSaveChanges,
     handleCloseEditingAndResetEverything,
-    handleSetShiftsEditOpen,
-    handleAddValidationError,
-    handleResetValidationErrors,
+    handleCloseEditing,
+    handleValidateChanges,
   } = hoursView;
 
   useEffect(() => {
@@ -51,51 +42,6 @@ export const HoursEdit = observer(({ user }: Props) => {
   }, [handleSetNewShifts]);
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
-
-  const handleCloseEditing = () => {
-    if (!editedSomething && shiftsToDelete.length === 0) {
-      handleSetShiftsEditOpen(false);
-      return;
-    }
-    handleOpenModal();
-  };
-
-  const handleValidateChanges = () => {
-    handleResetValidationErrors();
-
-    const newShiftsToDelete = [...shiftsToDelete];
-    let newShiftsToUpdate = [...newShifts];
-
-    newShiftsToUpdate = newShiftsToUpdate.filter(
-      (obj, index) =>
-        newShiftsToUpdate.findIndex((item) => item.id === obj.id) === index
-    );
-
-    const fieldsErrors = fieldsValidation(newShiftsToUpdate);
-    fieldsErrors.length > 0 &&
-      fieldsErrors.map((e) =>
-        handleAddValidationError({
-          shiftId: e.shiftId,
-          message: e.message,
-        })
-      );
-
-    const daysShiftOverlapErrors =
-      daysShiftOverlapValidation(newShiftsToUpdate);
-    daysShiftOverlapErrors.length > 0 &&
-      daysShiftOverlapErrors.map((e) =>
-        handleAddValidationError({
-          shiftId: e.shiftId,
-          message: e.message,
-        })
-      );
-
-    hoursView.shiftValidationErrors.length === 0 &&
-      handleSaveChanges({
-        shiftsToUpdate: newShiftsToUpdate,
-        shiftsToDelete: newShiftsToDelete,
-      });
-  };
 
   return (
     <>
@@ -123,12 +69,12 @@ export const HoursEdit = observer(({ user }: Props) => {
       {modalOpen && (
         <ConfirmationModal
           title={UNSAVED_CHANGES}
-          message={"Are you sure you want to cancel editing shifts?"}
+          message="Are you sure you want to cancel editing shifts?"
           onCancel={handleCloseModal}
           onSubmit={handleCloseEditingAndResetEverything}
-          cancelText={NO}
-          submitText={YES}
-          buttonReverse={true}
+          cancelText="NO"
+          submitText="YES"
+          buttonReverse
         />
       )}
     </>

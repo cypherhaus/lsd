@@ -10,6 +10,9 @@ import { supabase } from "../config/supabase";
 import Auth from "../components/auth";
 import Onboarding from "../components/Onboarding";
 
+// Constants
+import { HOURS_ROUTE } from "../constants/routes";
+
 const Home = observer(() => {
   const router = useRouter();
   const [isOnboarding, setIsOnboarding] = useState(false);
@@ -32,8 +35,8 @@ const Home = observer(() => {
     }
 
     authStore.currentUser &&
-      !router.pathname.includes("/dashboard/hours") &&
-      router.push("/dashboard/hours");
+      !router.pathname.includes(HOURS_ROUTE) &&
+      router.push(HOURS_ROUTE);
   }, [authStore.currentUser, init, router]);
 
   return (

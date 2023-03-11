@@ -2,7 +2,12 @@ import React from "react";
 import Select from "react-select";
 
 // Types
-import { Shift, Slot, ShiftSelectOption } from "../../../types/bookings";
+import {
+  Shift,
+  Slot,
+  ShiftSelectOption,
+  ShiftInputChange,
+} from "../../../types/bookings";
 
 // Utils
 import { formatHoursOnEdit, getAllTimeSlots } from "../../utils/time";
@@ -10,8 +15,8 @@ import { formatHoursOnEdit, getAllTimeSlots } from "../../utils/time";
 interface TimeInputProps {
   time: string;
   isStartTime: boolean;
-  shift?: Shift;
-  handleChange: (v: any) => void;
+  shift: Shift;
+  handleChange: (v: ShiftInputChange) => void;
 }
 
 const slotOptions: Slot[] = getAllTimeSlots();
@@ -20,13 +25,13 @@ export const TimeInput = ({
   time,
   handleChange,
   shift,
-  isStartTime,
+  isStartTime = true,
 }: TimeInputProps) => {
   const onInputChange = (option: ShiftSelectOption | null) => {
     handleChange({
       newValue: option,
-      shift: shift,
-      isStartTime: isStartTime,
+      shift,
+      isStartTime,
     });
   };
 
