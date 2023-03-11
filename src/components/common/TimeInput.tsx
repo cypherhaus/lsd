@@ -5,7 +5,7 @@ import Select from "react-select";
 import { Shift, Slot, ShiftSelectOption } from "../../../types/bookings";
 
 // Utils
-import { formatHours, getAllTimeSlots } from "../../utils/time";
+import { formatHoursOnEdit, getAllTimeSlots } from "../../utils/time";
 
 interface TimeInputProps {
   time: string;
@@ -68,13 +68,13 @@ export const TimeInput = ({
         }),
       }}
       defaultValue={{
-        value: formatHours(time),
+        value: time,
         label:
           time === ""
             ? isStartTime
               ? "Start..."
               : "End..."
-            : formatHours(time),
+            : formatHoursOnEdit(time),
       }}
       components={{
         IndicatorSeparator: () => null,

@@ -72,7 +72,7 @@ export const SingleShift = observer(
             </div>
           </div>
           <div
-            onClick={() => handleAddShiftReadyToDelete(id as string)}
+            onClick={() => handleAddShiftReadyToDelete(id)}
             className="flex flex-col items-end cursor-pointer"
           >
             <RiDeleteBinLine className="text-3xl text-brandOrange" />

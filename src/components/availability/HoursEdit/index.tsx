@@ -12,7 +12,11 @@ import { User } from "../../../../types/auth";
 import { Day } from "../../../../types/common";
 
 // Utils
-import { daysInWeek } from "../../../utils/time";
+import {
+  daysInWeek,
+  fieldsValidation,
+  daysShiftOverlapValidation,
+} from "../../../utils/time";
 
 // Constants
 import { UNSAVED_CHANGES, YES, NO } from "../../../constants/modals";
@@ -32,10 +36,13 @@ export const HoursEdit = observer(({ user }: Props) => {
   const {
     editedSomething,
     shiftsToDelete,
+    newShifts,
     setNewShifts,
-    handleValidateAndSaveChanges,
+    handleSaveChanges,
     handleCloseEditingAndResetEverything,
     handleSetShiftsEditOpen,
+    handleAddValidationError,
+    handleResetValidationErrors,
   } = hoursView;
 
   useEffect(() => {
@@ -46,7 +53,7 @@ export const HoursEdit = observer(({ user }: Props) => {
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
-  const handleClose = () => {
+  const handleCloseEditing = () => {
     if (!editedSomething && shiftsToDelete.length === 0) {
       handleSetShiftsEditOpen(false);
       return;
@@ -54,11 +61,53 @@ export const HoursEdit = observer(({ user }: Props) => {
     openModal();
   };
 
+  const handleValidateChanges = () => {
+    handleResetValidationErrors();
+
+    const newShiftsToDelete = [...shiftsToDelete];
+    let newShiftsToUpdate = [...newShifts];
+
+    newShiftsToDelete.length !== 0 &&
+      (newShiftsToUpdate = newShiftsToUpdate.filter(
+        (s) => !newShiftsToDelete.includes(s.id)
+      ));
+
+    newShiftsToUpdate = newShiftsToUpdate.filter(
+      (obj, index) =>
+        newShiftsToUpdate.findIndex((item) => item.id === obj.id) === index
+    );
+
+    const fieldsErrors = fieldsValidation(newShiftsToUpdate);
+    fieldsErrors.length > 0 &&
+      fieldsErrors.map((e) =>
+        handleAddValidationError({
+          shiftId: e.shiftId,
+          message: e.message,
+        })
+      );
+
+    const daysShiftOverlapErrors =
+      daysShiftOverlapValidation(newShiftsToUpdate);
+    daysShiftOverlapErrors.length > 0 &&
+      daysShiftOverlapErrors.map((e) =>
+        handleAddValidationError({
+          shiftId: e.shiftId,
+          message: e.message,
+        })
+      );
+
+    hoursView.shiftValidationErrors.length === 0 &&
+      handleSaveChanges({
+        shiftsToUpdate: newShiftsToUpdate,
+        shiftsToDelete: newShiftsToDelete,
+      });
+  };
+
   return (
     <>
       <div className="flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11">
         <div className="flex flex-row items-center justify-between gap-5">
-          <div className="cursor-pointer" onClick={handleClose}>
+          <div className="cursor-pointer" onClick={handleCloseEditing}>
             <RiCloseFill className="text-4xl" />
           </div>
           <span className="font-button text-2xl">
@@ -67,7 +116,7 @@ export const HoursEdit = observer(({ user }: Props) => {
               {firstName} {lastName}
             </span>
           </span>
-          <Button onClick={handleValidateAndSaveChanges} type="submit">
+          <Button onClick={handleValidateChanges} type="submit">
             Save
           </Button>
         </div>

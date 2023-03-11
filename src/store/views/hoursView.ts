@@ -15,14 +15,8 @@ import {
   Shift,
   ShiftValidationError,
   ShiftInputChange,
+  SaveChanges,
 } from "../../../types/bookings";
-
-// Utils
-import {
-  checkOverlap,
-  checkStartBeforeEnd,
-  daysInWeek,
-} from "../../utils/time";
 
 // Constants
 import { START_TIME, END_TIME } from "../../constants/common";
@@ -121,81 +115,34 @@ export default class HoursView {
     });
   };
 
-  handleValidateAndSaveChanges = async () => {
+  handleResetValidationErrors = () => {
     runInAction(() => {
       this.shiftValidationErrors = [];
     });
+  };
 
-    const shiftsToDelete = [...this.shiftsToDelete];
-    let newShifts = [...this.newShifts];
-
-    if (shiftsToDelete.length !== 0)
-      newShifts = newShifts.filter(
-        (s) => !shiftsToDelete.includes(s.id as string)
-      );
-
-    newShifts.map((s) => {
-      if (s.start_time === "" || s.end_time === "") {
-        runInAction(() => {
-          this.shiftValidationErrors = [
-            ...this.shiftValidationErrors,
-            {
-              shiftId: s.id,
-              message: "Please enter both start time and end time.",
-            },
-          ];
-        });
-      }
-      if (!checkStartBeforeEnd(s.start_time, s.end_time)) {
-        runInAction(() => {
-          this.shiftValidationErrors = [
-            ...this.shiftValidationErrors,
-            { shiftId: s.id, message: "End time is not after start time." },
-          ];
-        });
-      }
+  handleAddValidationError = ({ shiftId, message }: ShiftValidationError) => {
+    runInAction(() => {
+      this.shiftValidationErrors = [
+        ...this.shiftValidationErrors,
+        {
+          shiftId: shiftId,
+          message: message,
+        },
+      ];
     });
+  };
 
-    let finalShiftsToUpdate = newShifts.filter(
-      (obj, index) =>
-        newShifts.findIndex((item) => item.id === obj.id) === index
-    );
-
-    const initialShiftArray: string[][] = [];
-    const days = daysInWeek().map((d) => {
-      return { ...d, shifts: initialShiftArray };
-    });
-
-    days.map((d) => {
-      const dayShifts = finalShiftsToUpdate.filter(
-        (s) => s.iso_weekday === d.number
-      );
-      if (dayShifts.length > 1) {
-        d.shifts = dayShifts.map((ds) => [ds.start_time, ds.end_time]);
-        dayShifts.map((ds) => {
-          if (checkOverlap(d.shifts)) {
-            runInAction(() => {
-              this.shiftValidationErrors = [
-                ...this.shiftValidationErrors,
-                {
-                  shiftId: ds.id as string,
-                  message: "There is time overlap in shifts.",
-                },
-              ];
-            });
-          }
-        });
-      }
-    });
-
-    if (this.shiftValidationErrors.length === 0) {
-      if (shiftsToDelete.length > 0)
-        await this._store.teamStore.deleteMultipleShifts(shiftsToDelete);
-      if (this.editedSomething)
-        await this._store.teamStore.updateShifts(finalShiftsToUpdate);
-      this.fetchShifts(this._store.authStore.currentUser.id);
-      this.handleCloseEditingAndResetEverything();
-    }
+  handleSaveChanges = async ({
+    shiftsToUpdate,
+    shiftsToDelete,
+  }: SaveChanges) => {
+    shiftsToDelete.length > 0 &&
+      (await this._store.teamStore.deleteMultipleShifts(shiftsToDelete));
+    this.editedSomething &&
+      (await this._store.teamStore.updateShifts(shiftsToUpdate));
+    this.fetchShifts(this._store.authStore.currentUser.id);
+    this.handleCloseEditingAndResetEverything();
   };
 
   handleAddShift = (n: number) => {
@@ -239,7 +186,7 @@ export default class HoursView {
           [startOrEnd]: newValue.value,
         })
       : newShifts.push({
-          ...(shift as Shift),
+          ...shift,
           [startOrEnd]: newValue.value,
         });
 

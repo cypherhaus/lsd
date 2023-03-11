@@ -19,6 +19,11 @@ export interface Hours {
   id: string;
 }
 
+export interface SaveChanges {
+  shiftsToUpdate: Shift[];
+  shiftsToDelete: string[];
+}
+
 export interface Shift {
   created_at: string;
   end_time: string;
@@ -42,7 +47,7 @@ export interface ShiftInputChange {
 }
 
 export interface ShiftValidationError {
-  shiftId?: string;
+  shiftId: string;
   message: string;
 }
 
