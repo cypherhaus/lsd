@@ -18,7 +18,7 @@ interface Props {
   addShift: JSX.Element;
 }
 
-export const SingleShift = observer(
+export const SingleShiftInDay = observer(
   ({ shift, index, arrayLength, addShift }: Props) => {
     const { hoursView } = useStore();
     const {

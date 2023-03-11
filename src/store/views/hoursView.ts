@@ -51,7 +51,7 @@ export default class HoursView {
     );
   };
 
-  fetchShifts = async (user: string) => {
+  handleFetchShifts = async (user: string) => {
     await this._store.teamStore.fetchShifts(user);
     this.setActiveWeekShifts();
   };
@@ -109,7 +109,7 @@ export default class HoursView {
     });
   };
 
-  setNewShifts = () => {
+  handleSetNewShifts = () => {
     runInAction(() => {
       this.newShifts = [...this._store.teamStore?.shifts];
     });
@@ -138,10 +138,10 @@ export default class HoursView {
     shiftsToDelete,
   }: SaveChanges) => {
     shiftsToDelete.length > 0 &&
-      (await this._store.teamStore.deleteMultipleShifts(shiftsToDelete));
+      (await this._store.teamStore.postShiftsToDelete(shiftsToDelete));
     this.editedSomething &&
-      (await this._store.teamStore.updateShifts(shiftsToUpdate));
-    this.fetchShifts(this._store.authStore.currentUser.id);
+      (await this._store.teamStore.postShiftsToUpdate(shiftsToUpdate));
+    this.handleFetchShifts(this._store.authStore.currentUser.id);
     this.handleCloseEditingAndResetEverything();
   };
 
@@ -209,7 +209,7 @@ export default class HoursView {
     runInAction(() => {
       this.shiftsToDelete = [];
       this.newShifts = [];
-      this._store.modalView.closeModal();
+      this._store.modalView.handleCloseModal();
       this.shiftsEditOpen = false;
       this.shiftValidationErrors = [];
       this.editedSomething = false;

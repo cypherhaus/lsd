@@ -32,25 +32,7 @@ export default class DashAPI {
     return data;
   };
 
-  addShift = async ({ start_time, end_time, iso_weekday, user_id }: Shift) => {
-    const res = await supabase.from("shifts").upsert({
-      start_time,
-      end_time,
-      iso_weekday,
-      user_id,
-    });
-
-    if (res?.status === 201) return true;
-    return false;
-  };
-
-  postMultipleShifts = async (shifts: Shift[]) => {
-    const res = await supabase.from("shifts").insert(shifts);
-    if (res?.status === 201) return true;
-    return false;
-  };
-
-  updateShifts = async (newShifts: Shift[]) => {
+  postShiftsToUpdate = async (newShifts: Shift[]) => {
     const res = await supabase
       .from("shifts")
       .upsert(newShifts, { onConflict: "id", ignoreDuplicates: false });
@@ -58,13 +40,7 @@ export default class DashAPI {
     return false;
   };
 
-  deleteShift = async (id: string) => {
-    const res = await supabase.from("shifts").delete().eq("id", id);
-    if (res?.status === 201) return true;
-    return false;
-  };
-
-  deleteMultipleShifts = async (shifts: string[]) => {
+  postShiftsToDelete = async (shifts: string[]) => {
     const res = await supabase.from("shifts").delete().in("id", shifts);
     if (res?.status === 201) return true;
     return false;

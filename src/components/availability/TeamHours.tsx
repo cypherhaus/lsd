@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 
 // Components
-import { HoursNavigation } from "../../components/availability/HoursNavigation";
+import { HoursNavigation } from "./HoursNavigation";
 import { Button } from "../../components/common/Button";
 
 // Types

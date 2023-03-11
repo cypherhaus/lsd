@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
-import { SingleShift } from "./SingleShiftInDay";
+import { SingleShiftInDay } from "./SingleShiftInDay";
 
 // Types
 import { Day } from "../../../../types/common";
@@ -18,7 +18,7 @@ interface AddShiftProps {
   number: number;
 }
 
-export const SingleDay = observer(({ day }: Props) => {
+export const SingleDayInEdit = observer(({ day }: Props) => {
   const { hoursView } = useStore();
   const { label, fullLabel, number } = day;
 
@@ -51,7 +51,7 @@ export const SingleDay = observer(({ day }: Props) => {
         >
           {filteredShift.map((shift, index) => {
             return (
-              <SingleShift
+              <SingleShiftInDay
                 key={shift.iso_weekday + "-" + shift.start_time + "-" + index}
                 index={index}
                 shift={shift}

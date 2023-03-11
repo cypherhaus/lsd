@@ -18,13 +18,13 @@ export default class ModalView {
     this._store = store;
   }
 
-  closeModal = () => {
+  handleCloseModal = () => {
     runInAction(() => {
       this.modalOpen = false;
     });
   };
 
-  openModal = () => {
+  handleOpenModal = () => {
     runInAction(() => {
       this.modalOpen = true;
     });

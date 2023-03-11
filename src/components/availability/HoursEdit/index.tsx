@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
-import { SingleDay } from "./SingleDayInEdit";
+import { SingleDayInEdit } from "./SingleDayInEdit";
 import { ConfirmationModal } from "../../modals/ConfirmationModal";
 import { Button } from "../../common/Button";
 
@@ -30,6 +30,7 @@ interface Props {
 
 export const HoursEdit = observer(({ user }: Props) => {
   const { hoursView, modalView } = useStore();
+  const { modalOpen, handleOpenModal, handleCloseModal } = modalView;
   const { firstName, lastName } = user;
   const days = daysInWeek();
 
@@ -37,7 +38,7 @@ export const HoursEdit = observer(({ user }: Props) => {
     editedSomething,
     shiftsToDelete,
     newShifts,
-    setNewShifts,
+    handleSetNewShifts,
     handleSaveChanges,
     handleCloseEditingAndResetEverything,
     handleSetShiftsEditOpen,
@@ -46,10 +47,8 @@ export const HoursEdit = observer(({ user }: Props) => {
   } = hoursView;
 
   useEffect(() => {
-    setNewShifts();
-  }, [setNewShifts]);
-
-  const { modalOpen, openModal, closeModal } = modalView;
+    handleSetNewShifts();
+  }, [handleSetNewShifts]);
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
@@ -58,7 +57,7 @@ export const HoursEdit = observer(({ user }: Props) => {
       handleSetShiftsEditOpen(false);
       return;
     }
-    openModal();
+    handleOpenModal();
   };
 
   const handleValidateChanges = () => {
@@ -66,11 +65,6 @@ export const HoursEdit = observer(({ user }: Props) => {
 
     const newShiftsToDelete = [...shiftsToDelete];
     let newShiftsToUpdate = [...newShifts];
-
-    newShiftsToDelete.length !== 0 &&
-      (newShiftsToUpdate = newShiftsToUpdate.filter(
-        (s) => !newShiftsToDelete.includes(s.id)
-      ));
 
     newShiftsToUpdate = newShiftsToUpdate.filter(
       (obj, index) =>
@@ -122,7 +116,7 @@ export const HoursEdit = observer(({ user }: Props) => {
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {days.map((day: Day) => (
-            <SingleDay key={day.number} day={day} />
+            <SingleDayInEdit key={day.number} day={day} />
           ))}
         </div>
       </div>
@@ -130,7 +124,7 @@ export const HoursEdit = observer(({ user }: Props) => {
         <ConfirmationModal
           title={UNSAVED_CHANGES}
           message={"Are you sure you want to cancel editing shifts?"}
-          onCancel={closeModal}
+          onCancel={handleCloseModal}
           onSubmit={handleCloseEditingAndResetEverything}
           cancelText={NO}
           submitText={YES}

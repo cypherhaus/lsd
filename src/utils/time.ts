@@ -63,9 +63,7 @@ export const checkStartBeforeEnd = (
 ): boolean => {
   const startTime = moment(startTimeRaw, "hh:mm:ss");
   const endTime = moment(endTimeRaw, "hh:mm:ss");
-  if (endTime.isBefore(startTime)) {
-    return false;
-  }
+  if (endTime.isBefore(startTime)) return false;
   return true;
 };
 

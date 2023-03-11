@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Layout } from "../../components/common/Layout";
 import { useStore } from "../../store";
+import { useRouter } from "next/router";
 
 // Config
 import { supabase } from "../../config/supabase";
@@ -14,9 +15,10 @@ import { TeamHours } from "../../components/availability/TeamHours";
 import { User } from "../../../types/auth";
 
 const Availability = observer(() => {
+  const router = useRouter();
   const initialCurrentUserData: User = { firstName: "", lastName: "" };
   const { hoursView, authStore, authView } = useStore();
-  const { fetchShifts, shiftsEditOpen } = hoursView;
+  const { handleFetchShifts, shiftsEditOpen } = hoursView;
   const { init } = authView;
   const [currentUserData, setCurrentUserData] = useState(
     initialCurrentUserData
@@ -25,7 +27,7 @@ const Availability = observer(() => {
   useEffect(() => {
     const retrieveSession = async () => {
       const { data } = await supabase.auth.getSession();
-      if (data.session) init(data.session?.user?.id);
+      data.session && init(data.session?.user?.id);
     };
     retrieveSession();
 
@@ -35,10 +37,22 @@ const Availability = observer(() => {
         last_name: lastName,
         id,
       } = authStore.currentUser;
-      fetchShifts(id);
+
+      if (!authStore.currentUser.business_id) {
+        router.push("/");
+        return;
+      }
+
+      handleFetchShifts(id);
       setCurrentUserData({ firstName: firstName, lastName: lastName });
     }
-  }, [authStore.currentUser, setCurrentUserData, fetchShifts, init]);
+  }, [
+    authStore.currentUser,
+    setCurrentUserData,
+    handleFetchShifts,
+    init,
+    router,
+  ]);
 
   return (
     <Layout>

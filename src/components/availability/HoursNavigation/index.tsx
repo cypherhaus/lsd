@@ -1,23 +1,25 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { useStore } from "../../store";
+import { useStore } from "../../../store";
+
+// Components
+import { SingleDayInNavigation } from "./SingleDayInNavigation";
 
 // Types
-import { User } from "../../../types/auth";
+import { User } from "../../../../types/auth";
 
 //Icons
 import { RiEditLine } from "react-icons/ri";
 
 // Utils
-import { formatHours, daysInWeek } from "../../utils/time";
+import { daysInWeek } from "../../../utils/time";
 
 interface Props {
   user: User;
 }
 
 export const HoursNavigation = observer(({ user }: Props) => {
-  const { hoursView, teamStore } = useStore();
-  const { shifts } = teamStore;
+  const { hoursView } = useStore();
   const { handleSetShiftsEditOpen } = hoursView;
   const { firstName, lastName } = user;
   const days = daysInWeek();
@@ -60,36 +62,9 @@ export const HoursNavigation = observer(({ user }: Props) => {
                 </div>
               </div>
             </td>
-            {days.map((day) => {
-              const filteredShift = shifts.filter(
-                (shift) => shift.iso_weekday === day.number
-              );
-              return (
-                <td className="lg:w-[12.5%] p-2 align-top" key={day.label}>
-                  <div className="flex flex-col gap-2">
-                    {filteredShift.map((shift) => {
-                      if (shift.start_time !== null) {
-                        return (
-                          <span
-                            key={shift.iso_weekday + "" + shift.start_time}
-                            className="rounded-md text-center bg-white lg:px-1 py-1 px-2"
-                          >
-                            {formatHours(shift.start_time) +
-                              " - " +
-                              formatHours(shift.end_time)}
-                          </span>
-                        );
-                      }
-                    })}
-                    {filteredShift.length === 0 && (
-                      <span className="text-2xl font-button text-center">
-                        —
-                      </span>
-                    )}
-                  </div>
-                </td>
-              );
-            })}
+            {days.map((day) => (
+              <SingleDayInNavigation key={day.label} day={day} />
+            ))}
           </tr>
         </tbody>
       </table>

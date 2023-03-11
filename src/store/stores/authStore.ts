@@ -29,6 +29,7 @@ export default class AuthStore {
         this.currentUser.id
       );
       if (response) {
+        this.fetchProfile(this.currentUser.id);
         successToast("Business added successfully");
         return true;
       }

@@ -32,29 +32,11 @@ export default class TeamStore {
     });
   }
 
-  async addShift(shift: Shift) {
+  async postShiftsToUpdate(newShifts: Shift[]) {
     try {
-      const response = await this._store.api.dashAPI.addShift(shift);
-      if (response) return true;
-    } catch (err) {
-      errorToast("Cannot save changes.");
-    }
-    return false;
-  }
-
-  async addMultipleShifts(shifts: Shift[]) {
-    try {
-      const response = await this._store.api.dashAPI.postMultipleShifts(shifts);
-      if (response) return true;
-    } catch (err) {
-      errorToast("Cannot save changes.");
-    }
-    return false;
-  }
-
-  async updateShifts(newShifts: Shift[]) {
-    try {
-      const response = await this._store.api.dashAPI.updateShifts(newShifts);
+      const response = await this._store.api.dashAPI.postShiftsToUpdate(
+        newShifts
+      );
       if (response) {
         successToast("Saved changes sucessfully.");
         return true;
@@ -65,21 +47,9 @@ export default class TeamStore {
     return false;
   }
 
-  async deleteShiftById(id: string) {
+  async postShiftsToDelete(shifts: string[]) {
     try {
-      const response = await this._store.api.dashAPI.deleteShift(id);
-      if (response) return true;
-    } catch (err) {
-      errorToast("Cannot delete shift.");
-    }
-    return false;
-  }
-
-  async deleteMultipleShifts(shifts: string[]) {
-    try {
-      const response = await this._store.api.dashAPI.deleteMultipleShifts(
-        shifts
-      );
+      const response = await this._store.api.dashAPI.postShiftsToDelete(shifts);
       if (response) return true;
       successToast("Saved changes sucessfully.");
     } catch (err) {
@@ -90,10 +60,7 @@ export default class TeamStore {
 
   async fetchTeamMembers(businessId: string) {
     const data = await this._store.api.dashAPI.fetchTeam(businessId);
-
-    if (data) {
-      runInAction(() => (this.members = data));
-    }
+    data && runInAction(() => (this.members = data));
   }
 
   async addTeamMember(businessId: string) {

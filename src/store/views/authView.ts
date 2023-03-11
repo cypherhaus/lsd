@@ -38,25 +38,21 @@ export default class AuthView {
 
   async init(id: string) {
     // Fetch the current users profile info
-    if (!this._store.authStore.currentUser) {
-      await this._store.authStore.fetchProfile(id);
-    }
+    !this._store.authStore.currentUser &&
+      (await this._store.authStore.fetchProfile(id));
 
     // Fetch all team members associated with the business
-    if (
-      this._store.authStore.currentUser &&
-      !this._store.teamStore.members.length
-    ) {
-      await this._store.teamStore.fetchTeamMembers(
+    this._store.authStore.currentUser &&
+      !this._store.teamStore.members.length &&
+      (await this._store.teamStore.fetchTeamMembers(
         this._store.authStore.currentUser.business_id
-      );
-    }
+      ));
   }
 
   // Logout user
   async handleLogoutClick() {
     const success = await this._store.authStore.logout();
-    if (success) Router.push("/");
+    success && Router.push("/");
   }
 
   // Login user
@@ -78,6 +74,6 @@ export default class AuthView {
     }
 
     const success = await this._store.authStore.postBusiness(this.businessName);
-    if (success) Router.push("/dashboard/hours");
+    success && Router.push("/dashboard/hours");
   }
 }
