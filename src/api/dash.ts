@@ -87,9 +87,7 @@ export default class DashAPI {
       .select("*")
       .eq("business_id", businessId);
 
-    if (response?.data) {
-      return response.data;
-    }
+    if (response?.data) return response.data;
   };
 
   addTeamMember = async (businessId: string) => {

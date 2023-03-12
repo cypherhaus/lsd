@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
@@ -19,15 +19,20 @@ interface Props {
 }
 
 export const HoursNavigation = observer(({ user }: Props) => {
-  const { hoursView } = useStore();
-  const { handleSetShiftsEditOpen } = hoursView;
+  const { hoursView, teamStore } = useStore();
+  const { shifts } = teamStore;
+  const { handleSetShiftsEditOpen, handleStopLoading } = hoursView;
   const { firstName, lastName } = user;
   const days = daysInWeek();
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
+  useEffect(() => {
+    if (shifts.length !== 0) handleStopLoading();
+  }, [shifts, handleStopLoading]);
+
   return (
-    <div className="px-10 py-12">
+    <div className={"px-10 py-12"}>
       <table className="flex flex-row flex-no-wrap rounded-lg overflow-hidden">
         <thead className="text-3xl p-0 m-0">
           <tr className="flex flex-col flex-no wrap lg:table-row">

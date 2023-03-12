@@ -4,6 +4,7 @@ import { useStore } from "../../store";
 // Components
 import { HoursNavigation } from "./HoursNavigation";
 import { Button } from "../../components/common/Button";
+import { Loading } from "../common/Loading";
 
 // Types
 import { User } from "../../../types/auth";
@@ -20,19 +21,22 @@ interface Props {
 
 export const TeamHours = observer(({ user }: Props) => {
   const { hoursView } = useStore();
-  const { handleAddMember } = hoursView;
+  const { handleAddMember, loading } = hoursView;
 
   return (
     <>
-      <HoursNavigation user={user} />
-      <div className="flex flex-col items-center">
-        <Button
-          icon={<RiGroupLine />}
-          onClick={handleAddMember}
-          variant={BUTTON_VARIANT.WHITE}
-        >
-          Add Team Member
-        </Button>
+      {loading && <Loading />}
+      <div className={loading ? "hidden" : undefined}>
+        <HoursNavigation user={user} />
+        <div className="flex flex-col items-center">
+          <Button
+            icon={<RiGroupLine />}
+            onClick={handleAddMember}
+            variant={BUTTON_VARIANT.WHITE}
+          >
+            Add Team Member
+          </Button>
+        </div>
       </div>
     </>
   );

@@ -52,9 +52,7 @@ export default class AuthStore {
         const userProfile = await this._store.api.dashAPI.fetchProfile(
           response.data.user?.id
         );
-        runInAction(() => {
-          this.currentUser = userProfile;
-        });
+        runInAction(() => (this.currentUser = userProfile));
       }
 
       return null;
@@ -78,9 +76,7 @@ export default class AuthStore {
         const userProfile = await this._store.api.dashAPI.fetchProfile(
           response.data.user?.id
         );
-        runInAction(() => {
-          this.currentUser = userProfile;
-        });
+        runInAction(() => (this.currentUser = userProfile));
       }
 
       return null;
@@ -93,14 +89,11 @@ export default class AuthStore {
   async logout() {
     try {
       const success = await this._store.api.authAPI.signOut();
-      runInAction(() => {
-        this.currentUser = null;
-      });
+      runInAction(() => (this.currentUser = null));
       successToast("Signed out");
       return success;
     } catch (err) {
       console.log({ err });
-
       return null;
     }
   }
@@ -108,10 +101,7 @@ export default class AuthStore {
   async fetchProfile(id: string) {
     try {
       const data = await this._store.api.dashAPI.fetchProfile(id);
-
-      runInAction(() => {
-        this.currentUser = data;
-      });
+      runInAction(() => (this.currentUser = data));
     } catch (err) {
       console.log("Error fetching profile", err);
     }

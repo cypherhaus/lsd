@@ -33,6 +33,10 @@ export default class HoursView {
 
   shiftValidationErrors: ShiftValidationError[] = [];
 
+  // Loading shifts
+  loaded: boolean = false;
+  loading: boolean = true;
+
   // Edited shifts
   newShifts: Shift[] = [];
   editedSomething = false;
@@ -78,15 +82,12 @@ export default class HoursView {
       day = day.clone().add(1, "days");
     }
 
-    runInAction(() => {
-      this.activeWeekShifts = shiftDays;
-    });
+    runInAction(() => (this.activeWeekShifts = shiftDays));
   };
 
   prevWeek = () => {
     runInAction(() => {
       if (!this.weekStart || !this.weekEnd) return;
-
       this.weekStart = this.weekStart.clone().subtract(7, "days");
       this.weekEnd = this.weekEnd.clone().subtract(7, "days");
     });
@@ -111,16 +112,26 @@ export default class HoursView {
     });
   };
 
-  handleSetNewShifts = () => {
+  handleStartLoading = () => {
     runInAction(() => {
-      this.newShifts = [...this._store.teamStore?.shifts];
+      this.loaded = false;
+      this.loading = true;
     });
   };
 
-  handleResetValidationErrors = () => {
+  handleStopLoading = () => {
     runInAction(() => {
-      this.shiftValidationErrors = [];
+      this.loaded = true;
+      this.loading = false;
     });
+  };
+
+  handleSetNewShifts = () => {
+    runInAction(() => (this.newShifts = [...this._store.teamStore?.shifts]));
+  };
+
+  handleResetValidationErrors = () => {
+    runInAction(() => (this.shiftValidationErrors = []));
   };
 
   handleAddValidationError = ({ shiftId, message }: ShiftValidationError) => {
@@ -143,38 +154,42 @@ export default class HoursView {
         this.newShifts.findIndex((item) => item.id === obj.id) === index
     );
 
-    runInAction(() => {
-      this.newShifts = deletedDuplicates;
-    });
+    runInAction(() => (this.newShifts = deletedDuplicates));
 
     const newShiftsToUpdate = [...this.newShifts];
 
     const fieldsErrors = fieldsValidation(newShiftsToUpdate);
-    if (fieldsErrors.length > 0)
+    if (fieldsErrors.length > 0) {
       fieldsErrors.map((e) =>
         this.handleAddValidationError({
           shiftId: e.shiftId,
           message: e.message,
         })
       );
+    }
 
     const daysShiftOverlapErrors = overlapValidation(newShiftsToUpdate);
-    if (daysShiftOverlapErrors.length > 0)
+    if (daysShiftOverlapErrors.length > 0) {
       daysShiftOverlapErrors.map((e) =>
         this.handleAddValidationError({
           shiftId: e.shiftId,
           message: e.message,
         })
       );
+    }
 
     if (this.shiftValidationErrors.length === 0) this.handleSaveChanges();
   };
 
   handleSaveChanges = async () => {
-    if (this.shiftsToDelete.length > 0)
+    if (this.shiftsToDelete.length > 0) {
       await this._store.teamStore.postShiftsToDelete(this.shiftsToDelete);
-    if (this.editedSomething)
+    }
+
+    if (this.editedSomething) {
       await this._store.teamStore.postShiftsToUpdate(this.newShifts);
+    }
+
     this.handleFetchShifts(this._store.authStore.currentUser.id);
     this.handleCloseEditingReset();
   };
@@ -184,10 +199,9 @@ export default class HoursView {
     const id = uuidv4();
     const currentTime = moment().format();
 
-    if (!this.editedSomething)
-      runInAction(() => {
-        this.editedSomething = true;
-      });
+    if (!this.editedSomething) {
+      runInAction(() => (this.editedSomething = true));
+    }
 
     runInAction(() => {
       this.newShifts = [
@@ -208,10 +222,9 @@ export default class HoursView {
     const startOrEnd = isStartTime ? START_TIME : END_TIME;
     const newShifts = [...this.newShifts];
 
-    if (!this.editedSomething)
-      runInAction(() => {
-        this.editedSomething = true;
-      });
+    if (!this.editedSomething) {
+      runInAction(() => (this.editedSomething = true));
+    }
 
     const index = newShifts.map((s: Shift) => s.id).indexOf(shift?.id);
     index !== -1
@@ -224,9 +237,7 @@ export default class HoursView {
           [startOrEnd]: newValue?.value,
         });
 
-    runInAction(() => {
-      this.newShifts = newShifts;
-    });
+    runInAction(() => (this.newShifts = newShifts));
   };
 
   handleAddShiftToDelete = (shiftId: string) => {
@@ -259,9 +270,8 @@ export default class HoursView {
   };
 
   handleSetShiftsEditOpen = (v: boolean) => {
-    runInAction(() => {
-      this.shiftsEditOpen = v;
-    });
+    this.handleStartLoading();
+    runInAction(() => (this.shiftsEditOpen = v));
   };
 
   fetchTeamShifts = () => {};

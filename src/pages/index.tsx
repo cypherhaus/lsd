@@ -34,8 +34,9 @@ const Home = observer(() => {
       return;
     }
 
-    if (authStore.currentUser && !router.pathname.includes(HOURS_ROUTE))
+    if (authStore.currentUser && !router.pathname.includes(HOURS_ROUTE)) {
       router.push(HOURS_ROUTE);
+    }
   }, [authStore.currentUser, init, router]);
 
   return (

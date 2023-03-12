@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
@@ -12,16 +13,22 @@ interface Props {
 }
 
 export const NavigationDay = observer(({ day }: Props) => {
-  const { teamStore } = useStore();
+  const { teamStore, hoursView } = useStore();
+  const { loaded, handleStopLoading } = hoursView;
   const { shifts } = teamStore;
-  const filteredShift = shifts.filter(
+  const filteredShifts = shifts.filter(
     (shift) => shift.iso_weekday === day.number
   );
+
+  useEffect(() => {
+    if (loaded) handleStopLoading();
+  }, [loaded, handleStopLoading]);
+
   return (
     <td className="lg:w-[12.5%] p-2 align-top">
       <div className="flex flex-col gap-2">
         <>
-          {filteredShift.map((shift) => (
+          {filteredShifts.map((shift) => (
             <span
               key={shift.id}
               className="rounded-md text-center bg-white lg:px-1 py-1 px-2"
@@ -31,7 +38,7 @@ export const NavigationDay = observer(({ day }: Props) => {
                 formatHours(shift.end_time)}
             </span>
           ))}
-          {filteredShift.length === 0 && (
+          {filteredShifts.length === 0 && (
             <span className="text-2xl font-button text-center">—</span>
           )}
         </>

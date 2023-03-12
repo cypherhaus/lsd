@@ -43,15 +43,18 @@ export default class AuthView {
 
   async init(id: string) {
     // Fetch the current users profile info
-    if (!this._store.authStore.currentUser)
+    if (!this._store.authStore.currentUser) {
       await this._store.authStore.fetchProfile(id);
+    }
 
     // Fetch all team members associated with the business
-    if (this._store.authStore.currentUser)
-      if (!this._store.teamStore.members.length)
+    if (this._store.authStore.currentUser) {
+      if (!this._store.teamStore.members.length) {
         await this._store.teamStore.fetchTeamMembers(
           this._store.authStore.currentUser.business_id
         );
+      }
+    }
   }
 
   // Logout user

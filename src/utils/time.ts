@@ -26,11 +26,12 @@ export const overlapValidation = (data: Shift[]): ShiftValidationError[] => {
     if (dayShifts.length > 1) {
       d.shifts = dayShifts.map((ds) => [ds.start_time, ds.end_time]);
       dayShifts.map((ds) => {
-        if (checkOverlap(d.shifts))
+        if (checkOverlap(d.shifts)) {
           errors.push({
             shiftId: ds.id,
             message: "There is time overlap in shifts.",
           });
+        }
       });
     }
   });
@@ -40,17 +41,19 @@ export const overlapValidation = (data: Shift[]): ShiftValidationError[] => {
 export const fieldsValidation = (data: Shift[]): ShiftValidationError[] => {
   const errors: ShiftValidationError[] = [];
   data.map((s) => {
-    if (s.start_time === "" || s.end_time === "")
+    if (s.start_time === "" || s.end_time === "") {
       errors.push({
         shiftId: s.id,
         message: "Please enter both start time and end time.",
       });
+    }
 
-    if (!checkStartBeforeEnd(s.start_time, s.end_time))
+    if (!checkStartBeforeEnd(s.start_time, s.end_time)) {
       errors.push({
         shiftId: s.id,
         message: "End time is not after start time.",
       });
+    }
   });
   return errors;
 };

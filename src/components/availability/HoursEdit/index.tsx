@@ -6,6 +6,7 @@ import { useStore } from "../../../store";
 import { EditDay } from "./EditDay";
 import { ConfirmationModal } from "../../modals/ConfirmationModal";
 import { Button } from "../../common/Button";
+import { Loading } from "../../common/Loading";
 
 //Types
 import { User } from "../../../../types/auth";
@@ -35,6 +36,9 @@ export const HoursEdit = observer(({ user }: Props) => {
     handleCloseEditingReset,
     handleCloseEditing,
     handleValidateChanges,
+    handleStopLoading,
+    loading,
+    newShifts,
   } = hoursView;
 
   useEffect(() => {
@@ -43,9 +47,18 @@ export const HoursEdit = observer(({ user }: Props) => {
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
+  useEffect(() => {
+    if (newShifts.length !== 0) handleStopLoading();
+  }, [newShifts, handleStopLoading]);
+
   return (
     <>
-      <div className="flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11">
+      {loading && <Loading />}
+      <div
+        className={
+          loading ? "hidden" : "flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11"
+        }
+      >
         <div className="flex flex-row items-center justify-between gap-5">
           <div className="cursor-pointer" onClick={handleCloseEditing}>
             <RiCloseFill className="text-4xl" />
