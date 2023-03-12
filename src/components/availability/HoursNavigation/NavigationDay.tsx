@@ -11,7 +11,7 @@ interface Props {
   day: Day;
 }
 
-export const SingleDayInNavigation = observer(({ day }: Props) => {
+export const NavigationDay = observer(({ day }: Props) => {
   const { teamStore } = useStore();
   const { shifts } = teamStore;
   const filteredShift = shifts.filter(

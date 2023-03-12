@@ -43,9 +43,9 @@ export const TimeInput = ({
         control: (base, state) => ({
           ...base,
           boxShadow: "none",
-          borderColor: state.menuIsOpen ? "#ED5520" : "#000",
+          borderColor: state.menuIsOpen ? "#D9C5F6" : "#000",
           "&:hover": {
-            borderColor: "#ED5520",
+            borderColor: "#D9C5F6",
           },
         }),
         dropdownIndicator: (base) => ({
@@ -65,7 +65,7 @@ export const TimeInput = ({
           backgroundColor: state.isFocused
             ? "#EDECDF"
             : state.isSelected
-            ? "#ED5520"
+            ? "#D9C5F6"
             : "#fff",
           "&:hover": {
             backgroundColor: "#EDECDF",

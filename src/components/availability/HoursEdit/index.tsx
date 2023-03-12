@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
-import { SingleDayInEdit } from "./SingleDayInEdit";
+import { EditDay } from "./EditDay";
 import { ConfirmationModal } from "../../modals/ConfirmationModal";
 import { Button } from "../../common/Button";
 
@@ -32,7 +32,7 @@ export const HoursEdit = observer(({ user }: Props) => {
 
   const {
     handleSetNewShifts,
-    handleCloseEditingAndResetEverything,
+    handleCloseEditingReset,
     handleCloseEditing,
     handleValidateChanges,
   } = hoursView;
@@ -62,7 +62,7 @@ export const HoursEdit = observer(({ user }: Props) => {
         </div>
         <div className="flex flex-col basis-auto items-center gap-5">
           {days.map((day: Day) => (
-            <SingleDayInEdit key={day.number} day={day} />
+            <EditDay key={day.number} day={day} />
           ))}
         </div>
       </div>
@@ -71,7 +71,7 @@ export const HoursEdit = observer(({ user }: Props) => {
           title={UNSAVED_CHANGES}
           message="Are you sure you want to cancel editing shifts?"
           onCancel={handleCloseModal}
-          onSubmit={handleCloseEditingAndResetEverything}
+          onSubmit={handleCloseEditingReset}
           cancelText="NO"
           submitText="YES"
           buttonReverse

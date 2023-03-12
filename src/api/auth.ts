@@ -24,11 +24,11 @@ export default class AuthAPI {
         password,
       });
 
-      response.data?.user?.id &&
-        (await supabase
+      if (response.data?.user?.id)
+        await supabase
           .from(PROFILES_TABLE)
           .update({ first_name: firstName, last_name: lastName })
-          .eq("id", response.data?.user?.id));
+          .eq("id", response.data?.user?.id);
 
       if (response) return response;
     } catch (error) {

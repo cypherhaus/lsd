@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
-import { SingleDayInNavigation } from "./SingleDayInNavigation";
+import { NavigationDay } from "./NavigationDay";
 
 // Types
 import { User } from "../../../../types/auth";
@@ -63,7 +63,7 @@ export const HoursNavigation = observer(({ user }: Props) => {
               </div>
             </td>
             {days.map((day) => (
-              <SingleDayInNavigation key={day.label} day={day} />
+              <NavigationDay key={day.label} day={day} />
             ))}
           </tr>
         </tbody>

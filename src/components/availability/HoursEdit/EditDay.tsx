@@ -2,7 +2,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
-import { SingleShiftInDay } from "./SingleShiftInDay";
+import { DayShift } from "./DayShift";
+import { Button } from "../../common/Button";
 
 // Types
 import { Day } from "../../../../types/common";
@@ -10,17 +11,16 @@ import { Day } from "../../../../types/common";
 // Icons
 import { RiInformationFill } from "react-icons/ri";
 
+// Constants
+import { BUTTON_VARIANT } from "../../../constants/common";
+
 interface Props {
   day: Day;
 }
 
-interface AddShiftProps {
-  number: number;
-}
-
-export const SingleDayInEdit = observer(({ day }: Props) => {
+export const EditDay = observer(({ day }: Props) => {
   const { hoursView } = useStore();
-  const { label, fullLabel, number } = day;
+  const { fullLabel, number } = day;
   const { newShifts, shiftsToDelete, handleAddShift } = hoursView;
 
   const filteredShift = newShifts?.filter(
@@ -33,13 +33,10 @@ export const SingleDayInEdit = observer(({ day }: Props) => {
     <div className="w-full lg:w-3/4 xl:w-3/5 2xl:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6 gap-5">
       <span className="w-1/3 font-bold font-button text-2xl">{fullLabel}</span>
       <div className="w-2/3">
-        <div
-          className="flex align-baseline font-button gap-4 justify-start flex-col xl:basis-9-perc basis-11-perc"
-          key={label}
-        >
+        <div className="flex align-baseline font-button gap-4 justify-start flex-col xl:basis-9-perc basis-11-perc">
           {filteredShift.map((shift, index) => {
             return (
-              <SingleShiftInDay
+              <DayShift
                 key={shift.id}
                 index={index}
                 shift={shift}
@@ -56,12 +53,12 @@ export const SingleDayInEdit = observer(({ day }: Props) => {
                   No shifts on this day
                 </span>
               </div>
-              <div
+              <Button
                 onClick={() => handleAddShift(number)}
-                className="font-button font-bold cursor-pointer mt-3"
+                variant={BUTTON_VARIANT.TRANSPARENT}
               >
                 Add Shift
-              </div>
+              </Button>
             </div>
           )}
         </div>

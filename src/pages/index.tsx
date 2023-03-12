@@ -23,19 +23,18 @@ const Home = observer(() => {
   useEffect(() => {
     const rerieveSession = async () => {
       const { data } = await supabase.auth.getSession();
-      data.session && init(data.session?.user?.id);
+      if (data.session) init(data.session?.user?.id);
     };
 
     rerieveSession();
 
-    !authStore.currentUser && setIsOnboarding(false);
+    if (!authStore.currentUser) setIsOnboarding(false);
     if (authStore.currentUser && !authStore.currentUser.business_id) {
       setIsOnboarding(true);
       return;
     }
 
-    authStore.currentUser &&
-      !router.pathname.includes(HOURS_ROUTE) &&
+    if (authStore.currentUser && !router.pathname.includes(HOURS_ROUTE))
       router.push(HOURS_ROUTE);
   }, [authStore.currentUser, init, router]);
 

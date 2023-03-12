@@ -14,9 +14,7 @@ export const formatHoursOnEdit = (time: string): string => {
   return moment(string, "DD/MM/YYYY HH:mm:ss").format("h:mma");
 };
 
-export const daysShiftOverlapValidation = (
-  data: Shift[]
-): ShiftValidationError[] => {
+export const overlapValidation = (data: Shift[]): ShiftValidationError[] => {
   const errors: ShiftValidationError[] = [];
   const initialShiftArray: string[][] = [];
   const days = daysInWeek().map((d) => {
@@ -28,7 +26,7 @@ export const daysShiftOverlapValidation = (
     if (dayShifts.length > 1) {
       d.shifts = dayShifts.map((ds) => [ds.start_time, ds.end_time]);
       dayShifts.map((ds) => {
-        checkOverlap(d.shifts) &&
+        if (checkOverlap(d.shifts))
           errors.push({
             shiftId: ds.id,
             message: "There is time overlap in shifts.",
@@ -42,13 +40,13 @@ export const daysShiftOverlapValidation = (
 export const fieldsValidation = (data: Shift[]): ShiftValidationError[] => {
   const errors: ShiftValidationError[] = [];
   data.map((s) => {
-    (s.start_time === "" || s.end_time === "") &&
+    if (s.start_time === "" || s.end_time === "")
       errors.push({
         shiftId: s.id,
         message: "Please enter both start time and end time.",
       });
 
-    !checkStartBeforeEnd(s.start_time, s.end_time) &&
+    if (!checkStartBeforeEnd(s.start_time, s.end_time))
       errors.push({
         shiftId: s.id,
         message: "End time is not after start time.",
@@ -76,7 +74,7 @@ export const checkOverlap = (timeSegments: string[][]): boolean => {
     if (!(i + 1 === timeSegments.length)) {
       const currentEndTime = timeSegments[i][1];
       const nextStartTime = timeSegments[i + 1][0];
-      currentEndTime > nextStartTime && (overlap = true);
+      if (currentEndTime > nextStartTime) overlap = true;
     }
   });
   return overlap;

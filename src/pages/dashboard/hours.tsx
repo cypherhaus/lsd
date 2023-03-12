@@ -30,7 +30,7 @@ const Availability = observer(() => {
   useEffect(() => {
     const retrieveSession = async () => {
       const { data } = await supabase.auth.getSession();
-      data.session && init(data.session?.user?.id);
+      if (data.session) init(data.session?.user?.id);
     };
     retrieveSession();
 

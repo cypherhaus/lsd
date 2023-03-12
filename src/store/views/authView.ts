@@ -43,21 +43,21 @@ export default class AuthView {
 
   async init(id: string) {
     // Fetch the current users profile info
-    !this._store.authStore.currentUser &&
-      (await this._store.authStore.fetchProfile(id));
+    if (!this._store.authStore.currentUser)
+      await this._store.authStore.fetchProfile(id);
 
     // Fetch all team members associated with the business
-    this._store.authStore.currentUser &&
-      !this._store.teamStore.members.length &&
-      (await this._store.teamStore.fetchTeamMembers(
-        this._store.authStore.currentUser.business_id
-      ));
+    if (this._store.authStore.currentUser)
+      if (!this._store.teamStore.members.length)
+        await this._store.teamStore.fetchTeamMembers(
+          this._store.authStore.currentUser.business_id
+        );
   }
 
   // Logout user
   async handleLogoutClick() {
     const success = await this._store.authStore.logout();
-    success && Router.push(START_ROUTE);
+    if (success) Router.push(START_ROUTE);
   }
 
   // Login user
@@ -79,6 +79,6 @@ export default class AuthView {
     }
 
     const success = await this._store.authStore.postBusiness(this.businessName);
-    success && Router.push(HOURS_ROUTE);
+    if (success) Router.push(HOURS_ROUTE);
   }
 }

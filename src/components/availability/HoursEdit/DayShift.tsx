@@ -4,12 +4,16 @@ import { useStore } from "../../../store";
 // Components
 import { TimeInput } from "../../common/TimeInput";
 import { ErrorLabel } from "../../common/ErrorLabel";
+import { Button } from "../../common/Button";
 
 // Types
 import { Shift } from "../../../../types/bookings";
 
 // Icons
 import { RiDeleteBinLine } from "react-icons/ri";
+
+// Constants
+import { BUTTON_VARIANT } from "../../../constants/common";
 
 interface Props {
   shift: Shift;
@@ -18,17 +22,14 @@ interface Props {
   number: number;
 }
 
-export const SingleShiftInDay = observer(
+export const DayShift = observer(
   ({ shift, index, arrayLength, number }: Props) => {
     const { hoursView } = useStore();
     const { handleAddShift } = hoursView;
     const { start_time: startTime, end_time: endTime, id } = shift;
 
-    const {
-      handleAddShiftReadyToDelete,
-      handleEditShift,
-      shiftValidationErrors,
-    } = hoursView;
+    const { handleAddShiftToDelete, handleEditShift, shiftValidationErrors } =
+      hoursView;
 
     return (
       <div className="flex flex-col w-full gap-2">
@@ -63,17 +64,17 @@ export const SingleShiftInDay = observer(
                   )
               )}
               {index === arrayLength - 1 && (
-                <div
+                <Button
                   onClick={() => handleAddShift(number)}
-                  className="font-button font-bold cursor-pointer mt-3"
+                  variant={BUTTON_VARIANT.TRANSPARENT}
                 >
                   Add Shift
-                </div>
+                </Button>
               )}
             </div>
           </div>
           <div
-            onClick={() => handleAddShiftReadyToDelete(id)}
+            onClick={() => handleAddShiftToDelete(id)}
             className="flex flex-col items-end cursor-pointer"
           >
             <RiDeleteBinLine className="text-3xl text-brandOrange" />
