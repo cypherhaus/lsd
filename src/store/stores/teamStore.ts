@@ -58,7 +58,7 @@ export default class TeamStore {
 
   async fetchTeamMembers(businessId: string) {
     const data = await this._store.api.dashAPI.fetchTeam(businessId);
-    data && runInAction(() => (this.members = data));
+    if (data) runInAction(() => (this.members = data));
   }
 
   async addTeamMember(businessId: string) {

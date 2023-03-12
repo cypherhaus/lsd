@@ -227,15 +227,19 @@ export default class HoursView {
     }
 
     const index = newShifts.map((s: Shift) => s.id).indexOf(shift?.id);
-    index !== -1
-      ? (newShifts[index] = {
-          ...newShifts[index],
-          [startOrEnd]: newValue?.value,
-        })
-      : newShifts.push({
-          ...shift,
-          [startOrEnd]: newValue?.value,
-        });
+
+    if (index === -1) {
+      newShifts.push({
+        ...shift,
+        [startOrEnd]: newValue?.value,
+      });
+      return;
+    }
+
+    newShifts[index] = {
+      ...newShifts[index],
+      [startOrEnd]: newValue?.value,
+    };
 
     runInAction(() => (this.newShifts = newShifts));
   };
