@@ -122,6 +122,12 @@ export default class HoursView {
     );
   };
 
+  handleFilterShifts = (day: number) => {
+    return this.newShifts?.filter(
+      (shift) => shift.iso_weekday === day
+    ) as Shift[];
+  };
+
   handleStartLoading = () => runInAction(() => (this.shiftsLoading = true));
   handleStopLoading = () => runInAction(() => (this.shiftsLoading = false));
 

@@ -28,6 +28,7 @@ export const HoursEdit = observer(() => {
     handleCloseEditingReset,
     handleCloseEditing,
     handleValidateChanges,
+    handleFilterShifts,
     shiftsLoading,
     userInfo,
   } = hoursView;
@@ -38,34 +39,35 @@ export const HoursEdit = observer(() => {
 
   return (
     <>
-      {shiftsLoading && <Loading />}
-      <div
-        className={
-          shiftsLoading
-            ? "hidden"
-            : "flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11"
-        }
-      >
-        <div className="flex flex-row items-center justify-between gap-5">
-          <div className="cursor-pointer" onClick={handleCloseEditing}>
-            <RiCloseFill className="text-4xl" />
-          </div>
-          <span className="font-button text-2xl">
-            Edit Shifts for{" "}
-            <span className="font-bold">
-              {firstName} {lastName}
+      {shiftsLoading ? (
+        <Loading />
+      ) : (
+        <div className="flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11">
+          <div className="flex flex-row items-center justify-between gap-5">
+            <div className="cursor-pointer" onClick={handleCloseEditing}>
+              <RiCloseFill className="text-4xl" />
+            </div>
+            <span className="font-button text-2xl">
+              Edit Shifts for{" "}
+              <span className="font-bold">
+                {firstName} {lastName}
+              </span>
             </span>
-          </span>
-          <Button onClick={handleValidateChanges} type="submit">
-            Save
-          </Button>
+            <Button onClick={handleValidateChanges} type="submit">
+              Save
+            </Button>
+          </div>
+          <div className="flex flex-col basis-auto items-center gap-5">
+            {days.map((day: Day) => (
+              <EditDay
+                key={day.number}
+                day={day}
+                shifts={handleFilterShifts(day.number)}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col basis-auto items-center gap-5">
-          {days.map((day: Day) => (
-            <EditDay key={day.number} day={day} />
-          ))}
-        </div>
-      </div>
+      )}
       {modalOpen && (
         <ConfirmationModal
           title={UNSAVED_CHANGES}
