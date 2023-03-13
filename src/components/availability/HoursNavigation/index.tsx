@@ -1,12 +1,8 @@
-import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Components
 import { NavigationDay } from "./NavigationDay";
-
-// Types
-import { User } from "../../../../types/auth";
 
 //Icons
 import { RiEditLine } from "react-icons/ri";
@@ -14,22 +10,13 @@ import { RiEditLine } from "react-icons/ri";
 // Utils
 import { daysInWeek } from "../../../utils/time";
 
-interface Props {
-  user: User;
-}
-
-export const HoursNavigation = observer(({ user }: Props) => {
-  const { hoursView, teamStore } = useStore();
-  const { shifts } = teamStore;
-  const { handleSetShiftsEditOpen, handleStopLoading } = hoursView;
-  const { firstName, lastName } = user;
+export const HoursNavigation = observer(() => {
+  const { hoursView } = useStore();
+  const { handleSetShiftsEditOpen, userInfo } = hoursView;
+  const { firstName, lastName } = userInfo;
   const days = daysInWeek();
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
-
-  useEffect(() => {
-    if (shifts) handleStopLoading();
-  }, [shifts, handleStopLoading]);
 
   return (
     <div className="px-10 py-12">
@@ -50,7 +37,7 @@ export const HoursNavigation = observer(({ user }: Props) => {
             <td className="text-red-400 p-2 hover:text-red-600 hover:font-medium cursor-pointer">
               <div
                 className="cursor-pointer flex flex-col items-center"
-                onClick={() => handleSetShiftsEditOpen(true)}
+                onClick={handleSetShiftsEditOpen}
               >
                 <RiEditLine className="text-4xl text-brandOrange" />
               </div>

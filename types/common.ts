@@ -14,3 +14,8 @@ export interface Day {
   number: number;
   shifts?: string[][];
 }
+
+export interface UserInfo {
+  firstName: string;
+  lastName: string;
+}

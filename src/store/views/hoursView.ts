@@ -16,6 +16,7 @@ import {
   ShiftValidationError,
   ShiftInputChange,
 } from "../../../types/bookings";
+import { UserInfo } from "../../../types/common";
 
 // Utils
 import { overlapValidation, fieldsValidation } from "../../utils/time";
@@ -31,12 +32,12 @@ export default class HoursView {
   activeWeekShifts: Shift[][] | null = null;
   teamShifts: any = [];
 
-  shiftValidationErrors: ShiftValidationError[] = [];
+  userInfo: UserInfo = { firstName: "", lastName: "" };
 
-  // Loading shifts
+  shiftValidationErrors: ShiftValidationError[] = [];
   shiftsLoading: boolean = true;
 
-  // Edited shifts
+  // Shifts editing
   newShifts: Shift[] | null = null;
   editedSomething = false;
   shiftsEditOpen = false;
@@ -104,6 +105,10 @@ export default class HoursView {
       this.weekStart = moment().startOf("week").add(1, "days");
       this.weekEnd = moment().endOf("week").add(1, "days");
     });
+  };
+
+  handleSetUserInfo = (data: UserInfo) => {
+    runInAction(() => (this.userInfo = data));
   };
 
   handleFetchShifts = async (user: string) => {
@@ -250,7 +255,7 @@ export default class HoursView {
 
   handleCloseEditing = () => {
     if (!this.editedSomething && this.shiftsToDelete.length === 0) {
-      this.handleSetShiftsEditOpen(false);
+      this.handleSetShiftsEditClose();
       return;
     }
     this._store.modalView.handleOpenModal();
@@ -267,9 +272,13 @@ export default class HoursView {
     this._store.modalView.handleCloseModal();
   };
 
-  handleSetShiftsEditOpen = (v: boolean) => {
+  handleSetShiftsEditOpen = () => {
     this.handleStartLoading();
-    runInAction(() => (this.shiftsEditOpen = v));
+    runInAction(() => (this.shiftsEditOpen = true));
+  };
+
+  handleSetShiftsEditClose = () => {
+    runInAction(() => (this.shiftsEditOpen = false));
   };
 
   fetchTeamShifts = () => {};

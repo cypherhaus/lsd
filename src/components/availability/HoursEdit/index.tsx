@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
@@ -9,7 +8,6 @@ import { Button } from "../../common/Button";
 import { Loading } from "../../common/Loading";
 
 //Types
-import { User } from "../../../../types/auth";
 import { Day } from "../../../../types/common";
 
 // Utils
@@ -21,42 +19,29 @@ import { UNSAVED_CHANGES } from "../../../constants/modals";
 // Icons
 import { RiCloseFill } from "react-icons/ri";
 
-interface Props {
-  user: User;
-}
-
-export const HoursEdit = observer(({ user }: Props) => {
+export const HoursEdit = observer(() => {
   const { hoursView, modalView } = useStore();
   const { modalOpen, handleCloseModal } = modalView;
-  const { firstName, lastName } = user;
   const days = daysInWeek();
 
   const {
-    handleSetNewShifts,
     handleCloseEditingReset,
     handleCloseEditing,
     handleValidateChanges,
-    handleStopLoading,
     shiftsLoading,
-    newShifts,
+    userInfo,
   } = hoursView;
+
+  const { firstName, lastName } = userInfo;
 
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
-  useEffect(() => {
-    handleSetNewShifts();
-  }, [handleSetNewShifts]);
-
-  useEffect(() => {
-    if (newShifts) handleStopLoading();
-  }, [newShifts, handleStopLoading]);
-
   return (
     <>
-      {shiftsLoading === true && <Loading />}
+      {shiftsLoading && <Loading />}
       <div
         className={
-          shiftsLoading === true
+          shiftsLoading
             ? "hidden"
             : "flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11"
         }
