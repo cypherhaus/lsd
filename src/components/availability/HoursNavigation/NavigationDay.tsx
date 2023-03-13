@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
 // Types
 import { Day } from "../../../../types/common";
+import { Shift } from "../../../../types/bookings";
 
 // Utils
 import { formatHours } from "../../../utils/time";
@@ -13,16 +14,18 @@ interface Props {
 }
 
 export const NavigationDay = observer(({ day }: Props) => {
-  const { teamStore, hoursView } = useStore();
-  const { loaded, handleStopLoading } = hoursView;
+  const initialEmptyShifts: Shift[] = [];
+  const { teamStore } = useStore();
   const { shifts } = teamStore;
-  const filteredShifts = shifts.filter(
-    (shift) => shift.iso_weekday === day.number
-  );
+  const [filteredShifts, setFilteredShifts] = useState(initialEmptyShifts);
 
   useEffect(() => {
-    if (loaded) handleStopLoading();
-  }, [loaded, handleStopLoading]);
+    if (shifts) {
+      setFilteredShifts(
+        shifts.filter((shift) => shift.iso_weekday === day.number)
+      );
+    }
+  }, [shifts, setFilteredShifts, day.number]);
 
   return (
     <td className="lg:w-[12.5%] p-2 align-top">

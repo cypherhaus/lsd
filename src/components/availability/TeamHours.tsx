@@ -21,12 +21,12 @@ interface Props {
 
 export const TeamHours = observer(({ user }: Props) => {
   const { hoursView } = useStore();
-  const { handleAddMember, loading } = hoursView;
+  const { handleAddMember, shiftsLoading } = hoursView;
 
   return (
     <>
-      {loading && <Loading />}
-      <div className={loading ? "hidden" : undefined}>
+      {shiftsLoading && <Loading />}
+      <div className={shiftsLoading ? "hidden" : undefined}>
         <HoursNavigation user={user} />
         <div className="flex flex-col items-center">
           <Button

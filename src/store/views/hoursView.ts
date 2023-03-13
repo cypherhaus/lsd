@@ -34,11 +34,10 @@ export default class HoursView {
   shiftValidationErrors: ShiftValidationError[] = [];
 
   // Loading shifts
-  loaded: boolean = false;
-  loading: boolean = true;
+  shiftsLoading: boolean = true;
 
   // Edited shifts
-  newShifts: Shift[] = [];
+  newShifts: Shift[] | null = null;
   editedSomething = false;
   shiftsEditOpen = false;
 
@@ -57,18 +56,13 @@ export default class HoursView {
     );
   };
 
-  handleFetchShifts = async (user: string) => {
-    await this._store.teamStore.fetchShifts(user);
-    this.setActiveWeekShifts();
-  };
-
   setActiveWeekShifts = () => {
     if (!this.weekStart || !this.weekEnd) return;
-
+    const shifts = this._store.teamStore?.shifts as Shift[];
     let day = this.weekStart;
     const shiftDays: any = [];
     while (day < this.weekEnd) {
-      const repeatShifts = this._store.teamStore?.shifts?.filter((shift) => {
+      const repeatShifts = shifts.filter((shift) => {
         const isoWeekday = day.isoWeekday();
         return shift.iso_weekday === isoWeekday;
       });
@@ -112,23 +106,19 @@ export default class HoursView {
     });
   };
 
-  handleStartLoading = () => {
-    runInAction(() => {
-      this.loaded = false;
-      this.loading = true;
-    });
-  };
-
-  handleStopLoading = () => {
-    runInAction(() => {
-      this.loaded = true;
-      this.loading = false;
-    });
+  handleFetchShifts = async (user: string) => {
+    await this._store.teamStore.fetchShifts(user);
+    this.setActiveWeekShifts();
   };
 
   handleSetNewShifts = () => {
-    runInAction(() => (this.newShifts = [...this._store.teamStore?.shifts]));
+    runInAction(
+      () => (this.newShifts = [...(this._store.teamStore?.shifts as Shift[])])
+    );
   };
+
+  handleStartLoading = () => runInAction(() => (this.shiftsLoading = true));
+  handleStopLoading = () => runInAction(() => (this.shiftsLoading = false));
 
   handleResetValidationErrors = () => {
     runInAction(() => (this.shiftValidationErrors = []));
@@ -148,15 +138,15 @@ export default class HoursView {
 
   handleValidateChanges = () => {
     this.handleResetValidationErrors();
+    const shiftsToUpdate = [...(this.newShifts as Shift[])];
 
-    const deletedDuplicates = this.newShifts.filter(
+    const deletedDuplicates = shiftsToUpdate.filter(
       (obj, index) =>
-        this.newShifts.findIndex((item) => item.id === obj.id) === index
+        shiftsToUpdate.findIndex((item) => item.id === obj.id) === index
     );
 
     runInAction(() => (this.newShifts = deletedDuplicates));
-
-    const newShiftsToUpdate = [...this.newShifts];
+    const newShiftsToUpdate = [...(this.newShifts as Shift[])];
 
     const fieldsErrors = fieldsValidation(newShiftsToUpdate);
     if (fieldsErrors.length > 0) {
@@ -182,12 +172,15 @@ export default class HoursView {
   };
 
   handleSaveChanges = async () => {
+    const shiftsToDelete = [...this.shiftsToDelete];
+    const shiftsToUpdate = [...(this.newShifts as Shift[])];
+
     if (this.shiftsToDelete.length > 0) {
-      await this._store.teamStore.postShiftsToDelete(this.shiftsToDelete);
+      await this._store.teamStore.postShiftsToDelete(shiftsToDelete);
     }
 
     if (this.editedSomething) {
-      await this._store.teamStore.postShiftsToUpdate(this.newShifts);
+      await this._store.teamStore.postShiftsToUpdate(shiftsToUpdate);
     }
 
     this.handleFetchShifts(this._store.authStore.currentUser.id);
@@ -195,7 +188,7 @@ export default class HoursView {
   };
 
   handleAddShift = (n: number) => {
-    const newShifts = [...this.newShifts];
+    const newShifts = [...(this.newShifts as Shift[])];
     const id = uuidv4();
     const currentTime = moment().format();
 
@@ -220,7 +213,7 @@ export default class HoursView {
 
   handleEditShift = ({ newValue, isStartTime, shift }: ShiftInputChange) => {
     const startOrEnd = isStartTime ? START_TIME : END_TIME;
-    const newShifts = [...this.newShifts];
+    const newShifts = [...(this.newShifts as Shift[])];
 
     if (!this.editedSomething) {
       runInAction(() => (this.editedSomething = true));
@@ -246,7 +239,8 @@ export default class HoursView {
 
   handleAddShiftToDelete = (shiftId: string) => {
     const shiftsToDelete = [...this.shiftsToDelete];
-    const newShifts = this.newShifts.filter((shift) => shift.id !== shiftId);
+    const shiftsToUpdate = [...(this.newShifts as Shift[])];
+    const newShifts = shiftsToUpdate.filter((shift) => shift.id !== shiftId);
 
     runInAction(() => {
       this.shiftsToDelete = [...shiftsToDelete, shiftId];

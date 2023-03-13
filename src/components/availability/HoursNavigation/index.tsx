@@ -28,11 +28,11 @@ export const HoursNavigation = observer(({ user }: Props) => {
   if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   useEffect(() => {
-    if (shifts.length !== 0) handleStopLoading();
+    if (shifts) handleStopLoading();
   }, [shifts, handleStopLoading]);
 
   return (
-    <div className={"px-10 py-12"}>
+    <div className="px-10 py-12">
       <table className="flex flex-row flex-no-wrap rounded-lg overflow-hidden">
         <thead className="text-3xl p-0 m-0">
           <tr className="flex flex-col flex-no wrap lg:table-row">

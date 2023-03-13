@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../store";
 
@@ -8,6 +8,7 @@ import { Button } from "../../common/Button";
 
 // Types
 import { Day } from "../../../../types/common";
+import { Shift } from "../../../../types/bookings";
 
 // Icons
 import { RiInformationFill } from "react-icons/ri";
@@ -20,25 +21,19 @@ interface Props {
 }
 
 export const EditDay = observer(({ day }: Props) => {
+  const initialEmptyShifts: Shift[] = [];
   const { hoursView } = useStore();
   const { fullLabel, number } = day;
-  const {
-    newShifts,
-    shiftsToDelete,
-    handleAddShift,
-    handleStopLoading,
-    loaded,
-  } = hoursView;
-
-  const filteredShifts = newShifts?.filter(
-    (shift) =>
-      shift.iso_weekday === number &&
-      !shiftsToDelete?.find((shiftToDelete) => shift.id === shiftToDelete)
-  );
+  const { newShifts, handleAddShift } = hoursView;
+  const [filteredShifts, setFilteredShifts] = useState(initialEmptyShifts);
 
   useEffect(() => {
-    if (loaded) handleStopLoading();
-  }, [loaded, handleStopLoading]);
+    if (newShifts) {
+      setFilteredShifts(
+        newShifts.filter((shift) => shift.iso_weekday === day.number)
+      );
+    }
+  }, [newShifts, setFilteredShifts, day.number]);
 
   return (
     <div className="w-full lg:w-3/4 xl:w-3/5 2xl:w-2/4 flex flex-row justify-center rounded-xl text-start bg-white p-6 gap-5">

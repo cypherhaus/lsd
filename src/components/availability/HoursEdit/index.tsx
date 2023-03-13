@@ -37,26 +37,28 @@ export const HoursEdit = observer(({ user }: Props) => {
     handleCloseEditing,
     handleValidateChanges,
     handleStopLoading,
-    loading,
+    shiftsLoading,
     newShifts,
   } = hoursView;
+
+  if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
 
   useEffect(() => {
     handleSetNewShifts();
   }, [handleSetNewShifts]);
 
-  if (!hoursView.weekStart || !hoursView.weekEnd) return <></>;
-
   useEffect(() => {
-    if (newShifts.length !== 0) handleStopLoading();
+    if (newShifts) handleStopLoading();
   }, [newShifts, handleStopLoading]);
 
   return (
     <>
-      {loading && <Loading />}
+      {shiftsLoading === true && <Loading />}
       <div
         className={
-          loading ? "hidden" : "flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11"
+          shiftsLoading === true
+            ? "hidden"
+            : "flex flex-col lg:mx-24 mx-5 my-12 mb-28 gap-11"
         }
       >
         <div className="flex flex-row items-center justify-between gap-5">

@@ -15,13 +15,12 @@ export default class TeamStore {
   private _store: Store;
 
   bookings: Hours[] = [];
-  shifts: Shift[] = [];
+  shifts: Shift[] | null = null;
 
   members: Profile[] = [];
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
-
     this._store = store;
   }
 
