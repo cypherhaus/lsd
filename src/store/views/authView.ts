@@ -8,16 +8,21 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 import Router from "next/router";
+
+// Types
 import { SignInValues, SignUpValues } from "../../../types/auth";
+
+// Constants
+import { HOURS_ROUTE, START_ROUTE } from "../../constants/routes";
 
 export default class AuthView {
   private _store: Store;
 
-  password: string = "";
-  email: string = "";
-  firstName: string = "";
-  lastName: string = "";
-  businessName: string = "";
+  password = "";
+  email = "";
+  firstName = "";
+  lastName = "";
+  businessName = "";
   onboardingError: string | null = null;
 
   constructor(store: Store) {
@@ -34,7 +39,7 @@ export default class AuthView {
   setBusinessName = (v: string) => {
     this.onboardingError = null;
     this.businessName = v;
-  }
+  };
 
   async init(id: string) {
     // Fetch the current users profile info
@@ -43,36 +48,40 @@ export default class AuthView {
     }
 
     // Fetch all team members associated with the business
-    if (
-      this._store.authStore.currentUser &&
-      !this._store.teamStore.members.length
-    ) {
-      await this._store.teamStore.fetchTeamMembers(
-        this._store.authStore.currentUser.business_id
-      );
+    if (this._store.authStore.currentUser) {
+      if (!this._store.teamStore.members.length) {
+        await this._store.teamStore.fetchTeamMembers(
+          this._store.authStore.currentUser.business_id
+        );
+      }
     }
   }
 
   // Logout user
   async handleLogoutClick() {
     const success = await this._store.authStore.logout();
-    if (success) Router.push("/");
+    if (success) Router.push(START_ROUTE);
   }
 
   // Login user
-  async handleLoginClick(values: SignInValues) { await this._store.authStore.login(values); }
+  async handleLoginClick(values: SignInValues) {
+    await this._store.authStore.login(values);
+  }
 
   //  Signs up a user to Supabase and creates a Lightning Wallet
-  async handleSignUpClick(values: SignUpValues) { await this._store.authStore.signUp(values); }
+  async handleSignUpClick(values: SignUpValues) {
+    await this._store.authStore.signUp(values);
+  }
 
   async handleBusinessInfo() {
     if (!this.businessName) {
       runInAction(() => {
         this.onboardingError = "Please enter a business name";
       });
-    } else {
-      const success = await this._store.authStore.postBusiness(this.businessName);
-      if (success) Router.push("/dashboard/hours");
+      return;
     }
+
+    const success = await this._store.authStore.postBusiness(this.businessName);
+    if (success) Router.push(HOURS_ROUTE);
   }
 }

@@ -18,41 +18,32 @@ export interface Hours {
   user_id: string;
   id: string;
 }
+
 export interface Shift {
   created_at: string;
-  end: string;
+  end_time: string;
   id: string;
-  isoWeekday: number;
-  repeat: boolean;
-  start: string;
-  user_id: string;
-}
-
-export interface ShiftSingle {
-  created_at: string;
-  end: string;
-  id: string;
-  isoWeekday: number;
-  repeat: boolean;
-  start: string;
-  user_id: string;
-  date: string;
-}
-
-export interface AddShift {
-  end: string;
-  isoWeekday: number;
-  start: string;
+  iso_weekday: number;
+  repeat?: boolean;
+  start_time: string;
   user_id: string;
   date?: Moment;
 }
 
-export interface EditShift {
-  slot: Slot;
-  shifts: Shift[];
-  day: Moment;
+export interface ShiftSelectOption {
+  label: string;
+  value: string;
+}
+
+export interface ShiftInputChange {
+  newValue: ShiftSelectOption | null;
+  isStartTime: boolean;
+  shift: Shift;
+}
+
+export interface ShiftValidationError {
   shiftId: string;
-  close: boolean;
+  message: string;
 }
 
 export interface Slot {

@@ -5,9 +5,16 @@
  * without the express permission of Daramac LTD. and its affiliates.
  */
 
-import { SignUpValues, SignInValues } from "../../types/auth";
 import { supabase } from "../config/supabase";
+
+// Types
+import { SignUpValues, SignInValues } from "../../types/auth";
+
+// Utils
 import { errorToast } from "../utils/toast";
+
+// Constants
+import { PROFILES_TABLE } from "../constants/db";
 
 export default class AuthAPI {
   signUp = async ({ email, password, firstName, lastName }: SignUpValues) => {
@@ -19,12 +26,12 @@ export default class AuthAPI {
 
       if (response.data?.user?.id) {
         await supabase
-          .from("profiles")
+          .from(PROFILES_TABLE)
           .update({ first_name: firstName, last_name: lastName })
           .eq("id", response.data?.user?.id);
       }
 
-      return response;
+      if (response) return response;
     } catch (error) {
       errorToast("Failed to signup");
       console.log({ error });

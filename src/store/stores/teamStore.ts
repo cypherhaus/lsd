@@ -7,52 +7,57 @@
 
 import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
-import { AddShift, Hours, Shift, ShiftSingle } from "../../../types/bookings";
-import { Moment } from "moment";
+import { Hours, Shift } from "../../../types/bookings";
 import { Profile } from "../../../types/members";
+import { successToast, errorToast } from "../../utils/toast";
 
 export default class TeamStore {
   private _store: Store;
 
   bookings: Hours[] = [];
-  shifts: Shift[] = [];
-  shiftSingles: ShiftSingle[] = [];
+  shifts: Shift[] | null = null;
 
   members: Profile[] = [];
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
-
     this._store = store;
   }
 
   async fetchShifts(id: string) {
-    this.shifts = await this._store.api.dashAPI.fetchShifts(id);
+    const res = await this._store.api.dashAPI.fetchShifts(id);
+    runInAction(() => (this.shifts = res));
   }
 
-  async addShift(shift: AddShift) {
-    await this._store.api.dashAPI.addShift(shift);
+  async postShiftsToUpdate(newShifts: Shift[]) {
+    try {
+      const response = await this._store.api.dashAPI.postShiftsToUpdate(
+        newShifts
+      );
+      if (response) {
+        successToast("Saved changes sucessfully.");
+        return true;
+      }
+    } catch (err) {
+      errorToast("Cannot save changes.");
+    }
+    return false;
   }
 
-  async updateShifts(newShifts: any) {
-    await this._store.api.dashAPI.updateShifts(newShifts);
-  }
-
-  async deleteShiftById(id: string, date?: Moment, userId?: string) {
-    if (date) await this._store.api.dashAPI.deleteShiftOnce(id, date, userId);
-    if (!date) await this._store.api.dashAPI.deleteShift(id);
-  }
-
-  async deleteOneTimeShift(id: string) {
-    await this._store.api.dashAPI.deleteShift(id);
+  async postShiftsToDelete(shifts: string[]) {
+    try {
+      const response = await this._store.api.dashAPI.postShiftsToDelete(shifts);
+      if (response) return true;
+      successToast("Saved changes sucessfully.");
+    } catch (err) {
+      errorToast("Cannot delete shifts.");
+    }
+    return false;
   }
 
   async fetchTeamMembers(businessId: string) {
     const data = await this._store.api.dashAPI.fetchTeam(businessId);
-
-    if (data) {
-      runInAction(() => (this.members = data));
-    }
+    if (data) runInAction(() => (this.members = data));
   }
 
   async addTeamMember(businessId: string) {

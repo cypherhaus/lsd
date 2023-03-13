@@ -9,3 +9,8 @@ export interface SignInValues {
   password: string;
   email: string;
 }
+
+export interface User {
+  firstName: string;
+  lastName: string;
+}

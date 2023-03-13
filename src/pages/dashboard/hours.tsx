@@ -1,28 +1,78 @@
+import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Layout } from "../../components/common/Layout";
 import { useStore } from "../../store";
-import { useEffect } from "react";
-import { HoursNavigation } from "../../components/availability/HoursNavigation";
-import { MemberShifts } from "../../components/availability/MemberShifts";
-import { Button } from "../../components/common/Button";
+import { useRouter } from "next/router";
+
+// Config
+import { supabase } from "../../config/supabase";
 
 // Components
+import { HoursEdit } from "../../components/availability/HoursEdit";
+import { TeamHours } from "../../components/availability/TeamHours";
+
+// Constants
+import { START_ROUTE } from "../../constants/routes";
 
 const Availability = observer(() => {
-  const { authStore, hoursView } = useStore();
+  const router = useRouter();
+  const { hoursView, authStore, authView, teamStore } = useStore();
+  const { shifts } = teamStore;
+  const { init } = authView;
+
+  const {
+    handleFetchShifts,
+    handleSetNewShifts,
+    handleSetUserInfo,
+    handleStopLoading,
+    shiftsEditOpen,
+    newShifts,
+  } = hoursView;
 
   useEffect(() => {
-    if (!authStore.currentUser) return;
-  }, [authStore.currentUser]);
+    const retrieveSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) init(data.session?.user?.id);
+    };
 
-  return (
-    <Layout>
-      <HoursNavigation />
-      <div>
-        <Button onClick={hoursView.handleAddMember}>Add Team Member</Button>
-      </div>
-    </Layout>
-  );
+    retrieveSession();
+
+    if (authStore.currentUser) {
+      const {
+        first_name: firstName,
+        last_name: lastName,
+        id,
+      } = authStore.currentUser;
+
+      if (!authStore.currentUser.business_id) {
+        router.push(START_ROUTE);
+        return;
+      }
+
+      handleFetchShifts(id);
+      handleSetUserInfo({ firstName: firstName, lastName: lastName });
+    }
+  }, [
+    authStore.currentUser,
+    handleSetUserInfo,
+    handleFetchShifts,
+    init,
+    router,
+  ]);
+
+  useEffect(() => {
+    if (shifts) handleStopLoading();
+  }, [shifts, handleStopLoading]);
+
+  useEffect(() => {
+    if (newShifts) handleStopLoading();
+  }, [newShifts, handleStopLoading]);
+
+  useEffect(() => {
+    if (shiftsEditOpen) handleSetNewShifts();
+  }, [shiftsEditOpen, handleSetNewShifts]);
+
+  return <Layout>{!shiftsEditOpen ? <TeamHours /> : <HoursEdit />}</Layout>;
 });
 
 export default Availability;

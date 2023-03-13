@@ -5,29 +5,24 @@
  * without the express permission of Daramac LTD. and its affiliates.
  */
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Store } from "../store";
 
 export default class ModalView {
   private _store: Store;
 
-  modalOpen: boolean = false;
-  modalType: string | null = null;
+  modalOpen = false;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
     this._store = store;
   }
 
-  closeModal = () => {
-    this.modalOpen = false;
-    this.modalType = null;
-    this._store.hoursView.shiftToDelete = null;
-    this._store.hoursView.shiftToDeleteDate = null;
+  handleCloseModal = () => {
+    runInAction(() => (this.modalOpen = false));
   };
 
-  openModal = (type: string) => {
-    this.modalType = type;
-    this.modalOpen = true;
+  handleOpenModal = () => {
+    runInAction(() => (this.modalOpen = true));
   };
 }

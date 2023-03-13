@@ -7,9 +7,9 @@ import {
   ADD_MODAL,
   DELETE_MODAL,
 } from "../../constants/modals";
-import { DeleteShift } from "./DeleteShift";
 import { AddShift } from "./AddShift";
 import { AddBlock } from "./AddBlock";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 const customStyles = {
   content: {

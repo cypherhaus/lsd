@@ -9,7 +9,11 @@ module.exports = {
       backgroundImage:
          {
            'pawBackground': "url(../media/paw.svg)"
-         }
+         },
+      flexBasis: {
+          '11-perc': '11%',
+          '9-perc': '9%',
+        }
     },
     colors: {
       'brandOrange': '#ED5520',
@@ -17,6 +21,7 @@ module.exports = {
       'brandGreen': '#14353F',
       'brandWhite': '#EDECDF',
       'white': '#fff',
+      'black': '#000',
     },
     fontFamily: {
       'sans': 'Rubik, sans-serif',
