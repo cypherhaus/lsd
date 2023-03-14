@@ -4,8 +4,8 @@ interface Props {
 
 export const Tooltip = ({ text }: Props) => {
   return (
-    <div className="w-full absolute top-[25%] right-[-140%]">
-      <span className="truncate font-button font-bold text-md border-2 border-brandWhite rounded-md text-center bg-white px-2 py-1">
+    <div className="w-full top-[25%] right-[-140%] transition-opacity opacity-0 peer-hover:opacity-100 cursor-default absolute">
+      <span className="rounded-md font-button font-bold text-md bg-white py-1 px-2">
         {text}
       </span>
     </div>

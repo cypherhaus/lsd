@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -10,7 +9,6 @@ import { SIDEBAR_ITEMS } from "../constants/sidebar";
 
 export const Sidebar = () => {
   const router = useRouter();
-  const [hover, setHover] = useState("");
 
   return (
     <aside className="p-4 h-full bg-white flex gap-5 flex-col">
@@ -20,16 +18,12 @@ export const Sidebar = () => {
           : "cursor-pointer text-5xl";
 
         return (
-          <Link
-            key={navItem.href}
-            href={navItem.href}
-            className="flex flex-row relative"
-            onMouseEnter={() => setHover(navItem.href)}
-            onMouseLeave={() => setHover("")}
-          >
-            <navItem.Icon className={style} />
-            {hover == navItem.href && <Tooltip text={navItem.label} />}
-          </Link>
+          <div key={navItem.href} className="group flex relative">
+            <Link href={navItem.href} className="peer">
+              <navItem.Icon className={style} />
+            </Link>
+            <Tooltip text={navItem.label} />
+          </div>
         );
       })}
     </aside>
