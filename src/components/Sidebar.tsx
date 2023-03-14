@@ -1,24 +1,35 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+
+// Components
+import { Tooltip } from "./common/Tooltip";
+
+// Constants
 import { SIDEBAR_ITEMS } from "../constants/sidebar";
 
 export const Sidebar = () => {
   const router = useRouter();
+  const [hover, setHover] = useState("");
 
   return (
-    <aside className="pt-8 p-4 w-60 h-full bg-white flex gap-4 flex-col">
+    <aside className="p-4 h-full bg-white flex gap-5 flex-col">
       {SIDEBAR_ITEMS.map((navItem) => {
         const style = router.pathname.includes(navItem.href)
-          ? "cursor-pointer font-button text-2xl font-medium"
-          : "cursor-pointer font-button text-2xl font-extrabold";
+          ? "text-brandOrange cursor-pointer text-5xl"
+          : "cursor-pointer text-5xl";
 
         return (
-          <div
+          <Link
             key={navItem.href}
-            className={style}
-            onClick={() => router.push(navItem.href)}
+            href={navItem.href}
+            className="flex flex-row relative"
+            onMouseEnter={() => setHover(navItem.href)}
+            onMouseLeave={() => setHover("")}
           >
-            {navItem.label}
-          </div>
+            <navItem.Icon className={style} />
+            {hover == navItem.href && <Tooltip text={navItem.label} />}
+          </Link>
         );
       })}
     </aside>
