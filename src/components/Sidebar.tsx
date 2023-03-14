@@ -18,7 +18,7 @@ export const Sidebar = () => {
           : "cursor-pointer text-5xl";
 
         return (
-          <div key={navItem.href} className="group flex relative">
+          <div key={navItem.href} className="flex relative">
             <Link href={navItem.href} className="peer">
               <navItem.Icon className={style} />
             </Link>
