@@ -1,23 +1,28 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
+
+// Components
+import { Tooltip } from "./common/Tooltip";
+
+// Constants
 import { SIDEBAR_ITEMS } from "../constants/sidebar";
 
 export const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <aside className="pt-8 p-4 w-60 h-full bg-white flex gap-4 flex-col">
+    <aside className="p-4 h-full bg-white flex gap-5 flex-col">
       {SIDEBAR_ITEMS.map((navItem) => {
         const style = router.pathname.includes(navItem.href)
-          ? "cursor-pointer font-button text-2xl font-medium"
-          : "cursor-pointer font-button text-2xl font-extrabold";
+          ? "text-brandOrange cursor-pointer text-5xl"
+          : "cursor-pointer text-5xl";
 
         return (
-          <div
-            key={navItem.href}
-            className={style}
-            onClick={() => router.push(navItem.href)}
-          >
-            {navItem.label}
+          <div key={navItem.href} className="flex relative">
+            <Link href={navItem.href} className="peer">
+              <navItem.Icon className={style} />
+            </Link>
+            <Tooltip text={navItem.label} />
           </div>
         );
       })}

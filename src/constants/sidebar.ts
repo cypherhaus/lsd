@@ -1,16 +1,38 @@
+import {
+  RiCalendar2Fill,
+  RiAlarmLine,
+  RiMacLine,
+  RiFileList3Line,
+} from "react-icons/ri";
+
+import {
+  HOURS_ROUTE,
+  SHOPFRONT_ROUTE,
+  DOGALOGUE_ROUTE,
+  BOOKINGS_ROUTE,
+} from "./routes";
+
 export const SIDEBAR_ITEMS = [
   {
+    href: BOOKINGS_ROUTE,
     label: "Bookings",
-    href: "/dashboard/bookings",
+    Icon: RiCalendar2Fill,
   },
   {
-    label: "Hours",
-    href: "/dashboard/hours",
+    href: DOGALOGUE_ROUTE,
+    label: "Dogalogue",
+    Icon: RiFileList3Line,
   },
-  // {
-  //   label: "Shopfront",
-  //   href: "/dashboard/shopfront",
-  // },
+  {
+    href: HOURS_ROUTE,
+    label: "Hours",
+    Icon: RiAlarmLine,
+  },
+  {
+    href: SHOPFRONT_ROUTE,
+    label: "Shopfront",
+    Icon: RiMacLine,
+  },
   // {
   //   label: "Prices",
   //   href: "/dashboard/prices",
