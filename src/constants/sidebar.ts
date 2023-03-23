@@ -3,6 +3,7 @@ import {
   RiAlarmLine,
   RiMacLine,
   RiFileList3Line,
+  RiSettings4Line,
 } from "react-icons/ri";
 
 import {
@@ -10,6 +11,7 @@ import {
   SHOPFRONT_ROUTE,
   DOGALOGUE_ROUTE,
   BOOKINGS_ROUTE,
+  SETTINGS_ROUTE,
 } from "./routes";
 
 export const SIDEBAR_ITEMS = [
@@ -33,12 +35,9 @@ export const SIDEBAR_ITEMS = [
     label: "Shopfront",
     Icon: RiMacLine,
   },
-  // {
-  //   label: "Prices",
-  //   href: "/dashboard/prices",
-  // },
-  // {
-  //   label: "Settings",
-  //   href: "/dashboard/settings",
-  // },
+  {
+    href: SETTINGS_ROUTE,
+    label: "Settings",
+    Icon: RiSettings4Line,
+  },
 ];
