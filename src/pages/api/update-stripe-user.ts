@@ -13,13 +13,11 @@ const handler = async (
   const { API_ROUTE_SECRET } = req.query;
   if (API_ROUTE_SECRET !== process.env.API_ROUTE_SECRET) {
     res.status(401).send("Unauthorized");
-    return;
   }
 
   const { customer, name } = req.body;
   if (!customer || !name) {
     res.status(401).json({ message: "Please provide email and user id" });
-    return;
   }
 
   try {
