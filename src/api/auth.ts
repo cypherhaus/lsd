@@ -16,15 +16,20 @@ import { errorToast } from "../utils/toast";
 // Constants
 import { PROFILES_TABLE } from "../constants/db";
 
+import { getStripeClient } from "../config/stripe";
+
 export default class AuthAPI {
   signUp = async ({ email, password, firstName, lastName }: SignUpValues) => {
     try {
+      const stripe = await getStripeClient();
+
       const response = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (response.data?.user?.id) {
+        // Update supabase table with new First and Last name
         await supabase
           .from(PROFILES_TABLE)
           .update({ first_name: firstName, last_name: lastName })
