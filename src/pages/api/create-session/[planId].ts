@@ -5,7 +5,7 @@ import initStripe from "stripe";
 import { PROFILES_TABLE } from "../../../constants/db";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  const supabaseServerClient = createServerSupabaseClient<Database>({
+  const supabaseServerClient = createServerSupabaseClient<any>({
     req,
     res,
   });
@@ -23,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     .eq("id", user.id)
     .single();
 
+  // @ts-ignore
   const stripe = initStripe(process.env.STRIPE_SECRET_KEY ?? "");
   const { planId } = req.query;
 
