@@ -3,9 +3,6 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
 import { useStore } from "../store";
 
-// Config
-import { supabase } from "../config/supabase";
-
 // Components
 import Auth from "../components/auth";
 import Onboarding from "../components/Onboarding";
