@@ -18,7 +18,6 @@ const Availability = observer(() => {
   const router = useRouter();
   const { hoursView, authStore, authView, teamStore } = useStore();
   const { shifts } = teamStore;
-  const { init } = authView;
 
   const {
     handleFetchShifts,
@@ -30,13 +29,6 @@ const Availability = observer(() => {
   } = hoursView;
 
   useEffect(() => {
-    const retrieveSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) init(data.session?.user?.id);
-    };
-
-    retrieveSession();
-
     if (authStore.currentUser) {
       const {
         first_name: firstName,
@@ -52,13 +44,7 @@ const Availability = observer(() => {
       handleFetchShifts(id);
       handleSetUserInfo({ firstName: firstName, lastName: lastName });
     }
-  }, [
-    authStore.currentUser,
-    handleSetUserInfo,
-    handleFetchShifts,
-    init,
-    router,
-  ]);
+  }, [authStore.currentUser, handleSetUserInfo, handleFetchShifts, router]);
 
   useEffect(() => {
     if (shifts) handleStopLoading();
