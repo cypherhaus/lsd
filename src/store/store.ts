@@ -6,6 +6,7 @@ import {
   BookingView,
   ModalView,
   HoursView,
+  SettingsView,
   ShopfrontView,
 } from "./views";
 
@@ -21,6 +22,7 @@ export class Store {
   hoursView = new HoursView(this);
   modalView = new ModalView(this);
   shopfrontView = new ShopfrontView(this);
+  settingsView = new SettingsView(this);
 
   api: {
     authAPI: AuthAPI;
