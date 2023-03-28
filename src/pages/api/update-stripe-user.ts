@@ -10,19 +10,16 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<Data | string>
 ) => {
-  const { API_ROUTE_SECRET } = req.query;
-
   // Handle OPTIONS requests
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
+  const { API_ROUTE_SECRET } = req.query;
   if (API_ROUTE_SECRET !== process.env.API_ROUTE_SECRET) {
     return res.status(401).send("Unauthorized");
   }
 
-  const { customer, name } = req.body.record;
-  if (!customer || !name) {
+  const { first_name, stripe_customer } = req.body.record;
+  if (!stripe_customer || !first_name) {
     return res
       .status(402)
       .json({ message: "Please provide email and user id" });
