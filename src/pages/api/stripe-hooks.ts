@@ -12,6 +12,10 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<Data | string>
 ) => {
+  // Handle OPTIONS requests
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
   // @ts-ignore
   const stripe = initStripe(process.env.STRIPE_SECRET_KEY ?? "");
   const signature = req.headers["stripe-signature"];

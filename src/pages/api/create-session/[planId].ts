@@ -5,10 +5,16 @@ import initStripe from "stripe";
 import { PROFILES_TABLE } from "../../../constants/db";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  // Handle OPTIONS requests
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   const supabaseServerClient = createServerSupabaseClient<any>({
     req,
     res,
   });
+
   const {
     data: { user },
   } = await supabaseServerClient.auth.getUser();
