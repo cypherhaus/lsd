@@ -22,10 +22,10 @@ const handler = async (
     return res.status(401).send("Unauthorized");
   }
 
-  const { email, id } = req.body;
+  const { email, id } = req.body.record;
   if (!email || !id) {
     return res
-      .status(401)
+      .status(402)
       .json({ message: "Please provide email and user id" });
   }
 
