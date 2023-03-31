@@ -10,7 +10,7 @@ It includes:
 - State management
 - Database
 
-![Example image](./example-2.png)
+<img src="./example-2.png" alt="Example" width="200" height="200">
 
 ## Getting Started
 
