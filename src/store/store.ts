@@ -3,6 +3,7 @@ import { AuthAPI, DashAPI } from "../api";
 import { AuthStore, LightningStore } from "./stores";
 import { AuthView } from "./views";
 import DashboardView from "./views/dashboardView";
+import LightningApi from "../api/lightningApi";
 
 export class Store {
   // Child Stores
@@ -16,16 +17,18 @@ export class Store {
   api: {
     authAPI: AuthAPI;
     dashAPI: DashAPI;
+    lightningAPI: LightningApi;
   };
 
-  constructor(authAPI: AuthAPI, dashAPI: DashAPI) {
+  constructor(authAPI: AuthAPI, dashAPI: DashAPI, lightningAPI: LightningApi) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
-    this.api = { authAPI, dashAPI };
+    this.api = { authAPI, dashAPI, lightningAPI };
   }
 }
 
 export const createStore = () => {
   const authAPI = new AuthAPI();
   const dashAPI = new DashAPI();
-  return new Store(authAPI, dashAPI);
+  const lightningAPI = new LightningApi();
+  return new Store(authAPI, dashAPI, lightningAPI);
 };

@@ -11,7 +11,6 @@ import { errorToast } from "../utils/toast";
 
 export default class LightningApi {
   private api: AxiosInstance;
-  private token: string = "";
 
   constructor() {
     this.api = axios.create({
@@ -21,14 +20,6 @@ export default class LightningApi {
     });
   }
 
-  setToken = (token: string) => {
-    this.token = token;
-  };
-
-  clearToken = () => {
-    this.token = "";
-  };
-
   fetchWallet = async (userId: string) => {
     const data = await supabase.from("profiles").select().eq("id", userId);
 
@@ -36,10 +27,7 @@ export default class LightningApi {
   };
 
   updateLnAddress = async (lnAddress: string) => {
-    if (!this.token) return;
-
     const response = await this.api.post(`/${UPDATE_LN_ADDRESS}`, {
-      token: this.token,
       lnAddress,
     });
 
@@ -51,11 +39,8 @@ export default class LightningApi {
   };
 
   withdrawToAddress = async (amount: string) => {
-    if (!this.token) return;
-
     try {
       const response = await this.api.post(`/${WITHDRAW_LN_ADDRESS}`, {
-        token: this.token,
         amount,
       });
 
@@ -110,11 +95,8 @@ export default class LightningApi {
   };
 
   createCharge = async (sats: string) => {
-    if (!this.token) return;
-
     try {
-      const response = await this.api.post(`/${CREATE_CHARGE}`, {
-        token: this.token,
+      const response = await this.api.post(`../api/${CREATE_CHARGE}`, {
         amount: sats,
       });
 

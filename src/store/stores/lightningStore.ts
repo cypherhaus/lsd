@@ -36,7 +36,6 @@ export default class LightningStore {
   // Create a charge
   async createCharge(amount: string) {
     const result = await this._store.api.lightningAPI.createCharge(amount);
-
     if (result?.data) this.charge = result?.data;
   }
 

@@ -4,27 +4,28 @@ import QRCode from "react-qr-code";
 import { useStore } from "../../store";
 import { Input } from "../../components/common/Input";
 import { Layout } from "../../components/common/Layout";
+import { supabase } from "../../config/supabase";
 
 const Fund = observer(() => {
   const { dashboardView, lightningStore } = useStore();
 
   // Subscribe to charges to listen for when invoice is settled
-  useEffect(() => {
-    if (lightningStore.charge) {
-      const chargeSub = supabase
-        .from(`charges:id=eq.${lightningStore.charge.internalId}`)
-        .on(
-          "UPDATE",
-          (message) =>
-            message.new.settled && dashboardView.handleChargeSettled()
-        )
-        .subscribe();
+  // useEffect(() => {
+  //   if (lightningStore.charge) {
+  //     const chargeSub = supabase
+  //       .from(`charges:id=eq.${lightningStore.charge.internalId}`)
+  //       .on(
+  //         "UPDATE",
+  //         (message: any) =>
+  //           message.new.settled && dashboardView.handleChargeSettled()
+  //       )
+  //       .subscribe();
 
-      return () => {
-        supabase.removeSubscription(chargeSub);
-      };
-    }
-  }, [lightningStore, lightningStore.charge, dashboardView]);
+  //     return () => {
+  //       supabase.removeSubscription(chargeSub);
+  //     };
+  //   }
+  // }, [lightningStore, lightningStore.charge, dashboardView]);
 
   return (
     <Layout>

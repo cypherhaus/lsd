@@ -6,14 +6,17 @@ import { useEffect } from "react";
 import { useStore } from "../store";
 
 export const AppWrapper = observer(({ children }: any) => {
-  const { authView } = useStore();
+  const { authView, lightningStore } = useStore();
   const sb = useSupabaseClient<any>();
 
   const retrieveSession = async () => {
     const {
       data: { session },
     } = await sb.auth.getSession();
-    if (session) authView.init(session.user.id);
+    if (session) {
+      authView.init(session.user.id);
+      lightningStore.fetchWallet(session.user.id);
+    }
   };
 
   useEffect(() => {

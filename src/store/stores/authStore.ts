@@ -49,7 +49,6 @@ export default class AuthStore {
 
       if (response.data) {
         successToast("Account created successfully");
-        console.log(response.data);
         runInAction(() => (this.currentUser = response.data.user));
       }
 
@@ -74,7 +73,6 @@ export default class AuthStore {
         const userProfile = await this._store.api.dashAPI.fetchProfile(
           response.data.user?.id
         );
-        console.log({ userProfile });
         runInAction(() => (this.currentUser = userProfile));
       }
 
@@ -100,6 +98,7 @@ export default class AuthStore {
   async fetchProfile(id: string) {
     try {
       const data = await this._store.api.dashAPI.fetchProfile(id);
+      console.log({ data });
       runInAction(() => (this.currentUser = data));
     } catch (err) {
       console.log("Error fetching profile", err);
