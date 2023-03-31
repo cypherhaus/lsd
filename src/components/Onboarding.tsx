@@ -26,7 +26,7 @@ const Onboarding = observer(() => {
             onChange={(e) => setBusinessName(e.target.value)}
             error={!!onboardingError}
             value={businessName}
-            placeholder="Business Name"
+            placeholder="Username"
           />
           {onboardingError && <ErrorLabel>{onboardingError}</ErrorLabel>}
         </div>

@@ -16,8 +16,7 @@ export const SignUpForm = observer(() => {
   return (
     <Formik
       initialValues={{
-        firstName: "",
-        lastName: "",
+        username: "",
         email: "",
         password: "",
       }}
@@ -27,30 +26,19 @@ export const SignUpForm = observer(() => {
       {({ errors, touched }) => (
         <Form className="flex flex-col gap-4">
           <div className="flex flex-col">
-            <Field name="firstName">
+            <Field name="username">
               {({ field, meta }: any) => (
                 <Input
                   {...field}
                   error={!!(meta.touched && meta.error)}
-                  placeholder="First Name"
+                  placeholder="Username"
                 />
               )}
             </Field>
-            {errors.firstName && touched.firstName ? (
-              <ErrorLabel>{errors.firstName}</ErrorLabel>
+            {errors.username && touched.username ? (
+              <ErrorLabel>{errors.username}</ErrorLabel>
             ) : null}
-            <Field name="lastName">
-              {({ field, meta }: any) => (
-                <Input
-                  {...field}
-                  error={!!(meta.touched && meta.error)}
-                  placeholder="Last Name"
-                />
-              )}
-            </Field>
-            {errors.lastName && touched.lastName ? (
-              <ErrorLabel>{errors.lastName}</ErrorLabel>
-            ) : null}
+
             <Field name="email">
               {({ field, meta }: any) => (
                 <Input

@@ -20,8 +20,7 @@ export default class AuthView {
 
   password = "";
   email = "";
-  firstName = "";
-  lastName = "";
+  username = "";
   businessName = "";
   onboardingError: string | null = null;
 
@@ -33,29 +32,12 @@ export default class AuthView {
   // Setters
   setPassword = (v: string) => (this.password = v);
   setEmail = (v: string) => (this.email = v);
-  setLastName = (v: string) => (this.lastName = v);
-  setFirstName = (v: string) => (this.firstName = v);
+  setUsername = (v: string) => (this.username = v);
 
   setBusinessName = (v: string) => {
     this.onboardingError = null;
     this.businessName = v;
   };
-
-  async init(id: string) {
-    // Fetch the current users profile info
-    if (!this._store.authStore.currentUser) {
-      await this._store.authStore.fetchProfile(id);
-    }
-
-    // Fetch all team members associated with the business
-    if (this._store.authStore.currentUser) {
-      if (!this._store.teamStore.members.length) {
-        await this._store.teamStore.fetchTeamMembers(
-          this._store.authStore.currentUser.business_id
-        );
-      }
-    }
-  }
 
   // Logout user
   async handleLogoutClick() {
@@ -68,8 +50,8 @@ export default class AuthView {
     await this._store.authStore.login(values);
   }
 
-  //  Signs up a user to Supabase and creates a Lightning Wallet
   async handleSignUpClick(values: SignUpValues) {
+    console.log("hey");
     await this._store.authStore.signUp(values);
   }
 

@@ -28,7 +28,7 @@ const Home = observer(() => {
   }, [authStore.currentUser, router]);
 
   return (
-    <div className="flex flex-col pt-10 md:pt-40 lg:bg-[length:60%_70%] xl:bg-[length:55%_80%] bg-left-bottom bg-no-repeat bg-contain bg-pawBackground bg-brandWhite items-center h-screen flex-1 justify-top">
+    <div className="flex flex-col pt-10 md:pt-40 lg:bg-[length:60%_70%] xl:bg-[length:55%_80%] bg-left-bottom bg-no-repeat bg-brandWhite items-center h-screen flex-1 justify-top">
       {isOnboarding ? <Onboarding /> : <Auth />}
     </div>
   );

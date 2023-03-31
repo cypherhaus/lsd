@@ -3,8 +3,7 @@ export interface Profile {
   business: string;
   business_name: string;
   created_at: string;
-  first_name: string;
-  last_name: string;
+  username: string;
   slug: string;
   type: string;
 }

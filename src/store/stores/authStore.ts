@@ -76,6 +76,7 @@ export default class AuthStore {
         const userProfile = await this._store.api.dashAPI.fetchProfile(
           response.data.user?.id
         );
+        console.log({ userProfile });
         runInAction(() => (this.currentUser = userProfile));
       }
 

@@ -22,11 +22,9 @@ import {
 
 export default class DashAPI {
   fetchProfile = async (id: string) => {
-    const { data, error } = await supabase
-      .from(PROFILES_TABLE)
-      .select()
-      .eq("id", id);
-    if (data) return data[0];
+    const res2 = await supabase.from(PROFILES_TABLE).select().eq("id", id);
+    console.log({ res2 });
+    if (res2.data) return res2.data[0];
     return false;
   };
 

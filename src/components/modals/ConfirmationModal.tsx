@@ -27,7 +27,7 @@ export const ConfirmationModal = observer(
         }
       >
         <div className="flex flex-col gap-3">
-          <span className="text-2xl font-bold text-center text-brandOrange">
+          <span className="text-2xl font-bold text-center text-primary">
             {title}
           </span>
           <div className="flex flex-col text-center gap-5">
