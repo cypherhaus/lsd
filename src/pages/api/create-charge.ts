@@ -59,11 +59,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           amount: amountInMsats,
           description: "-",
           internalId: chargeId,
-          callbackUrl: `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/settle-charge?id=${chargeId}`,
+          callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/settle-charge?id=${chargeId}`,
         },
         {
           headers: {
-            apikey: process.env.NEXT_PUBLIC_ZEBEDEE_KEY ?? "",
+            apikey: process.env.ZEBEDEE_KEY ?? "",
             "Content-Type": "application/json",
           },
         }
