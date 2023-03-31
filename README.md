@@ -10,6 +10,8 @@ It includes:
 - State management
 - Database
 
+![Example image](./example-2.png)
+
 ## Getting Started
 
 First, create an account at Supabase and enter the environment variables in:
