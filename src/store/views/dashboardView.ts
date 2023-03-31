@@ -108,6 +108,7 @@ export default class DashboardView {
   // Handle charge settled event
   handleChargeSettled() {
     this._store.lightningStore.chargeSettled();
+    this._store.authStore.fetchProfile(this._store.authStore.currentUser.id);
     successToast("Settled Charge");
 
     runInAction(() => {

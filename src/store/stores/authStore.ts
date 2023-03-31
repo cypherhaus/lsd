@@ -97,7 +97,6 @@ export default class AuthStore {
   async fetchProfile(id: string) {
     try {
       const data = await this._store.api.dashAPI.fetchProfile(id);
-      console.log({ data });
       runInAction(() => (this.currentUser = data));
     } catch (err) {
       console.log("Error fetching profile", err);

@@ -1,24 +1,24 @@
+import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 import { formatNumber } from "../../utils/number";
 
-export const Navbar = () => {
-  const { authView, lightningStore, authStore } = useStore();
-  console.log({ lightningStore: lightningStore.wallet });
+export const Navbar = observer(() => {
+  const { authView, authStore } = useStore();
 
   return (
     <div className="text-white flex w-full bg-primary items-center justify-between p-6">
       <p className="font-bold text-2xl text-cypherhaus text-center">
         {authStore?.currentUser?.balance
-          ? formatNumber(lightningStore.wallet?.balance)
+          ? formatNumber(authStore?.currentUser?.balance)
           : "0"}{" "}
         sats
       </p>
       <div
         onClick={authView.handleLogoutClick}
-        className="text-lg text-white font-button cursor-pointer"
+        className="text-white font-button cursor-pointer font-bold"
       >
         Logout
       </div>
     </div>
   );
-};
+});

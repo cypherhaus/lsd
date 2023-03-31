@@ -15,7 +15,6 @@ export const AppWrapper = observer(({ children }: any) => {
     } = await sb.auth.getSession();
     if (session) {
       authView.init(session.user.id);
-      lightningStore.fetchWallet(session.user.id);
     }
   };
 

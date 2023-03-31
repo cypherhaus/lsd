@@ -10,22 +10,27 @@ const Fund = observer(() => {
   const { dashboardView, lightningStore } = useStore();
 
   // Subscribe to charges to listen for when invoice is settled
-  // useEffect(() => {
-  //   if (lightningStore.charge) {
-  //     const chargeSub = supabase
-  //       .from(`charges:id=eq.${lightningStore.charge.internalId}`)
-  //       .on(
-  //         "UPDATE",
-  //         (message: any) =>
-  //           message.new.settled && dashboardView.handleChargeSettled()
-  //       )
-  //       .subscribe();
+  useEffect(() => {
+    console.log({ supabase });
 
-  //     return () => {
-  //       supabase.removeSubscription(chargeSub);
-  //     };
-  //   }
-  // }, [lightningStore, lightningStore.charge, dashboardView]);
+    if (lightningStore.charge) {
+      supabase
+        .channel("any")
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "charges",
+            filter: `id=eq.${lightningStore.charge.internalId}`,
+          },
+          (message: any) => {
+            message.new.settled && dashboardView.handleChargeSettled();
+          }
+        )
+        .subscribe();
+    }
+  }, [lightningStore, lightningStore.charge, dashboardView]);
 
   return (
     <Layout>
