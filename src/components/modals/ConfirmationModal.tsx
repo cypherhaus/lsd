@@ -8,7 +8,7 @@ import { Button } from "../common/Button";
 import { ModalProps } from "../../../types/common";
 
 // Constants
-import { BUTTON_VARIANT } from "../../constants/common";
+import { BUTTON_VARIANT } from "../../constants/buttons";
 
 export const ConfirmationModal = observer(
   ({

@@ -1,4 +1,4 @@
-import { BUTTON_VARIANT } from "../../constants/common";
+import { BUTTON_VARIANT } from "../../constants/buttons";
 
 interface ButtonProps {
   onClick?: () => void;

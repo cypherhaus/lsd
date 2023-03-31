@@ -1,6 +1,5 @@
 import React from "react";
 import RModal from "react-modal";
-import { useStore } from "../../store";
 import { observer } from "mobx-react-lite";
 
 const customStyles = {
@@ -17,13 +16,7 @@ const customStyles = {
 RModal.setAppElement("#__next");
 
 export const Modal = observer(() => {
-  const { modalView } = useStore();
-
   return (
-    <RModal
-      style={customStyles}
-      isOpen={modalView.modalOpen}
-      contentLabel="Example Modal"
-    ></RModal>
+    <RModal style={customStyles} isOpen={false} contentLabel="Example Modal" />
   );
 });
