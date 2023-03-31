@@ -26,19 +26,6 @@ export const SignUpForm = observer(() => {
       {({ errors, touched }) => (
         <Form className="flex flex-col gap-4">
           <div className="flex flex-col">
-            <Field name="username">
-              {({ field, meta }: any) => (
-                <Input
-                  {...field}
-                  error={!!(meta.touched && meta.error)}
-                  placeholder="Username"
-                />
-              )}
-            </Field>
-            {errors.username && touched.username ? (
-              <ErrorLabel>{errors.username}</ErrorLabel>
-            ) : null}
-
             <Field name="email">
               {({ field, meta }: any) => (
                 <Input

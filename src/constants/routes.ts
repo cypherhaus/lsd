@@ -1,6 +1,3 @@
-export const HOURS_ROUTE = "/dashboard/hours";
-export const BOOKINGS_ROUTE = "/dashboard/bookings";
-export const DOGALOGUE_ROUTE = "/dashboard/dogalogue";
-export const SHOPFRONT_ROUTE = "/dashboard/shopfront";
-export const SETTINGS_ROUTE = "/dashboard/settings";
-export const START_ROUTE = "/";
+export const PAGE_1_ROUTE = "/dashboard/page1";
+export const PAGE_2_ROUTE = "/dashboard/page2";
+export const PAGE_3_ROUTE = "/dashboard/page3";

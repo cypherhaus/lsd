@@ -1,9 +1,9 @@
 import { Layout } from "../../components/common/Layout";
 
-export default function Another() {
+export default function Page3() {
   return (
     <Layout>
-      <div>Another</div>
+      <div>Page 3</div>
     </Layout>
   );
 }

@@ -39,6 +39,16 @@ export default class AuthAPI {
     }
   };
 
+  postUsername = async (username: string, id: string) => {
+    console.log("hey");
+    const res = await supabase
+      .from(PROFILES_TABLE)
+      .update({ username })
+      .eq("id", id);
+    if (res?.status === 204) return true;
+    return false;
+  };
+
   login = async ({ email, password }: SignInValues) => {
     try {
       const data = await supabase.auth.signInWithPassword({

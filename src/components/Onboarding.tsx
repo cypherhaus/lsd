@@ -10,27 +10,27 @@ import { ErrorLabel } from "./common/ErrorLabel";
 const Onboarding = observer(() => {
   const { authView } = useStore();
   const {
-    setBusinessName,
-    handleBusinessInfo,
+    setUsername,
+    handleUsername,
     handleLogoutClick,
     onboardingError,
-    businessName,
+    username,
   } = authView;
 
   return (
     <div className="flex flex-col gap-5 bg-white rounded-xl p-10">
-      <div className="text-5xl font-bold text-center">Business Info</div>
+      <div className="text-5xl font-bold text-center">Username</div>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <Input
-            onChange={(e) => setBusinessName(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             error={!!onboardingError}
-            value={businessName}
+            value={username}
             placeholder="Username"
           />
           {onboardingError && <ErrorLabel>{onboardingError}</ErrorLabel>}
         </div>
-        <Button onClick={handleBusinessInfo} type="submit">
+        <Button onClick={handleUsername} type="submit">
           NEXT
         </Button>
       </div>
@@ -38,7 +38,7 @@ const Onboarding = observer(() => {
         onClick={handleLogoutClick}
         className="text-2xl text-center cursor-pointer"
       >
-        logout
+        Logout
       </div>
     </div>
   );

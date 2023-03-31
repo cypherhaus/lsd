@@ -1,43 +1,21 @@
-import {
-  RiCalendar2Fill,
-  RiAlarmLine,
-  RiMacLine,
-  RiFileList3Line,
-  RiSettings4Line,
-} from "react-icons/ri";
+import { RiCalendar2Fill, RiAlarmLine, RiFileList3Line } from "react-icons/ri";
 
-import {
-  HOURS_ROUTE,
-  SHOPFRONT_ROUTE,
-  DOGALOGUE_ROUTE,
-  BOOKINGS_ROUTE,
-  SETTINGS_ROUTE,
-} from "./routes";
+import { PAGE_1_ROUTE, PAGE_2_ROUTE, PAGE_3_ROUTE } from "./routes";
 
 export const SIDEBAR_ITEMS = [
   {
-    href: BOOKINGS_ROUTE,
-    label: "Bookings",
+    href: PAGE_1_ROUTE,
+    label: "Page1",
     Icon: RiCalendar2Fill,
   },
   {
-    href: DOGALOGUE_ROUTE,
-    label: "Dogalogue",
+    href: PAGE_2_ROUTE,
+    label: "Page2",
     Icon: RiFileList3Line,
   },
   {
-    href: HOURS_ROUTE,
-    label: "Hours",
+    href: PAGE_3_ROUTE,
+    label: "Page3",
     Icon: RiAlarmLine,
-  },
-  {
-    href: SHOPFRONT_ROUTE,
-    label: "Shopfront",
-    Icon: RiMacLine,
-  },
-  {
-    href: SETTINGS_ROUTE,
-    label: "Settings",
-    Icon: RiSettings4Line,
   },
 ];

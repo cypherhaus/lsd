@@ -16,6 +16,7 @@ module.exports = {
       },
     },
     colors: {
+      orange: "#ed5520",
       primary: "#000",
       brandLavendar: "#D9C5F6",
       brandGreen: "#14353F",

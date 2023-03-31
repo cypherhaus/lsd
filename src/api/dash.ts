@@ -22,9 +22,8 @@ import {
 
 export default class DashAPI {
   fetchProfile = async (id: string) => {
-    const res2 = await supabase.from(PROFILES_TABLE).select().eq("id", id);
-    console.log({ res2 });
-    if (res2.data) return res2.data[0];
+    const { data } = await supabase.from(PROFILES_TABLE).select().eq("id", id);
+    if (data) return data[0];
     return false;
   };
 
@@ -59,14 +58,6 @@ export default class DashAPI {
   addBlockedTime = async (blockedTime: AddBlockedTime) => {
     const res = await supabase.from(BLOCKED_TIMES_TABLE).insert(blockedTime);
 
-    if (res?.status === 201) return true;
-    return false;
-  };
-
-  postBusiness = async (name: string, id: string) => {
-    const res = await supabase
-      .from(BUSINESSES_TABLE)
-      .insert({ name, owner_id: id });
     if (res?.status === 201) return true;
     return false;
   };

@@ -1,9 +1,9 @@
 import { Layout } from "../../components/common/Layout";
 
-export default function Settings() {
+export default function Page1() {
   return (
     <Layout>
-      <button className="bg-white w-20">Checkout</button>
+      <div>Page 1</div>
     </Layout>
   );
 }

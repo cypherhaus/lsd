@@ -13,7 +13,7 @@ import Router from "next/router";
 import { SignInValues, SignUpValues } from "../../../types/auth";
 
 // Constants
-import { HOURS_ROUTE, START_ROUTE } from "../../constants/routes";
+import { PAGE_ROUTE } from "../../constants/routes";
 
 export default class AuthView {
   private _store: Store;
@@ -21,7 +21,6 @@ export default class AuthView {
   password = "";
   email = "";
   username = "";
-  businessName = "";
   onboardingError: string | null = null;
 
   constructor(store: Store) {
@@ -32,17 +31,23 @@ export default class AuthView {
   // Setters
   setPassword = (v: string) => (this.password = v);
   setEmail = (v: string) => (this.email = v);
-  setUsername = (v: string) => (this.username = v);
 
-  setBusinessName = (v: string) => {
-    this.onboardingError = null;
-    this.businessName = v;
+  setUsername = (v: string) => {
+    runInAction(() => {
+      this.onboardingError = null;
+      this.username = v;
+    });
   };
+
+  async init(id: string) {
+    const { authStore } = this._store;
+    if (!authStore.currentUser) authStore.fetchProfile(id);
+  }
 
   // Logout user
   async handleLogoutClick() {
     const success = await this._store.authStore.logout();
-    if (success) Router.push(START_ROUTE);
+    if (success) Router.push("/");
   }
 
   // Login user
@@ -51,19 +56,18 @@ export default class AuthView {
   }
 
   async handleSignUpClick(values: SignUpValues) {
-    console.log("hey");
     await this._store.authStore.signUp(values);
   }
 
-  async handleBusinessInfo() {
-    if (!this.businessName) {
+  async handleUsername() {
+    if (!this.username) {
       runInAction(() => {
         this.onboardingError = "Please enter a business name";
       });
       return;
     }
 
-    const success = await this._store.authStore.postBusiness(this.businessName);
-    if (success) Router.push(HOURS_ROUTE);
+    const success = await this._store.authStore.postUsername(this.username);
+    if (success) Router.push(PAGE_ROUTE);
   }
 }

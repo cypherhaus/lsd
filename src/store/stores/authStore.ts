@@ -21,16 +21,16 @@ export default class AuthStore {
     this._store = store;
   }
 
-  async postBusiness(name: string) {
+  async postUsername(username: string) {
     if (!this.currentUser.id) return;
     try {
-      const response = await this._store.api.dashAPI.postBusiness(
-        name,
+      const response = await this._store.api.authAPI.postUsername(
+        username,
         this.currentUser.id
       );
       if (response) {
         this.fetchProfile(this.currentUser.id);
-        successToast("Business added successfully");
+        successToast("Username added successfully");
         return true;
       }
     } catch (err) {
@@ -49,10 +49,8 @@ export default class AuthStore {
 
       if (response.data) {
         successToast("Account created successfully");
-        const userProfile = await this._store.api.dashAPI.fetchProfile(
-          response.data.user?.id
-        );
-        runInAction(() => (this.currentUser = userProfile));
+        console.log(response.data);
+        runInAction(() => (this.currentUser = response.data.user));
       }
 
       return null;

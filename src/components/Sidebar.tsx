@@ -13,9 +13,10 @@ export const Sidebar = () => {
   return (
     <aside className="p-4 h-full bg-white flex gap-5 flex-col">
       {SIDEBAR_ITEMS.map((navItem) => {
-        const style = router.pathname.includes(navItem.href)
-          ? "text-primary cursor-pointer text-5xl"
-          : "cursor-pointer text-5xl";
+        const style =
+          router.pathname === navItem.href
+            ? "text-orange cursor-pointer text-5xl"
+            : "cursor-pointer text-5xl";
 
         return (
           <div key={navItem.href} className="flex relative">
