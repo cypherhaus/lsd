@@ -13,6 +13,7 @@ export const Navbar = observer(() => {
           : "0"}{" "}
         sats
       </p>
+      <span>{authStore.currentUser?.username}</span>
       <div
         onClick={authView.handleLogoutClick}
         className="text-white font-button cursor-pointer font-bold"
