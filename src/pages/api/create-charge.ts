@@ -1,21 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import NextCors from "nextjs-cors";
+import { supabase } from "../../config/supabase";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  await NextCors(req, res, {
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    origin: "*",
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  });
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
-  );
   const supabaseServerClient = createServerSupabaseClient<any>({
     req,
     res,

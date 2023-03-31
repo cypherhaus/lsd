@@ -27,7 +27,7 @@ export default class LightningApi {
   };
 
   updateLnAddress = async (lnAddress: string) => {
-    const response = await this.api.post(`/${UPDATE_LN_ADDRESS}`, {
+    const response = await this.api.post(`../api/${UPDATE_LN_ADDRESS}`, {
       lnAddress,
     });
 
