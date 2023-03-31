@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         `https://api.zebedee.io/v0/ln-address/validate/${lnAddress}`,
         {
           headers: {
-            apikey: process.env.REACT_APP_ZEBEDEE_KEY ?? "",
+            apikey: process.env.ZEBEDEE_KEY ?? "",
             "Content-Type": "application/json",
           },
         }
