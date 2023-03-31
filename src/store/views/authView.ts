@@ -13,7 +13,7 @@ import Router from "next/router";
 import { SignInValues, SignUpValues } from "../../../types/auth";
 
 // Constants
-import { PAGE_1_ROUTE } from "../../constants/routes";
+import { FUND_ROUTE } from "../../constants/routes";
 
 export default class AuthView {
   private _store: Store;
@@ -68,6 +68,6 @@ export default class AuthView {
     }
 
     const success = await this._store.authStore.postUsername(this.username);
-    if (success) Router.push(PAGE_1_ROUTE);
+    if (success) Router.push(FUND_ROUTE);
   }
 }

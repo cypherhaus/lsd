@@ -1,15 +1,14 @@
 interface InputProps {
-  error: boolean;
+  onChange: (value: string) => void;
+  value: string;
   placeholder: string;
-  onChange?: (e: any) => void;
-  value?: string;
+  type?: string;
 }
 
-export const Input = ({ error, ...rest }: InputProps) => (
+export const Input = ({ onChange, ...rest }: InputProps) => (
   <input
-    className={`placeholder:text-dark200 outline-none font-white border-2 rounded border-black my-1.5 px-3 py-1 text-xl bg-transparent ${
-      error && "border-primary"
-    }`}
+    onChange={(e) => onChange(e.target.value)}
+    className="placeholder:text-dark200 outline-none font-white my-2 border-b-2  border-black  p-2 text-xl bg-transparent"
     {...rest}
   />
 );

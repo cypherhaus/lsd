@@ -8,7 +8,7 @@ import Auth from "../components/auth";
 import Onboarding from "../components/Onboarding";
 
 // Constants
-import { PAGE_1_ROUTE } from "../constants/routes";
+import { FUND_ROUTE } from "../constants/routes";
 
 const Home = observer(() => {
   const router = useRouter();
@@ -22,8 +22,8 @@ const Home = observer(() => {
       return;
     }
 
-    if (authStore.currentUser && !router.pathname.includes(PAGE_1_ROUTE)) {
-      router.push(PAGE_1_ROUTE);
+    if (authStore.currentUser && !router.pathname.includes(FUND_ROUTE)) {
+      router.push(FUND_ROUTE);
     }
   }, [authStore.currentUser, router]);
 

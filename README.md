@@ -1,4 +1,4 @@
-## create-dash-app
+## lsd
 
 This is a starter project for building web apps, built with [Next.js](https://nextjs.org/) and [Supabase](https://supabase.co).
 

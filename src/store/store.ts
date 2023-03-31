@@ -1,14 +1,17 @@
 import { makeAutoObservable } from "mobx";
 import { AuthAPI, DashAPI } from "../api";
-import { AuthStore } from "./stores";
+import { AuthStore, LightningStore } from "./stores";
 import { AuthView } from "./views";
+import DashboardView from "./views/dashboardView";
 
 export class Store {
   // Child Stores
   authStore = new AuthStore(this);
+  lightningStore = new LightningStore(this);
 
   // Views - UI interaction state
   authView = new AuthView(this);
+  dashboardView = new DashboardView(this);
 
   api: {
     authAPI: AuthAPI;
