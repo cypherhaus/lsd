@@ -2,8 +2,8 @@ import { supabase } from "../../config/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req?.body) {
-    const { internalId, status } = JSON.parse(req.body);
+  if (req.body) {
+    const { internalId, status } = req.body;
 
     if (status === "expired") {
       await supabase
