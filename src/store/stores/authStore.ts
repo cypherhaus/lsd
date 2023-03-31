@@ -82,7 +82,6 @@ export default class AuthStore {
     }
   }
 
-  // Logout User
   async logout() {
     try {
       const success = await this._store.api.authAPI.signOut();
