@@ -56,6 +56,9 @@ export default class DashboardView {
       this.lnAddress
     );
 
+    if (response.success)
+      successToast("Successfully changed Lightning Address");
+
     runInAction(() => {
       this.lnAddress = "";
     });

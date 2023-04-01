@@ -11,8 +11,6 @@ const Fund = observer(() => {
 
   // Subscribe to charges to listen for when invoice is settled
   useEffect(() => {
-    console.log({ supabase });
-
     if (lightningStore.charge) {
       supabase
         .channel("any")
