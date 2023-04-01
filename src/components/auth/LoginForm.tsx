@@ -27,7 +27,10 @@ export const LoginForm = observer(() => {
           <div className="flex flex-col">
             <Field name="email">
               {({ field, meta }: any) => (
-                <Input
+                <input
+                  className={`placeholder:text-dark200 outline-none font-white my-2 border-b-2  border-black  p-2 text-xl bg-transparent ${
+                    !!(meta.touched && meta.error) && "border-primary"
+                  }`}
                   {...field}
                   error={!!(meta.touched && meta.error)}
                   placeholder="Email"
@@ -43,7 +46,10 @@ export const LoginForm = observer(() => {
               name="password"
             >
               {({ field, meta }: any) => (
-                <Input
+                <input
+                  className={`placeholder:text-dark200 outline-none font-white my-2 border-b-2  border-black  p-2 text-xl bg-transparent ${
+                    !!(meta.touched && meta.error) && "border-primary"
+                  }`}
                   {...field}
                   error={!!(meta.touched && meta.error)}
                   type="password"

@@ -47,55 +47,62 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      if (balance > parseInt(amount)) {
-        const withdrawal = await supabase.from("withdrawals").insert({
+      const withdrawal = await supabase
+        .from("withdrawals")
+        .insert({
           user_id: user?.id,
           ln_address: balanceCheck.data.ln_address,
           amount,
-        });
+        })
+        .select();
 
-        if (!withdrawal.data) {
-          res.status(500).json({ message: "Server Error" });
-          return;
-        }
-
-        const data = await axios.post(
-          `https://api.zebedee.io/v0/ln-address/send-payment`,
-          {
-            lnAddress: balanceCheck.data.ln_address,
-            amount: parseInt(amount) * 1000,
-            comment: "Withdraw from Supa ZBD",
-          },
-          {
-            headers: {
-              apikey: process.env.ZEBEDEE_KEY ?? "",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!data.data) {
-          res.status(500).json({ message: "Server Error" });
-          return;
-        }
-
-        await supabase
-          .from("withdrawals")
-          .update({
-            settled: true,
-          })
-          .eq("id", withdrawal.data[0].id);
-
-        res.status(200).json({
-          message: "Successfully withdrawn sats",
-        });
+      if (withdrawal.status !== 201) {
+        res
+          .status(500)
+          .json({ message: "Server Error - Could not get withdrawal data" });
         return;
       }
 
-      res.status(500).json({ message: "Server Error" });
+      const data = await axios.post(
+        `https://api.zebedee.io/v0/ln-address/send-payment`,
+        {
+          lnAddress: balanceCheck.data.ln_address,
+          amount: parseInt(amount) * 1000,
+          comment: "Withdraw from Supa ZBD",
+        },
+        {
+          headers: {
+            apikey: process.env.ZEBEDEE_KEY ?? "",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (data.status !== 200) {
+        res.status(data.status).json({ message: "ZEBEDEE Server Error" });
+        return;
+      }
+
+      await supabase
+        .from("withdrawals")
+        .update({
+          settled: true,
+        })
+        .eq("id", withdrawal.data[0].id);
+
+      res.status(200).json({
+        message: "Successfully withdrawn sats",
+      });
       return;
     } catch (err) {
-      console.log({ err });
+      if (err?.response?.data?.message) {
+        console.log("Error:", err?.response?.data?.message);
+        res
+          .status(500)
+          .json({ message: `ZBD Error: ${err?.response?.data?.message}` });
+        return;
+      }
+
       res.status(500).json({ message: "Server Error" });
       return;
     }

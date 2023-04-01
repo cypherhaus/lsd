@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { toast } from "react-hot-toast";
-import { successToast, basicToastStyle } from "../../utils/toast";
+import { successToast, basicToastStyle, errorToast } from "../../utils/toast";
 import { Store } from "../store";
 
 export default class DashboardView {
@@ -39,7 +39,7 @@ export default class DashboardView {
     );
 
     if (response.success) {
-      successToast("Handle pay username");
+      successToast(`Sent ${this.sendAmount} sats to ${this.sendUsername}`);
 
       runInAction(() => {
         this.sendAmount = "";
@@ -67,22 +67,13 @@ export default class DashboardView {
 
   // Handle pressing the withdraw button
   async handleWithdrawClick() {
-    toast.promise(
-      this._store.lightningStore.withdraw(this.withdrawAmount),
-      {
-        loading: "Processing withdrawal..",
-        success: "Withdraw successful",
-        error: "Error withdrawing sats",
-      },
-      {
-        success: {
-          style: basicToastStyle,
-          duration: 5000,
-          icon: "🔥",
-        },
-        style: basicToastStyle,
-      }
+    const response = await this._store.lightningStore.withdraw(
+      this.withdrawAmount
     );
+
+    if (response.success) successToast("Successful withdrawal");
+    if (!response.success) errorToast("Failed to withdraw");
+
     this.withdrawAmount = "";
   }
 
@@ -112,7 +103,7 @@ export default class DashboardView {
   handleChargeSettled() {
     this._store.lightningStore.chargeSettled();
     this._store.authStore.fetchProfile(this._store.authStore.currentUser.id);
-    successToast("Settled Charge");
+    successToast("Successfully funded account");
 
     runInAction(() => {
       this.fundAmount = "";

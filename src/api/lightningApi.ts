@@ -40,18 +40,14 @@ export default class LightningApi {
 
   withdrawToAddress = async (amount: string) => {
     try {
-      const response = await this.api.post(`../api/${WITHDRAW}`, {
+      await this.api.post(`../api/${WITHDRAW}`, {
         amount,
       });
 
-      if (response.status === 200) {
-        return { success: true, message: "Successful withdrawal" };
-      }
+      return { success: true, message: "Successful withdrawal" };
     } catch (err) {
-      console.log({ err });
       return { success: false, message: "Failed to withdraw" };
     }
-    return { success: false, message: "Failed to withdraw" };
   };
 
   payUser = async (

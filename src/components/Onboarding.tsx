@@ -23,7 +23,7 @@ const Onboarding = observer(() => {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <Input
-            onChange={(e: any) => setUsername(e.target.value)}
+            onChange={setUsername}
             value={username}
             placeholder="Username"
           />
