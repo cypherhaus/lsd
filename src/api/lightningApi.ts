@@ -5,7 +5,7 @@ import {
   BASE_URL,
   CREATE_CHARGE,
   UPDATE_LN_ADDRESS,
-  WITHDRAW_LN_ADDRESS,
+  WITHDRAW,
 } from "../constants/endpoints";
 import { errorToast } from "../utils/toast";
 
@@ -40,7 +40,7 @@ export default class LightningApi {
 
   withdrawToAddress = async (amount: string) => {
     try {
-      const response = await this.api.post(`/${WITHDRAW_LN_ADDRESS}`, {
+      const response = await this.api.post(`../api/${WITHDRAW}`, {
         amount,
       });
 

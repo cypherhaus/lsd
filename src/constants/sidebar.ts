@@ -19,7 +19,7 @@ export const SIDEBAR_ITEMS = [
   },
   {
     href: WITHDRAW_ROUTE,
-    label: "Withdrawal",
+    label: "Withdraw",
     Icon: RiChatForwardLine,
   },
 ];
