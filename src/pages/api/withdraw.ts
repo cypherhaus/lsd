@@ -95,14 +95,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
       return;
     } catch (err) {
-      if (err?.response?.data?.message) {
-        console.log("Error:", err?.response?.data?.message);
-        res
-          .status(500)
-          .json({ message: `ZBD Error: ${err?.response?.data?.message}` });
-        return;
-      }
-
       res.status(500).json({ message: "Server Error" });
       return;
     }
