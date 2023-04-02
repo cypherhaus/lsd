@@ -10,8 +10,6 @@ It includes:
 - State management
 - Database
 
-<img src="./example-2.png" alt="Example" width="400" height="300">
-
 ## Getting Started
 
 First, create an account at Supabase and enter the environment variables in:
@@ -28,6 +26,8 @@ Next, create a Supabase project, and then in the SQL Editor of the dashboard, cl
 ```sql
 CREATE TABLE profiles (
   id UUID PRIMARY KEY,
+  balance INT8 DEFAULT 0,
+  ln_address TEXT,
   email TEXT,
   username TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -75,7 +75,8 @@ CREATE TABLE withdrawals (
 2. Create all Functions
 
 ```sql
-CREATE FUNCTION create_profile_on_user_insert()
+-- Create Profile after Authenticated - - - - - - - - - - - - - - - - - - - - - -
+CREATE FUNCTION create_profile()
 RETURNS TRIGGER SECURITY DEFINER AS $$
 BEGIN
   INSERT INTO public.profiles (id, email)
@@ -83,12 +84,176 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-CREATE TRIGGER create_profile_trigger
+
+-- Calculate the balance after a payment is made - - - - - - - - - - - - - - - -
+CREATE FUNCTION balance_after_payment() RETURNS TRIGGER SECURITY DEFINER AS $$
+DECLARE
+  -- Debitor variables
+  debitor_settlements_balance INTEGER;
+  debitor_payments_balance INTEGER;
+  debitor_total_balance INTEGER;
+
+  -- Creditor variables
+  creditor_settlements_balance INTEGER;
+  creditor_payments_balance INTEGER;
+  creditor_total_balance INTEGER;
+BEGIN
+  -- DEBITOR
+
+  -- Get the balance of the debitor from the settlements table
+  debitor_settlements_balance = (SELECT COALESCE(SUM(credit) - SUM(debit), 0)
+                                 FROM public.settlements
+                                 WHERE user_id = NEW.user_id);
+
+  -- Get the balance of the debitor from the payments table
+  debitor_payments_balance = (SELECT COALESCE(SUM(credit) - SUM(debit), 0)
+                              FROM public.payments
+                              WHERE user_id = NEW.user_id);
+
+  -- Calculate total balance of the debitor
+  debitor_total_balance = (debitor_settlements_balance + debitor_payments_balance);
+
+  -- Update the debitor's profile balance
+  UPDATE public.profiles
+  SET balance = debitor_total_balance
+  WHERE id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+-- Calculate the balance after a settlement is made - - - - - - - - - - - - - - -
+CREATE FUNCTION balance_after_settlement() RETURNS TRIGGER SECURITY DEFINER AS $$
+DECLARE
+  settlements_balance INTEGER;
+  payments_balance INTEGER;
+  total_balance INTEGER;
+BEGIN
+  -- Get the balance from the settlements table
+  settlements_balance = (SELECT COALESCE(SUM(credit) - SUM(debit), 0)
+                          FROM public.settlements
+                          WHERE user_id = NEW.user_id);
+
+  -- Get the balance of the user from the payments table
+  payments_balance = (SELECT COALESCE(SUM(credit) - SUM(debit), 0)
+                      FROM public.payments
+                      WHERE user_id = NEW.user_id);
+
+  -- Get the total balance across settlements and payments balance
+  total_balance = (settlements_balance + payments_balance);
+
+  -- Update the profile table to reflect the balance
+  UPDATE public.profiles
+  SET balance = total_balance
+  WHERE id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+-- Creates a credit entry for every debit entry - - - - - - - - - - - - - -
+CREATE FUNCTION create_credit_on_debit_payment() RETURNS TRIGGER SECURITY DEFINER AS $$
+BEGIN
+  IF NEW.debit > 0 THEN
+    INSERT INTO public.payments(participant_id, credit, debit_id, user_id)
+    VALUES (NEW.user_id, NEW.debit, NEW.id, NEW.participant_id);
+
+    RETURN NEW;
+  END IF;
+
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+-- Create a TX row when a charge is settled - - - - - - - - - - - - - - -
+CREATE FUNCTION create_tx_on_charge() RETURNS TRIGGER SECURITY DEFINER AS $$
+BEGIN
+  IF NEW.settled = TRUE THEN
+    INSERT INTO public.settlements(id, credit, user_id, type)
+    VALUES (NEW.id, NEW.amount, NEW.user_id, 'FUND');
+
+    RETURN NEW;
+  END IF;
+
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - -
+
+-- Create a TX on a withdrawal - - - - - - - - - - - - - - - - - - - - - - - - --
+CREATE FUNCTION create_tx_on_withdrawal() RETURNS TRIGGER SECURITY DEFINER AS $$
+BEGIN
+  IF NEW.settled = TRUE THEN
+    INSERT INTO public.settlements(id, debit, user_id, type)
+    VALUES (NEW.id, NEW.amount, NEW.user_id, 'WITHDRAWAL');
+
+    RETURN NEW;
+  END IF;
+
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - -
+
+```
+
+3. Create all Triggers
+
+```sql
+-- Trigger for Creating Profile after Authenticated - - - -
+CREATE TRIGGER create_profile
 AFTER INSERT ON auth.users
 FOR EACH ROW
-EXECUTE FUNCTION create_profile_on_user_insert();
+EXECUTE FUNCTION create_profile();
+-- - - - - - - - - - - - - - -  - - - - - - - - - - - - - -
 
+-- Trigger for calculating balance after a payment - - - - -
+CREATE TRIGGER balance_after_payment
+  AFTER INSERT ON public.payments
+  FOR EACH ROW
+  EXECUTE FUNCTION balance_after_payment();
+-- - - - - - - - -  - - - - - - - - - - - - - - - - - - -
+
+-- Trigger for calculating balance after a settlement - - - -
+CREATE TRIGGER balance_after_settlement
+  AFTER INSERT ON public.settlements
+  FOR EACH ROW
+  EXECUTE FUNCTION balance_after_settlement();
+--  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+-- Trigger for creating a credit entry for every debit - - -
+CREATE TRIGGER create_credit_on_debit_payment
+  AFTER INSERT ON public.payments
+  FOR EACH ROW
+  EXECUTE FUNCTION create_credit_on_debit_payment();
+-- - - - - - - - - - - - - - - - - - - - - - - - - -- -  - - -
+
+-- Trigger for creating tx on a settled charge - - - - - - -
+CREATE TRIGGER create_tx_on_charge
+  AFTER UPDATE ON public.charges
+  FOR EACH ROW
+  EXECUTE FUNCTION create_tx_on_charge();
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+-- Trigger for creating a TX on a withdrawal - - - - - - - - - - - - - - - - - - - -
+CREATE TRIGGER create_tx_on_withdrawal
+  AFTER UPDATE ON public.withdrawals
+  FOR EACH ROW
+  EXECUTE FUNCTION create_tx_on_withdrawal();
+-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+4. Database Settings
+
+```
+ALTER PUBLICATION supabase_realtime ADD TABLE charges,profiles
 ```
 
 This will instruct the Supabase DB to create a `profiles` table, and when a user is authenticated, to automatically create a row in the profiles table

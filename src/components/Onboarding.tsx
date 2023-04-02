@@ -18,7 +18,7 @@ const Onboarding = observer(() => {
   } = authView;
 
   return (
-    <div className="flex flex-col gap-5 bg-white rounded-xl p-10">
+    <div className="flex flex-col gap-5 bg-white p-10">
       <div className="text-5xl font-bold text-center">Username</div>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col">

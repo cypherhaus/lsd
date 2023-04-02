@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store";
 import { formatNumber } from "../../utils/number";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 
 export const Navbar = observer(() => {
   const { authView, authStore } = useStore();
@@ -13,12 +14,12 @@ export const Navbar = observer(() => {
           : "0"}{" "}
         sats
       </p>
-      <span>{authStore.currentUser?.username}</span>
+      <span className="font-bold">yo {authStore.currentUser?.username}</span>
       <div
         onClick={authView.handleLogoutClick}
         className="font-button cursor-pointer font-bold"
       >
-        Logout
+        <RiLogoutBoxRLine size={30} />
       </div>
     </div>
   );

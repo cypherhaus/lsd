@@ -11,23 +11,25 @@ const Fund = observer(() => {
 
   // Subscribe to charges to listen for when invoice is settled
   useEffect(() => {
-    if (lightningStore.charge) {
-      supabase
-        .channel("any")
-        .on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "charges",
-            filter: `id=eq.${lightningStore.charge.internalId}`,
-          },
-          (message: any) => {
-            message.new.settled && dashboardView.handleChargeSettled();
-          }
-        )
-        .subscribe();
-    }
+    if (!lightningStore.charge) return;
+
+    const subscription = supabase
+      .channel("any")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "charges",
+          filter: `id=eq.${lightningStore.charge.internalId}`,
+        },
+        (message: any) => {
+          message.new.settled && dashboardView.handleChargeSettled();
+        }
+      )
+      .subscribe();
+
+    return () => supabase.removeSubscription(subscription);
   }, [lightningStore, lightningStore.charge, dashboardView]);
 
   return (
@@ -44,7 +46,7 @@ const Fund = observer(() => {
         ></Input>
         <button
           onClick={dashboardView.handleFundClick}
-          className="rounded p-3 mt-5 text-white bg-primary text-xl font-bold mb-6"
+          className="p-3 mt-5 text-white bg-primary text-xl font-bold mb-6"
         >
           Fund
         </button>

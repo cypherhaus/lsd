@@ -1,9 +1,9 @@
 import { toast } from "react-hot-toast";
 
 export const basicToastStyle = {
-  borderRadius: "20px",
-  background: "#333",
-  color: "#fff",
+  background: "#EFEFEF",
+  borderColor: "black",
+  borderWidth: 2,
 };
 
 export const successToast = (message: string) => {

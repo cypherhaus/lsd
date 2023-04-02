@@ -20,7 +20,7 @@ const Withdraw = observer(() => {
           />
           <button
             onClick={dashboardView.handleUpdateAddressClick}
-            className="rounded p-3 mt-5 text-white bg-primary text-xl font-bold"
+            className="p-3 mt-5 text-white bg-primary text-xl font-bold"
           >
             Save
           </button>
@@ -45,7 +45,7 @@ const Withdraw = observer(() => {
         />
         <button
           onClick={dashboardView.handleWithdrawClick}
-          className="rounded p-3 mt-5 text-white bg-primary text-xl font-bold"
+          className="p-3 mt-5 text-white bg-primary text-xl font-bold"
         >
           Withdraw
         </button>

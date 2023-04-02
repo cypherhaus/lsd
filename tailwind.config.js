@@ -26,8 +26,7 @@ module.exports = {
       black: "#000",
     },
     fontFamily: {
-      sans: "Rubik, sans-serif",
-      button: "Inter, sans-serif",
+      sans: "Aero",
     },
   },
   plugins: [],

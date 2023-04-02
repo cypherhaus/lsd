@@ -11,7 +11,7 @@ export const Sidebar = () => {
   const router = useRouter();
 
   return (
-    <aside className="p-4 h-full bg-white flex gap-5 flex-col">
+    <aside className="h-full bg-white flex flex-col">
       {SIDEBAR_ITEMS.map((navItem) => {
         const style =
           router.pathname === navItem.href
@@ -19,7 +19,10 @@ export const Sidebar = () => {
             : "cursor-pointer text-5xl";
 
         return (
-          <div key={navItem.href} className="flex relative">
+          <div
+            key={navItem.href}
+            className="flex relative border-b-2 border-r-2 p-2"
+          >
             <Link href={navItem.href} className="peer">
               <navItem.Icon className={style} />
             </Link>

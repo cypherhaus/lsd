@@ -24,7 +24,7 @@ const Transfer = observer(() => {
           onClick={() =>
             dashboardView.handlePayUsername(authStore.currentUser.id)
           }
-          className="rounded p-3 mt-5 text-white bg-primary text-xl font-bold"
+          className="p-3 mt-5 text-white bg-primary text-xl font-bold"
         >
           Send
         </button>
