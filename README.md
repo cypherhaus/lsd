@@ -16,9 +16,9 @@ NEXT_PUBLIC_BASE_URL=
 
 (the `NEXT_PUBLIC_BASE_URL` will come after deploying or from creating a tunnel to localhost with Ngrok)
 
-1. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
+2. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
 
-2. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
+3. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
 
 Tables
 
@@ -254,9 +254,7 @@ Database Settings
 ALTER PUBLICATION supabase_realtime ADD TABLE charges,profiles
 ```
 
-This will instruct the Supabase DB to create a `profiles` table, and when a user is authenticated, to automatically create a row in the profiles table
-
-Then, run the development server:
+4. Run the development server:
 
 ```bash
 npm run dev
