@@ -251,7 +251,7 @@ CREATE TRIGGER create_tx_on_withdrawal
 Database Settings
 
 ```sql
-ALTER PUBLICATION supabase_realtime ADD TABLE charges,profiles
+ALTER PUBLICATION supabase_realtime ADD TABLE charges
 ```
 
 4. Run the development server:
