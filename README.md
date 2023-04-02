@@ -14,7 +14,7 @@ NEXT_PUBLIC_BASE_URL=
 
 ```
 
-(the `NEXT_PUBLIC_BASE_URL` will come after deploying or from creating a tunnel to localhost with Ngrok)
+(the `NEXT_PUBLIC_BASE_URL` will come after deploying or from creating a tunnel to localhost with Ngrok below)
 
 2. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
 
