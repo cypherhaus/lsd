@@ -4,7 +4,7 @@ This is a starter project for building Bitcoin/Lightning web apps, built with [N
 
 ## Getting Started
 
-1. Create an account at Supabase and ZEBEDEE and enter the environment variables in an `.env.local` file (the public base url will come after deploying in step 2 - or from creating a tunnel to your localhost with Ngrok or similar):
+1. Create an account at Supabase and ZEBEDEE and enter the environment variables in an `.env.local` file
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=
@@ -14,9 +14,11 @@ NEXT_PUBLIC_BASE_URL=
 
 ```
 
-2. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
+(the `NEXT_PUBLIC_BASE_URL` will come after deploying or from creating a tunnel to localhost with Ngrok)
 
-3. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
+1. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
+
+2. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
 
 Tables
 
