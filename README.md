@@ -21,7 +21,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 Next, create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts:
 
-1. Create all tables
+Tables
 
 ```sql
 CREATE TABLE profiles (
@@ -72,7 +72,7 @@ CREATE TABLE withdrawals (
 
 ```
 
-2. Create all Functions
+Database Functions
 
 ```sql
 -- Create Profile after Authenticated - - - - - - - - - - - - - - - - - - - - - -
@@ -204,7 +204,7 @@ $$ LANGUAGE plpgsql;
 
 ```
 
-3. Create all Triggers
+Triggers
 
 ```sql
 -- Trigger for Creating Profile after Authenticated - - - -
@@ -250,9 +250,9 @@ CREATE TRIGGER create_tx_on_withdrawal
 -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ```
 
-4. Database Settings
+Database Settings
 
-```
+```sql
 ALTER PUBLICATION supabase_realtime ADD TABLE charges,profiles
 ```
 
