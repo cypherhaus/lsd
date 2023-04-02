@@ -1,4 +1,4 @@
-## lsd
+## LSD (Lightning and Supabase Demo)
 
 This is a starter project for building Bitcoin/Lightning web apps, built with [Next.js](https://nextjs.org/), [ZEBEDEE](https://zebedee.io) and [Supabase](https://supabase.co).
 
