@@ -20,8 +20,9 @@ module.exports = {
       primary: "#000",
       brandLavendar: "#D9C5F6",
       brandGreen: "#14353F",
-      brandWhite: "#EDECDF",
+      brandWhite: "#EFEFEF",
       white: "#fff",
+      cypherhausGreen: "#2C4745",
       black: "#000",
     },
     fontFamily: {

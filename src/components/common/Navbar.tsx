@@ -6,7 +6,7 @@ export const Navbar = observer(() => {
   const { authView, authStore } = useStore();
 
   return (
-    <div className="text-white flex w-full bg-primary items-center justify-between p-6">
+    <div className="flex w-full items-center justify-between p-6 border-b-2 bg-white">
       <p className="font-bold text-2xl text-cypherhaus text-center">
         {authStore?.currentUser?.balance
           ? formatNumber(authStore?.currentUser?.balance)
@@ -16,7 +16,7 @@ export const Navbar = observer(() => {
       <span>{authStore.currentUser?.username}</span>
       <div
         onClick={authView.handleLogoutClick}
-        className="text-white font-button cursor-pointer font-bold"
+        className="font-button cursor-pointer font-bold"
       >
         Logout
       </div>
