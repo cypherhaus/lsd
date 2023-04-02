@@ -1,14 +1,6 @@
 ## lsd
 
-This is a starter project for building web apps, built with [Next.js](https://nextjs.org/) and [Supabase](https://supabase.co).
-
-It includes:
-
-- Authentication
-- A Sidebar navigation
-- Toasts
-- State management
-- Database
+This is a starter project for building Bitcoin/Lightning web apps, built with [Next.js](https://nextjs.org/), [ZEBEDEE](https://zebedee.io) and [Supabase](https://supabase.co).
 
 ## Getting Started
 
