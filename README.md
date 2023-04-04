@@ -18,7 +18,7 @@ NEXT_PUBLIC_BASE_URL=
 
 (the `NEXT_PUBLIC_BASE_URL` will come from the step below)
 
-3. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`. Alternatively you can create a tunnel to your localhost with Ngrok (or similar)
+3. Deploy the project to Vercel (or similar) to get your `NEXT_PUBLIC_BASE_URL`. Alternatively you can create a tunnel to your localhost with Ngrok (or similar)
 
 4. Go to the dashboard of youe Supabase project and go to Authentication, Providers, Email and temporarily turn off Confirm Email
 
