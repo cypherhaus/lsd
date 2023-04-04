@@ -20,7 +20,9 @@ NEXT_PUBLIC_BASE_URL=
 
 3. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`. Alternatively you can create a tunnel to your localhost with Ngrok (or similar)
 
-4. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
+4. Go to the dashboard of youe Supabase project and go to Authentication, Providers, Email and temporarily turn off Confirm Email
+
+5. in the SQL Editor of the Supabase dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
 
 Tables
 
