@@ -18,7 +18,7 @@ NEXT_PUBLIC_BASE_URL=
 
 (the `NEXT_PUBLIC_BASE_URL` will come after deploying or from creating a tunnel to localhost with Ngrok below)
 
-3. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`
+3. Deploy the project to Vercel (or simalar) to get your `NEXT_PUBLIC_BASE_URL`. Alternatively you can create a tunnel to your localhost with Ngrok (or similar)
 
 4. Create a Supabase project, and then in the SQL Editor of the dashboard, click `New Query`, and run the following scripts (either in separate scripts or all at once):
 
