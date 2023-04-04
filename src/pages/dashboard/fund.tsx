@@ -29,7 +29,7 @@ const Fund = observer(() => {
       )
       .subscribe();
 
-    return () => supabase.removeSubscription(subscription);
+    return () => supabase.removeAllChannels();
   }, [lightningStore, lightningStore.charge, dashboardView]);
 
   return (
