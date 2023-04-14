@@ -5,6 +5,8 @@ import { useStore } from "../../store";
 import { Input } from "../../components/common/Input";
 import { Layout } from "../../components/common/Layout";
 import { supabase } from "../../config/supabase";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { successToast } from "../../utils/toast";
 
 const Fund = observer(() => {
   const { dashboardView, lightningStore } = useStore();
@@ -13,7 +15,7 @@ const Fund = observer(() => {
   useEffect(() => {
     if (!lightningStore.charge) return;
 
-    const subscription = supabase
+    supabase
       .channel("any")
       .on(
         "postgres_changes",
@@ -50,12 +52,18 @@ const Fund = observer(() => {
         >
           Fund
         </button>
+
         {lightningStore.charge && (
-          <QRCode
-            style={{ height: "auto", maxWidth: "300px", width: "300px" }}
-            value={lightningStore.charge.invoice.request}
-            viewBox={`0 0 256 256`}
-          />
+          <CopyToClipboard
+            text={lightningStore.charge.invoice.request}
+            onCopy={() => successToast("Copied Bolt11 to Clipboard")}
+          >
+            <QRCode
+              style={{ height: "auto", maxWidth: "300px", width: "300px" }}
+              value={lightningStore.charge.invoice.request}
+              viewBox={`0 0 256 256`}
+            />
+          </CopyToClipboard>
         )}
       </div>
     </Layout>
