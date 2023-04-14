@@ -15,7 +15,6 @@ ZEBEDEE_KEY=
 NEXT_PUBLIC_BASE_URL=
 
 ```
-
 (the `NEXT_PUBLIC_BASE_URL` will come from the step below)
 
 3. Deploy the project to Vercel (or similar) to get your `NEXT_PUBLIC_BASE_URL`. Alternatively you can create a tunnel to your localhost with Ngrok (or similar)
